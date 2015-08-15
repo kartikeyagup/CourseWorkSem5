@@ -1,0 +1,36 @@
+structure Tokens = Tokens
+
+type pos = int
+type svalue = Tokens.svalue
+type ('a,'b) token = ('a,'b) Tokens.token
+type lexresult= (svalue,pos) token
+
+val pos = ref 0
+fun eof () = Tokens.EOF(!pos,!pos)
+fun error (e,l,_) = TextIO.output (TextIO.stdOut, String.concat[
+	"line ", (Int.toString l), ": ", e, "\n"])
+
+%%
+%header (functor CalcLexFun(structure Tokens: Calc_TOKENS));
+alpha=[A-Za-z];
+alphanum=[A-Za-z0-9];
+caps=[A-Z];
+sm=[a-z];
+digit=[0-9];
+ws = [\ \t];
+%%
+\n       => (pos := (!pos) + 1; lex());
+{ws}+    => (lex());
+"1"		 => (Tokens.TRUE(!pos,!pos));
+"0"		 => (Tokens.FALSE(!pos,!pos));
+{alphanum}+ => (Tokens.VAR(yytext,!pos,!pos));
+"+"		 => (Tokens.OR(!pos,!pos));
+"\*"	 => (Tokens.AND(!pos,!pos));
+"\~" 	 => (Tokens.NOT(!pos,!pos));
+")"		 => (Tokens.RPAREN(!pos,!pos));
+"("		 => (Tokens.LPAREN(!pos,!pos));
+"=>"	 => (Tokens.IMPLY(!pos,!pos));
+";"		 => (Tokens.SEMI(!pos,!pos));
+"="		 => (Tokens.EQUAL(!pos,!pos));
+"\."	 => (Tokens.DOT(!pos,!pos));
+"."      => (error ("ignoring bad character "^yytext,!pos,!pos); lex());

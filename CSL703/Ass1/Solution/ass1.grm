@@ -1,0 +1,51 @@
+%%
+
+%eop EOF SEMI
+
+(* %pos declares the type of positions for terminals.
+   Each symbol has an associated left and right position. *)
+
+%pos int
+
+
+%term VAR of string
+	| TRUE
+	| FALSE
+	| DOT
+	| LPAREN
+	| RPAREN
+	| EOF
+	| OR
+	| AND
+	| NOT
+	| IMPLY
+	| EQUAL
+	| IF
+	| SEMI
+	| COMMA
+
+%nonterm PROG of Program.BoolExpr
+	| TERM of Program.BoolExpr
+	
+%name Calc
+
+%start PROG
+
+%noshift EOF
+%verbose
+%%
+
+(* the parser returns the value associated with the expression *)
+
+PROG: TERM							(TERM)
+
+TERM: TERM AND TERM 				(Program.OprBinary(Program.AND,TERM,TERM))
+	| TERM OR TERM 					(Program.OprBinary(Program.OR,TERM, TERM))
+	| NOT TERM 						(Program.OprUnary(Program.NOT, TERM))
+	| TERM IMPLY TERM 				(Program.OprBinary(Program.IMPLY, TERM,TERM))
+	| TERM EQUAL TERM 				(Program.OprBinary(Program.DOUBLEIMPLY, TERM,TERM))
+	| TERM IF TERM COMMA TERM 		(Program.OprTernary(Program.IFTHENELSE,TERM,TERM,TERM))
+	| VAR 							(Program.Variable VAR)
+	| TRUE 							(Program.Constant true)
+	| FALSE 						(Program.Constant false)
+	| LPAREN TERM RPAREN 			(TERM)
