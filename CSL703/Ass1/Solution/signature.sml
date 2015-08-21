@@ -101,74 +101,120 @@ fun Mk(H_Table(h),T_Table(t),G,i:string,lo:Node,hi:Node): H*T*G*Node=
 ;
 
 fun App(H,T,G_Table(g),Program.AND,n1,n2)=
-	if (HashTable.inDomain g (n1,n2)) then (HashTable.lookup g (n1,n2),H,T,G_Table(g))
-	else if (CheckRoot(n1) andalso CheckRoot(n2)) then 
-		let
-			val u = GetBool(n1) andalso GetBool(n2);
-			val p = HashTable.insert g ((n1,n2),Node_Root(u));
-		in
-			(Node_Root(u),H,T,G_Table(g))
-		end 
-	else if (CheckRoot(n1) andalso CheckNode(n2)) then
-		if (GetBool(n1)) then 
+		if (HashTable.inDomain g (n1,n2)) then (HashTable.lookup g (n1,n2),H,T,G_Table(g))
+		else if (CheckRoot(n1) andalso CheckRoot(n2)) then 
 			let
-				val q = print "Bool value was true\n";
+				val u = GetBool(n1) andalso GetBool(n2);
+				val p = HashTable.insert g ((n1,n2),Node_Root(u));
 			in
+				(Node_Root(u),H,T,G_Table(g))
+			end 
+		else if (CheckRoot(n1) andalso CheckNode(n2)) then
+			if (GetBool(n1)) then 
+				let
+					val q = print "Bool value was true\n";
+				in
+					(n2,H,T,G_Table(g))		
+				end
+			else 
+				let
+					val r = "Bool value is false\n";
+				in
+					(n1,H,T,G_Table(g))
+				end
+		else if (CheckRoot(n2) andalso CheckNode(n1)) then
+			if (GetBool(n2)) then 
+				(n1,H,T,G_Table(g))		
+			else 
+				(n2,H,T,G_Table(g))
+		else if (var(n1)=var(n2)) then
+			let
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),GetLow(n2))
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),GetHigh(n2))
+				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
+				val addeding = HashTable.insert g1 ((n1,n2), D) 
+			in
+				(D,A,B,G_Table(g1))
+			end
+		else if (var(n1)<var(n2)) then
+			let
+				val d1 = print "in else if\n";
+				val d1 = print "string for n1 ";
+				val d1= print (StringEquiv(n1));
+				val d1 =print "\n";
+				val d1 = print "string for n2 ";
+				val d1= print (StringEquiv(n2));
+				val d1 =print "\n";
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),n2)
+				val d1 = print "string for app1 ";
+				val d1= print (StringEquiv(app1));
+				val d1 =print "\n";
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),n2)
+				val d1 = print "string for app5 ";
+				val d1= print (StringEquiv(app5));
+				val d1 =print "\n";
+				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
+				val d1 = print "made\n";
+				val addeding = HashTable.insert g1 ((n1,n2), D) 
+			in
+				(D,A,B,G_Table(g1))
+			end
+		else
+			let
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,(n1),GetLow(n2))
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,(n1),GetHigh(n2))
+				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n2),app1,app5)
+				val addeding = HashTable.insert g1 ((n1,n2), D) 
+			in
+				(D,A,B,G_Table(g1))
+			end
+	|App(H,T,G_Table(g),Program.OR,n1,n2)=
+		if (HashTable.inDomain g (n1,n2)) then (HashTable.lookup g (n1,n2),H,T,G_Table(g))
+		else if (CheckRoot(n1) andalso CheckRoot(n2)) then 
+			let
+				val u = GetBool(n1) orelse GetBool(n2);
+				val p = HashTable.insert g ((n1,n2),Node_Root(u));
+			in
+				(Node_Root(u),H,T,G_Table(g))
+			end 
+		else if (CheckRoot(n1) andalso CheckNode(n2)) then
+			if (GetBool(n1)) then 
+				(n1,H,T,G_Table(g))		
+			else 
+				(n2,H,T,G_Table(g))
+		else if (CheckRoot(n2) andalso CheckNode(n1)) then
+			if (GetBool(n2)) then 
 				(n2,H,T,G_Table(g))		
-			end
-		else 
-			let
-				val r = "Bool value is false\n";
-			in
+			else 
 				(n1,H,T,G_Table(g))
+		else if (var(n1)=var(n2)) then
+			let
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),GetLow(n2))
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),GetHigh(n2))
+				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
+				val addeding = HashTable.insert g1 ((n1,n2), D) 
+			in
+				(D,A,B,G_Table(g1))
 			end
-	else if (CheckRoot(n2) andalso CheckNode(n1)) then
-		if (GetBool(n2)) then 
-			(n1,H,T,G_Table(g))		
-		else 
-			(n2,H,T,G_Table(g))
-	else if (var(n1)=var(n2)) then
-		let
-			val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),GetLow(n2))
-			val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),GetHigh(n2))
-			val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
-			val addeding = HashTable.insert g1 ((n1,n2), D) 
-		in
-			(D,A,B,G_Table(g1))
-		end
-	else if (var(n1)<var(n2)) then
-		let
-			val d1 = print "in else if\n";
-			val d1 = print "string for n1 ";
-			val d1= print (StringEquiv(n1));
-			val d1 =print "\n";
-			val d1 = print "string for n2 ";
-			val d1= print (StringEquiv(n2));
-			val d1 =print "\n";
-			val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),n2)
-			val d1 = print "string for app1 ";
-			val d1= print (StringEquiv(app1));
-			val d1 =print "\n";
-			val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),n2)
-			val d1 = print "string for app5 ";
-			val d1= print (StringEquiv(app5));
-			val d1 =print "\n";
-			val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
-			val d1 = print "made\n";
-			val addeding = HashTable.insert g1 ((n1,n2), D) 
-		in
-			(D,A,B,G_Table(g1))
-		end
-	else
-		let
-			val d1 = print "in else\n"
-			val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,(n1),GetLow(n2))
-			val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,(n1),GetHigh(n2))
-			val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n2),app1,app5)
-			val addeding = HashTable.insert g1 ((n1,n2), D) 
-		in
-			(D,A,B,G_Table(g1))
-		end
+		else if (var(n1)<var(n2)) then
+			let
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),n2)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),n2)
+				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
+				val addeding = HashTable.insert g1 ((n1,n2), D) 
+			in
+				(D,A,B,G_Table(g1))
+			end
+		else
+			let
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,(n1),GetLow(n2))
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,(n1),GetHigh(n2))
+				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n2),app1,app5)
+				val addeding = HashTable.insert g1 ((n1,n2), D) 
+			in
+				(D,A,B,G_Table(g1))
+			end
+	
 ;			
 
 
@@ -213,7 +259,7 @@ fun initG() =
 ;
 
 (*val q:Program.BoolExpr=Calc.parse_string("(x2*x1);");*)
-val q:Program.BoolExpr=Calc.parse_string("x1*(x2*x1*x3);");
+val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");
 
 MakeBDD(initH(),initT(),initG(),q);
 

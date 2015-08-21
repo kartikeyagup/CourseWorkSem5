@@ -1,10 +1,10 @@
 import random
 
-f=open("input4.txt","w")
+f=open("input5.txt","w")
 timegiven=5
-k = 2 # Papers in session
-p = 2 # Parallel sessions
-t = 4 # Time slots
+k = 10 # Papers in session
+p = 10 # Parallel sessions
+t = 10 # Time slots
 c = 0.7
 
 n= k*p*t

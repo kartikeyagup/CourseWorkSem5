@@ -84,7 +84,8 @@ Schedule::Schedule(std::string filename)
 
 float Schedule::GetHappiness(int *scheduleinp)
 {
-	float ans = (Sp.tp*(Sp.k)*(Sp.k-1))/2;
+	// float ans = (Sp.tp*(Sp.k)*(Sp.k-1))/2;
+	double ans=0;
 	for (int i=0; i<Sp.tp; i++)
 	{
 		for (int j=0; j<Sp.k; j++)
@@ -92,14 +93,63 @@ float Schedule::GetHappiness(int *scheduleinp)
 			for (int k=j+1; k<Sp.k; k++)
 			{
 				// std::cout <<"this will come: " << i*Sp.k+j <<"\t" << scheduleinp[i*Sp.k+j] <<" " << scheduleinp[i*Sp.tp+k]<<"\n";
-				ans -= Sp.d[scheduleinp[i*Sp.k+j]-1][scheduleinp[i*Sp.k+k]-1];
+				ans += (1-Sp.d[scheduleinp[i*Sp.k+j]-1][scheduleinp[i*Sp.k+k]-1]);
 				// std::cout <<"this wont come: " << j <<" " << k<<"\n";
 			}
 		}
 	}
 	// std::cout <<"done first part\n";
 	
-	float anst=0;
+	double anst=0;
+	for (int i=0; i<Sp.t; i++)
+	{
+		// for (int j=0;j<Sp.p;j++)
+		// {
+		// 	for (int k=0;k<Sp.k;k++)
+		// 	{
+		// 		for (int l=i*Sp.pk+(j+1)*Sp.k;l<(1+i)*Sp.pk;l++)
+		// 		{
+		// 			anst += Sp.d[scheduleinp[l]-1][scheduleinp[i*Sp.pk + j*Sp.k + k]-1];
+		// 		}
+		// 	}
+		// 	// for (int k=(1+i)*Sp.k;k<totalpapers;k++)
+		// 	// {
+		// 	// 	anst += Sp.d[scheduleinp[Sp.k*i+j]-1][scheduleinp[k]-1];
+		// 	// }
+		// }
+
+		for (int j=0; j<Sp.pk; j++)
+		{
+			for (int k=(Sp.k)*(1+j/Sp.p);k<Sp.pk; k++)
+			{
+				anst += Sp.d[scheduleinp[i*Sp.pk+j]-1][scheduleinp[i*Sp.pk+k]-1];
+			}
+		}		
+	}
+	anst *= Sp.c;
+	return ans+anst;
+}
+
+
+float Schedule::GetHappiness2(int *scheduleinp)
+{
+	// float ans = (Sp.tp*(Sp.k)*(Sp.k-1))/2;
+	double ans=0;
+	for (int i=0; i<Sp.tp; i++)
+	{
+		for (int j=0; j<Sp.k; j++)
+		{
+			for (int k=j+1; k<Sp.k; k++)
+			{
+				// std::cout <<"this will come: " << i*Sp.k+j <<"\t" << scheduleinp[i*Sp.k+j] <<" " << scheduleinp[i*Sp.tp+k]<<"\n";
+				ans += (1-Sp.d[scheduleinp[i*Sp.k+j]-1][scheduleinp[i*Sp.k+k]-1]);
+				// std::cout <<"this wont come: " << j <<" " << k<<"\n";
+			}
+		}
+	}
+	// std::cout <<"done first part\n";
+	
+	double anst=0;
 	for (int i=0; i<Sp.t; i++)
 	{
 		for (int j=0;j<Sp.p;j++)
@@ -108,18 +158,19 @@ float Schedule::GetHappiness(int *scheduleinp)
 			{
 				for (int l=i*Sp.pk+(j+1)*Sp.k;l<(1+i)*Sp.pk;l++)
 				{
-					anst += Sp.d[scheduleinp[l]-1][scheduleinp[i*Sp.pk + j*Sp.k + k]-1];		
+					anst += Sp.d[scheduleinp[l]-1][scheduleinp[i*Sp.pk + j*Sp.k + k]-1];
 				}
 			}
 			// for (int k=(1+i)*Sp.k;k<totalpapers;k++)
 			// {
 			// 	anst += Sp.d[scheduleinp[Sp.k*i+j]-1][scheduleinp[k]-1];
 			// }
-		}
+		}	
 	}
 	anst *= Sp.c;
 	return ans+anst;
 }
+
 
 void Schedule::ShowSchedule()
 {
@@ -184,11 +235,9 @@ void Schedule::NormalDFS()
 			presenthp=presentgoodness;
 		}
 	}
-	std::cout << presentgoodness << " ";
-	ShowSchedule();
 }
 
-void Schedule::SwapIJ(int i,int j)
+double Schedule::SwapIJ(int i,int j)
 {
 	if (i/Sp.k != j/Sp.k)
 	{
@@ -219,120 +268,232 @@ void Schedule::SwapIJ(int i,int j)
 			}
 
 			// std::cout << pscore<<"\t"<<GetHappiness(schedule)<<"\n";
-			if (pscore != GetHappiness(schedule))
-			{
-				std::cout << "SWAPPING SCORE CALC INCORRECT FOR SAME\t" << GetHappiness(schedule)-pscore <<"\n";
-			}
+			// if (pscore != GetHappiness(schedule))
+			// {
+			// 	std::cout << "SWAPPING SCORE CALC INCORRECT FOR SAME\t" << GetHappiness(schedule)<<"\t"<<GetHappiness2(schedule) <<"\n";
+			// }
 
-			if (pscore<presentgoodness)
-			{
+			// if (pscore<presentgoodness)
+			// {
 				temp = schedule[i];
 				schedule[i] = schedule[j];
 				schedule[j] = temp;
-			}
-			else
-			{
-				std::cout << presentgoodness << " ";
-				ShowSchedule();
-				presentgoodness=pscore;
-			}
+				return pscore;
+			// }
+			// else
+			// {
+			// 	std::cout << presentgoodness << " ";
+			// 	ShowSchedule();
+			// 	presentgoodness=pscore;
+			// }
 
 		}
 		else
 		{
-			// Different time slot swapping
 			double pscore = presentgoodness;
-			int rowi = (i/Sp.pk)*Sp.pk;
-			int rowj = (j/Sp.pk)*Sp.pk;
 			for (int q=0; q<Sp.pk; q++)
 			{
 				if (q/Sp.k == (i%Sp.pk)/Sp.k)
 				{
-					pscore -= (1-Sp.d[schedule[i]-1][schedule[rowi+q]-1]);
+					pscore -= (1-Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) + q]-1]);
 				}
 				else
 				{
-					pscore -= Sp.c*Sp.d[schedule[i]-1][schedule[rowi+q]-1];
+					pscore -= Sp.c*Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) +q]-1];
 				}
+
 				if (q/Sp.k == (j%Sp.pk)/Sp.k)
 				{
-					pscore -= (1-Sp.d[schedule[j]-1][schedule[rowj+q]-1]);
+					pscore -= (1-Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) + q]-1]);
 				}
 				else
 				{
-					pscore -= Sp.c*Sp.d[schedule[j]-1][schedule[rowj+q]-1];
-				}				
+					pscore -= Sp.c*Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) +q]-1];
+				}
 			}
-			
-			int temp = schedule[i];
+
+			int t1 = schedule[i];
 			schedule[i] = schedule[j];
-			schedule[j] = temp;
-			
-			temp= rowi;
-			rowi = rowj;
-			rowj = temp;
+			schedule[j] = t1;
 
-			for (int q=0; q<Sp.pk; q++)
+			for (int q=0; q<Sp.pk ; q++)
 			{
 				if (q/Sp.k == (i%Sp.pk)/Sp.k)
 				{
-					pscore += (1-Sp.d[schedule[i]-1][schedule[rowi+q]-1]);
+					pscore += (1-Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) + q]-1]);
 				}
 				else
 				{
-					pscore += Sp.c*Sp.d[schedule[i]-1][schedule[rowi+q]-1];
+					pscore += Sp.c*Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) +q]-1];
 				}
+
 				if (q/Sp.k == (j%Sp.pk)/Sp.k)
 				{
-					pscore += (1-Sp.d[schedule[j]-1][schedule[rowj+q]-1]);
+					pscore += (1-Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) + q]-1]);
 				}
 				else
 				{
-					pscore += Sp.c*Sp.d[schedule[j]-1][schedule[rowj+q]-1];
-				}				
-			}
-			// std::cout << pscore<<"\t"<<GetHappiness(schedule)<<"\n";			
-			if (pscore != GetHappiness(schedule))
-			{
-				std::cout << "SWAPPING SCORE CALC INCORRECT FOR SEAPARATE\t" << GetHappiness(schedule)-pscore <<"\n";
-			}
-			else
-			{
-				std::cout << "SWAPPING correct from separate\n";
+					pscore += Sp.c*Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) +q]-1];
+				}	
 			}
 
-			if (pscore<presentgoodness)
-			{
-				temp = schedule[i];
+			// if (pscore != GetHappiness(schedule))
+			// {
+			// 	std::cout <<" NOT MATCHING " << pscore << "\t" << GetHappiness(schedule) <<"\n"; 
+			// }
+			// // Different time slot swapping
+			// double pscore = presentgoodness;
+			// int rowi = (i/Sp.pk)*Sp.pk;
+			// int rowj = (j/Sp.pk)*Sp.pk;
+			// for (int q=0; q<Sp.pk; q++)
+			// {
+			// 	if (q/Sp.k == (i%Sp.pk)/Sp.k)
+			// 	{
+			// 		pscore -= (1-Sp.d[schedule[i]-1][schedule[rowi+q]-1]);
+			// 	}
+			// 	else
+			// 	{
+			// 		pscore -= Sp.c*Sp.d[schedule[i]-1][schedule[rowi+q]-1];
+			// 	}
+
+			// 	if (q/Sp.k == (j%Sp.pk)/Sp.k)
+			// 	{
+			// 		pscore -= (1-Sp.d[schedule[j]-1][schedule[rowj+q]-1]);
+			// 	}
+			// 	else
+			// 	{
+			// 		pscore -= Sp.c*Sp.d[schedule[j]-1][schedule[rowj+q]-1];
+			// 	}				
+			// }
+			
+			// int temp = schedule[i];
+			// schedule[i] = schedule[j];
+			// schedule[j] = temp;
+			
+			// temp= rowi;
+			// rowi = rowj;
+			// rowj = temp;
+
+			// for (int q=0; q<Sp.pk; q++)
+			// {
+			// 	if (q/Sp.k == (i%Sp.pk)/Sp.k)
+			// 	{
+			// 		pscore += (1-Sp.d[schedule[i]-1][schedule[rowi+q]-1]);
+			// 	}
+			// 	else
+			// 	{
+			// 		pscore += Sp.c*Sp.d[schedule[i]-1][schedule[rowi+q]-1];
+			// 	}
+
+			// 	if (q/Sp.k == (j%Sp.pk)/Sp.k)
+			// 	{
+			// 		pscore += (1-Sp.d[schedule[j]-1][schedule[rowj+q]-1]);
+			// 	}
+			// 	else
+			// 	{
+			// 		pscore += Sp.c*Sp.d[schedule[j]-1][schedule[rowj+q]-1];
+			// 	}				
+			// }
+			// // std::cout << pscore<<"\t"<<GetHappiness(schedule)<<"\n";			
+			// if (pscore != GetHappiness(schedule))
+			// {
+				// std::cout << "SWAPPING SCORE CALC \t" << GetHappiness(schedule)<<"\t" << pscore <<"\n";
+			// }
+			// else
+			// {
+			// 	std::cout << "SWAPPING correct from separate\n";
+			// }
+
+			// if (pscore<presentgoodness)
+			// {
+				int temp = schedule[i];
 				schedule[i] = schedule[j];
 				schedule[j] = temp;
-			}
-			else
-			{
-				std::cout << presentgoodness << " ";
-				ShowSchedule();
-				presentgoodness=GetHappiness(schedule);
-			}		
+				return pscore;
+			// }
+			// else
+			// {
+			// 	std::cout << presentgoodness << " ";
+			// 	ShowSchedule();
+			// 	presentgoodness=GetHappiness(schedule);
+			// }		
 		}
 	}
 }
 
 void Schedule::RandomMovement()
 {
+	std::cout << "Starting random movements\n";
 	time_t time_start,presenttime;
 	time (&time_start);
 	int pos1,pos2;
+	double res;
+	std::cout <<"starting happiness value: " << presentgoodness<<"\n";
 	while (true)
 	{
 		pos1 = rand() % totalpapers;
 		pos2 = rand() % totalpapers;
-		SwapIJ(pos1,pos2);
+		res=SwapIJ(pos1,pos2);
+		if (res>presentgoodness)
+		{
+			int temp= schedule[pos1];
+			schedule[pos1]=schedule[pos2];
+			schedule[pos2]=temp;
+			presentgoodness=res;
+			// std::cout << "Happiness increased to: " << presentgoodness<<"\n";
+		}
 		time (&presenttime);
 		if (difftime(presenttime,time_start) > processtime + 5)
 		{
 			break;
 		}
 	}
+}
+
+void Schedule::LocalSearch()
+{
+	time_t time_start,presenttime;
+	time (&time_start);
+	// int pos1,pos2;
+	double resbestsofar,tempres;
+	int bestpos1,bestpos2,tempst;
+	while (true)
+	{
+		bestpos1=0;
+		bestpos2=0;
+		resbestsofar=presentgoodness;
+		for (int pos1=0; pos1<totalpapers;pos1++)
+		{
+			for (int pos2=pos1+1;pos2<totalpapers; pos2++)
+			{
+				tempres = SwapIJ(pos1,pos2);
+				if (tempres>resbestsofar)
+				{
+					resbestsofar=tempres;
+					bestpos1=pos1;
+					bestpos2=pos2;
+				}
+			}
+		}
+		tempst= schedule[bestpos1];
+		schedule[bestpos1]=schedule[bestpos2];
+		schedule[bestpos2]=tempst;
+		if (resbestsofar>presentgoodness)
+		{
+			std::cout << "Improved to: " << resbestsofar <<"\n";
+		}
+		presentgoodness=resbestsofar;
+		time (&presenttime);
+		if (difftime(presenttime,time_start) > processtime + 5)
+		{
+			break;
+		}	
+	}
+}
+
+void Schedule::ShowScore()
+{
+	std::cout << "Final happiness: " << presentgoodness <<"\n";
 }
 
 int main(int argc, char *argv[])
@@ -344,6 +505,9 @@ int main(int argc, char *argv[])
 	Schedule n1 = Schedule(fname);
 	// n1.ShowSchedule();
 	// n1.NormalDFS();
-	n1.RandomMovement();
+	// n1.RandomMovement();
+	n1.LocalSearch();
+	n1.ShowScore();
+	n1.ShowSchedule();
 	return 0;
 }

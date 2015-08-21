@@ -32,10 +32,13 @@ public:
 	Schedule(std::string);
 
 	float GetHappiness(int *);
+	float GetHappiness2(int *);
 	void ShowSchedule();
 	void NormalDFS();
 	void RandomMovement();
-	void SwapIJ(int,int);
+	void LocalSearch();
+	double SwapIJ(int,int);
+	void ShowScore();
 
 private:
 	double processtime;
