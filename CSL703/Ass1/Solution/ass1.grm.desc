@@ -1,0 +1,419 @@
+30 shift/reduce conflicts
+
+error:  state 12: shift/reduce conflict (shift IF, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift EQUAL, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift IMPLY, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift AND, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift OR, reduce by rule 3)
+error:  state 15: shift/reduce conflict (shift IF, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift EQUAL, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift IMPLY, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift AND, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift OR, reduce by rule 5)
+error:  state 16: shift/reduce conflict (shift IF, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift EQUAL, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift IMPLY, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift AND, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift OR, reduce by rule 4)
+error:  state 17: shift/reduce conflict (shift IF, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift EQUAL, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift IMPLY, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift AND, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift OR, reduce by rule 1)
+error:  state 18: shift/reduce conflict (shift IF, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift EQUAL, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift IMPLY, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift AND, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift OR, reduce by rule 2)
+error:  state 21: shift/reduce conflict (shift IF, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift EQUAL, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift IMPLY, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift AND, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift OR, reduce by rule 6)
+
+state 0:
+
+	PROG : . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	PROG	goto 22
+	TERM	goto 1
+
+	.	error
+
+
+state 1:
+
+	PROG : TERM .  (reduce by rule 0)
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 0
+
+
+state 2:
+
+	TERM : NOT . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 12
+
+	.	error
+
+
+state 3:
+
+	TERM : LPAREN . TERM RPAREN 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 13
+
+	.	error
+
+
+state 4:
+
+	TERM : FALSE .  (reduce by rule 9)
+
+
+
+	.	reduce by rule 9
+
+
+state 5:
+
+	TERM : TRUE .  (reduce by rule 8)
+
+
+
+	.	reduce by rule 8
+
+
+state 6:
+
+	TERM : VAR .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 7:
+
+	TERM : TERM IF . TERM COMMA TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 14
+
+	.	error
+
+
+state 8:
+
+	TERM : TERM EQUAL . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 15
+
+	.	error
+
+
+state 9:
+
+	TERM : TERM IMPLY . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 16
+
+	.	error
+
+
+state 10:
+
+	TERM : TERM AND . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 17
+
+	.	error
+
+
+state 11:
+
+	TERM : TERM OR . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 18
+
+	.	error
+
+error:  state 12: shift/reduce conflict (shift IF, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift EQUAL, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift IMPLY, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift AND, reduce by rule 3)
+error:  state 12: shift/reduce conflict (shift OR, reduce by rule 3)
+
+state 12:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : NOT TERM .  (reduce by rule 3)
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 3
+
+
+state 13:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+	TERM : LPAREN TERM . RPAREN 
+
+	RPAREN	shift 19
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	error
+
+
+state 14:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+	TERM : TERM IF TERM . COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+	COMMA	shift 20
+
+
+	.	error
+
+error:  state 15: shift/reduce conflict (shift IF, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift EQUAL, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift IMPLY, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift AND, reduce by rule 5)
+error:  state 15: shift/reduce conflict (shift OR, reduce by rule 5)
+
+state 15:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM EQUAL TERM .  (reduce by rule 5)
+	TERM : TERM . IF TERM COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 5
+
+error:  state 16: shift/reduce conflict (shift IF, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift EQUAL, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift IMPLY, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift AND, reduce by rule 4)
+error:  state 16: shift/reduce conflict (shift OR, reduce by rule 4)
+
+state 16:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM IMPLY TERM .  (reduce by rule 4)
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 4
+
+error:  state 17: shift/reduce conflict (shift IF, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift EQUAL, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift IMPLY, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift AND, reduce by rule 1)
+error:  state 17: shift/reduce conflict (shift OR, reduce by rule 1)
+
+state 17:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM AND TERM .  (reduce by rule 1)
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 1
+
+error:  state 18: shift/reduce conflict (shift IF, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift EQUAL, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift IMPLY, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift AND, reduce by rule 2)
+error:  state 18: shift/reduce conflict (shift OR, reduce by rule 2)
+
+state 18:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM OR TERM .  (reduce by rule 2)
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 2
+
+
+state 19:
+
+	TERM : LPAREN TERM RPAREN .  (reduce by rule 10)
+
+
+
+	.	reduce by rule 10
+
+
+state 20:
+
+	TERM : TERM IF TERM COMMA . TERM 
+
+	VAR	shift 6
+	TRUE	shift 5
+	FALSE	shift 4
+	LPAREN	shift 3
+	NOT	shift 2
+
+	TERM	goto 21
+
+	.	error
+
+error:  state 21: shift/reduce conflict (shift IF, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift EQUAL, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift IMPLY, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift AND, reduce by rule 6)
+error:  state 21: shift/reduce conflict (shift OR, reduce by rule 6)
+
+state 21:
+
+	TERM : TERM . AND TERM 
+	TERM : TERM . OR TERM 
+	TERM : TERM . IMPLY TERM 
+	TERM : TERM . EQUAL TERM 
+	TERM : TERM . IF TERM COMMA TERM 
+	TERM : TERM IF TERM COMMA TERM .  (reduce by rule 6)
+
+	OR	shift 11
+	AND	shift 10
+	IMPLY	shift 9
+	EQUAL	shift 8
+	IF	shift 7
+
+
+	.	reduce by rule 6
+
+
+state 22:
+
+
+	EOF	accept
+	SEMI	accept
+
+
+	.	error
+
+54 of 117 action table entries left after compaction
+10 goto table entries

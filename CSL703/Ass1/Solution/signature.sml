@@ -258,11 +258,29 @@ fun initG() =
 	end
 ;
 
+fun GenerateString(Node_Root(x)) = ""
+	|GenerateString(Node_Node(a,b,c)) = concat[concat([a," -> ", var(b)]),";",  concat([a, " -> ", var(c)]) , ";",GenerateString(b),GenerateString(c)]
+;
+
+fun MakeTotalString(l)= concat["digraph G { ", GenerateString(l) , "}"];
+
+fun GetNode(_,_,_,x)=x;
+
 (*val q:Program.BoolExpr=Calc.parse_string("(x2*x1);");*)
 val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");
 
-MakeBDD(initH(),initT(),initG(),q);
+val writestream = TextIO.openOut "test.dot";
+(*TextIO.output(writestream, "This is a message to write to your stream.");*)
 
+
+
+val res =GetNode(MakeBDD(initH(),initT(),initG(),q));
+
+val strout= MakeTotalString(res);
+
+TextIO.output(writestream,strout);
+
+TextIO.closeOut(writestream);
 (*val ht : (string, int) HashTable.hash_table = HashTable.mkTable(HashString.hashString, op=)(17, Domain);*)
 
 (*val ht : (Node, (string*Node*Node)) HashTable.hash_table = HashTable.mkTable(HashingNode, NodeEqual)(17, Domain);*)

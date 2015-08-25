@@ -247,8 +247,8 @@ double Schedule::SwapIJ(int i,int j)
 			double pscore = presentgoodness;
 			for (int q=0; q<Sp.k; q++)
 			{
-				pscore -= (1-Sp.d[schedule[i]-1][schedule[Sp.k*(i/Sp.k) + q]-1]);
-				pscore -= (1-Sp.d[schedule[j]-1][schedule[Sp.k*(j/Sp.k) + q]-1]);
+				pscore += (Sp.d[schedule[i]-1][schedule[Sp.k*(i/Sp.k) + q]-1]);
+				pscore += (Sp.d[schedule[j]-1][schedule[Sp.k*(j/Sp.k) + q]-1]);
 				
 				pscore -= Sp.c*Sp.d[schedule[i]-1][schedule[Sp.k*(j/Sp.k) +q] -1];
 				pscore -= Sp.c*Sp.d[schedule[j]-1][schedule[Sp.k*(i/Sp.k) +q] -1];
@@ -260,8 +260,8 @@ double Schedule::SwapIJ(int i,int j)
 
 			for (int q=0; q<Sp.k;q++)
 			{	
-				pscore += (1-Sp.d[schedule[i]-1][schedule[Sp.k*(i/Sp.k) + q]-1]);
-				pscore += (1-Sp.d[schedule[j]-1][schedule[Sp.k*(j/Sp.k) + q]-1]);
+				pscore -= (Sp.d[schedule[i]-1][schedule[Sp.k*(i/Sp.k) + q]-1]);
+				pscore -= (Sp.d[schedule[j]-1][schedule[Sp.k*(j/Sp.k) + q]-1]);
 				
 				pscore += Sp.c*Sp.d[schedule[i]-1][schedule[Sp.k*(j/Sp.k) +q] -1];
 				pscore += Sp.c*Sp.d[schedule[j]-1][schedule[Sp.k*(i/Sp.k) +q] -1];
@@ -295,7 +295,7 @@ double Schedule::SwapIJ(int i,int j)
 			{
 				if (q/Sp.k == (i%Sp.pk)/Sp.k)
 				{
-					pscore -= (1-Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) + q]-1]);
+					pscore += (Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) + q]-1]);
 				}
 				else
 				{
@@ -304,7 +304,7 @@ double Schedule::SwapIJ(int i,int j)
 
 				if (q/Sp.k == (j%Sp.pk)/Sp.k)
 				{
-					pscore -= (1-Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) + q]-1]);
+					pscore += (Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) + q]-1]);
 				}
 				else
 				{
@@ -320,7 +320,7 @@ double Schedule::SwapIJ(int i,int j)
 			{
 				if (q/Sp.k == (i%Sp.pk)/Sp.k)
 				{
-					pscore += (1-Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) + q]-1]);
+					pscore -= (Sp.d[schedule[i]-1][schedule[Sp.pk*(i/Sp.pk) + q]-1]);
 				}
 				else
 				{
@@ -329,7 +329,7 @@ double Schedule::SwapIJ(int i,int j)
 
 				if (q/Sp.k == (j%Sp.pk)/Sp.k)
 				{
-					pscore += (1-Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) + q]-1]);
+					pscore -= (Sp.d[schedule[j]-1][schedule[Sp.pk*(j/Sp.pk) + q]-1]);
 				}
 				else
 				{
@@ -505,8 +505,8 @@ int main(int argc, char *argv[])
 	Schedule n1 = Schedule(fname);
 	// n1.ShowSchedule();
 	// n1.NormalDFS();
-	// n1.RandomMovement();
-	n1.LocalSearch();
+	n1.RandomMovement();
+	// n1.LocalSearch();
 	n1.ShowScore();
 	n1.ShowSchedule();
 	return 0;
