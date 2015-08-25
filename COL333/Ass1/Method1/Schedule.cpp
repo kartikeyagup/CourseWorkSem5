@@ -1,5 +1,11 @@
 #include "Schedule.h"
 
+int csofar;
+float overallbest;
+int *schedulebest;
+long biglimofpapers;
+time_t time_start;
+
 Schedule::Schedule()
 {
 	Sp.k=0;
@@ -8,6 +14,17 @@ Schedule::Schedule()
 	Sp.c=0;
 	Sp.d=new double*[1];
 	schedule = new int[0];
+}
+
+void randomarray(int* arr,int n)
+{
+	for(int i=0;i<n;i++)
+	{
+		int pos=rand()%((n-1)-i+1) +i;
+		int temp=arr[pos];
+		arr[pos]=arr[i];
+		arr[i]=temp;
+	}	
 }
 
 Schedule::Schedule(std::string filename)
@@ -78,7 +95,7 @@ Schedule::Schedule(std::string filename)
     {
     	schedule[i]=i+1;
     }
-    std::cout << "created schedule\n";
+    // std::cout << "created schedule\n";
     presentgoodness = GetHappiness(schedule);
 }
 
@@ -177,7 +194,7 @@ void Schedule::ShowSchedule()
 	// TODO: Remove the stray vertical line
 	for (int i=0; i< Sp.t;i++)
 	{
-		for (int j=0; j< Sp.p; j++)
+		for (int j=0; j< Sp.p -1; j++)
 		{
 			for (int k=0; k<Sp.k; k++)
 			{
@@ -185,6 +202,11 @@ void Schedule::ShowSchedule()
 			}
 			std::cout <<"| ";
 		}
+		for (int k=0; k<Sp.k; k++)
+		{
+			std::cout << schedule[i*Sp.pk + (Sp.p -1 )*Sp.k + k] <<" ";
+		}
+		
 		std::cout <<"\n";
 	}
 }
@@ -423,12 +445,14 @@ double Schedule::SwapIJ(int i,int j)
 
 void Schedule::RandomMovement()
 {
-	std::cout << "Starting random movements\n";
-	time_t time_start,presenttime;
-	time (&time_start);
+	// std::cout << "Starting random movements\n";
+	time_t presenttime;
 	int pos1,pos2;
+	schedulebest=new int[totalpapers];
+	overallbest=0;
+	biglimofpapers = (totalpapers*(totalpapers+1))/2;
 	double res;
-	std::cout <<"starting happiness value: " << presentgoodness<<"\n";
+	// std::cout <<"starting happiness value: " << presentgoodness<<"\n";
 	while (true)
 	{
 		pos1 = rand() % totalpapers;
@@ -440,20 +464,51 @@ void Schedule::RandomMovement()
 			schedule[pos1]=schedule[pos2];
 			schedule[pos2]=temp;
 			presentgoodness=res;
+			csofar=0;
 			// std::cout << "Happiness increased to: " << presentgoodness<<"\n";
 		}
+		else
+		{
+			csofar+=1;
+			if (csofar==biglimofpapers)
+			{
+				csofar=0;
+				if (presentgoodness>overallbest)
+				{
+					overallbest=presentgoodness;
+					// std::cout << "Schedule reset to: " << presentgoodness <<"\n";
+					for (int i=0; i< totalpapers; i++)
+					{
+						schedulebest[i]=schedule[i];
+					}
+				}
+				float tgoodness=presentgoodness;
+				randomarray(schedule,totalpapers);
+				presentgoodness=GetHappiness(schedule);
+				// while(presentgoodness<tgoodness)
+				// {
+				// 	randomarray(schedule,totalpapers);
+				// 	presentgoodness=GetHappiness(schedule);
+				// 	std::cout << "Stuck in while with: " << presentgoodness << " while lim set is: " << tgoodness<<"\n";
+				// }
+			}
+		}
 		time (&presenttime);
-		if (difftime(presenttime,time_start) > processtime + 5)
+		if (difftime(presenttime,time_start) > processtime + 2)
 		{
 			break;
 		}
+	}
+	if (presentgoodness<overallbest)
+	{
+		schedule=schedulebest;
+		presentgoodness= overallbest;
 	}
 }
 
 void Schedule::LocalSearch()
 {
-	time_t time_start,presenttime;
-	time (&time_start);
+	time_t presenttime;
 	// int pos1,pos2;
 	double resbestsofar,tempres;
 	int bestpos1,bestpos2,tempst;
@@ -498,16 +553,17 @@ void Schedule::ShowScore()
 
 int main(int argc, char *argv[])
 {
+	time (&time_start);
 	srand(time(NULL));
-
+	csofar=0;
 	char* fname= argv[1];
-	std::cout <<"fname is: "<<fname<<"\n";
+	// std::cout <<"fname is: "<<fname<<"\n";
 	Schedule n1 = Schedule(fname);
 	// n1.ShowSchedule();
 	// n1.NormalDFS();
 	n1.RandomMovement();
 	// n1.LocalSearch();
-	n1.ShowScore();
+	// n1.ShowScore();
 	n1.ShowSchedule();
 	return 0;
 }
