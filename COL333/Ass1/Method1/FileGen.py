@@ -1,11 +1,11 @@
 import random
 
-f=open("input5.txt","w")
+f=open("biginput.txt","w")
 timegiven=5
-k = 10 # Papers in session
-p = 10 # Parallel sessions
-t = 10 # Time slots
-c = 0.7
+k = 20 # Papers in session
+p = 20 # Parallel sessions
+t = 30 # Time slots
+c = 0.9
 
 n= k*p*t
 a=[[0 for i in xrange(n)] for i in xrange(n)]

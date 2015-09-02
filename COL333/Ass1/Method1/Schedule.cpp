@@ -5,6 +5,7 @@ float overallbest;
 int *schedulebest;
 long biglimofpapers;
 time_t time_start;
+int temp;
 
 Schedule::Schedule()
 {
@@ -21,7 +22,7 @@ void randomarray(int* arr,int n)
 	for(int i=0;i<n;i++)
 	{
 		int pos=rand()%((n-1)-i+1) +i;
-		int temp=arr[pos];
+		temp=arr[pos];
 		arr[pos]=arr[i];
 		arr[i]=temp;
 	}	
@@ -96,7 +97,7 @@ Schedule::Schedule(std::string filename)
     	schedule[i]=i+1;
     }
     // std::cout << "created schedule\n";
-    presentgoodness = GetHappiness(schedule);
+    presentgoodness = GetHappiness2(schedule);
 }
 
 float Schedule::GetHappiness(int *scheduleinp)
@@ -198,13 +199,13 @@ void Schedule::ShowSchedule()
 		{
 			for (int k=0; k<Sp.k; k++)
 			{
-				std::cout << schedule[i*Sp.pk + j*Sp.k + k] <<" ";
+				std::cout << schedule[i*Sp.pk + j*Sp.k + k] -1 <<" ";
 			}
 			std::cout <<"| ";
 		}
 		for (int k=0; k<Sp.k; k++)
 		{
-			std::cout << schedule[i*Sp.pk + (Sp.p -1 )*Sp.k + k] <<" ";
+			std::cout << schedule[i*Sp.pk + (Sp.p -1 )*Sp.k + k] -1 <<" ";
 		}
 		
 		std::cout <<"\n";
@@ -276,7 +277,7 @@ double Schedule::SwapIJ(int i,int j)
 				pscore -= Sp.c*Sp.d[schedule[j]-1][schedule[Sp.k*(i/Sp.k) +q] -1];
 			}
 
-			int temp = schedule[i];
+			temp = schedule[i];
 			schedule[i] = schedule[j];
 			schedule[j]= temp;
 
@@ -334,9 +335,9 @@ double Schedule::SwapIJ(int i,int j)
 				}
 			}
 
-			int t1 = schedule[i];
+			temp = schedule[i];
 			schedule[i] = schedule[j];
-			schedule[j] = t1;
+			schedule[j] = temp;
 
 			for (int q=0; q<Sp.pk ; q++)
 			{
@@ -428,7 +429,7 @@ double Schedule::SwapIJ(int i,int j)
 
 			// if (pscore<presentgoodness)
 			// {
-				int temp = schedule[i];
+				temp = schedule[i];
 				schedule[i] = schedule[j];
 				schedule[j] = temp;
 				return pscore;
@@ -453,6 +454,9 @@ void Schedule::RandomMovement()
 	biglimofpapers = (totalpapers*(totalpapers+1))/2;
 	double res;
 	// std::cout <<"starting happiness value: " << presentgoodness<<"\n";
+	// randomarray(schedule,totalpapers);
+	// presentgoodness = GetHappiness(schedule);
+	// std::cout <<"starting happiness value: " << presentgoodness<<"\n";
 	while (true)
 	{
 		pos1 = rand() % totalpapers;
@@ -460,7 +464,7 @@ void Schedule::RandomMovement()
 		res=SwapIJ(pos1,pos2);
 		if (res>presentgoodness)
 		{
-			int temp= schedule[pos1];
+			temp= schedule[pos1];
 			schedule[pos1]=schedule[pos2];
 			schedule[pos2]=temp;
 			presentgoodness=res;
@@ -484,7 +488,7 @@ void Schedule::RandomMovement()
 				}
 				float tgoodness=presentgoodness;
 				randomarray(schedule,totalpapers);
-				presentgoodness=GetHappiness(schedule);
+				presentgoodness=GetHappiness2(schedule);
 				// while(presentgoodness<tgoodness)
 				// {
 				// 	randomarray(schedule,totalpapers);
@@ -494,7 +498,7 @@ void Schedule::RandomMovement()
 			}
 		}
 		time (&presenttime);
-		if (difftime(presenttime,time_start) > processtime + 2)
+		if (difftime(presenttime,time_start) > processtime - 2)
 		{
 			break;
 		}
@@ -566,4 +570,4 @@ int main(int argc, char *argv[])
 	// n1.ShowScore();
 	n1.ShowSchedule();
 	return 0;
-}
+} 	
