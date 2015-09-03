@@ -21,6 +21,10 @@ public:
 	void ShowPresent();
 	void Move(int,int,int,int);
 	void AddNew(char,int,int);
+	int GetNewScoreInsert(char,int,int);
+	int GetNewScoreMove(int,int,int,int);
+	bool GetValidMoveInsert(char,int,int);
+	bool GetValidMoveShift(int,int,int,int);
 
 private:
 	char **Board;

@@ -109,7 +109,6 @@ int Game::GetPresentScore()
 	return Pscore;
 }
 
-
 void Game::Move(int initx,int inity, int finx, int finy)
 {
 	// (initx)(inity) -> (finx)(finy)
@@ -123,6 +122,83 @@ void Game::AddNew(char nchar,int xpos, int ypos)
 	Board[xpos][ypos]=nchar;
 	// TODO: Put in Pscore change
 }
+
+int Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
+{
+	// Give the new score on inserting nchar at xpos,ypos but not making any change in the memory
+	return Pscore;
+}
+
+int Game::GetNewScoreMove(int prex,int prevy,int newx,int newy)
+{
+	// Give the new score on moving the tile from (prevxy,prevy) to (newx,newy) without making change in memory
+	return Pscore;
+}
+
+bool Game::GetValidMoveInsert(char newc,int posx,int posy)
+{
+	return (Board[posx][posy]!='-');
+}
+
+bool GetValidMoveShift(int prevx,int prevy,int newx,int newy)
+{
+	if (prevx==newx)
+	{
+		if (newy>prevy)
+		{
+			for(int i=prevy+1; i<newy; i++)
+			{
+				if (Board[prevx][i]!='-')
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		else if (prevy>newy)
+		{
+			for (int i=newy +1; i<prevy; i++)
+			{
+				if (Board[prevx][i]!='-')
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		// Moving to same point
+		return true;
+	}
+	else if (prevy==newy)
+	{
+		if (newx>prevx)
+		{
+			for (int i=prevx+1;i<newx; i++)
+			{
+				if (Board[i][prevy]!='-')
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		else if(prevx>newx)
+		{
+			for(int i=newx+1; i<prevx; i++)
+			{
+				if (Board[i][newy]!='-')
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		// Moving to same point
+		return true;
+	}
+	return false;
+}
+
 
 int main(int argc, char const *argv[])
 {
