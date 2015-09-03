@@ -1,6 +1,7 @@
 Control.Print.printDepth := 100;
 open HashString;
 
+exception InvalidInput;
 
 CM.make "sources.cm";
 
@@ -56,7 +57,7 @@ structure Bdd :> BDD=
 
 		fun HashingTriple(a,b,c) = HashString.hashString(String.concat([a,".",StringEquiv(b),".",StringEquiv(c)]));
 
-		fun CompareTriple((a,b,c),(d,e,f)) = (a=d) andalso NodeTupleEqual((b,c),(e,f));
+		fun CompareTriple((a,b,c),(d,e,f)) = (String.compare(a,d)=(EQUAL:order)) andalso NodeTupleEqual((b,c),(e,f));
 
 		fun CheckRoot(Node_Root(x))= true
 			|CheckRoot(Node_Node(_,_,_))=false
@@ -66,7 +67,9 @@ structure Bdd :> BDD=
 			|CheckNode(Node_Root(_))= false
 		;
 
-		fun GetBool(Node_Root(x))= x;
+		fun GetBool(Node_Root(x))= x
+			|GetBool(_) = raise InvalidInput
+		;
 
 		fun GetLow(Node_Node(a,b,c)) = b
 			|GetLow(Node_Root(a)) = Node_Root(a)
@@ -99,6 +102,8 @@ fun Mk(H_Table(h),T_Table(t),G,i:string,lo:Node,hi:Node): H*T*G*Node=
 			(H_Table(h),T_Table(t),G,n1)
 		end
 ;
+
+
 
 fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 		if (HashTable.inDomain g (n1,n2)) then (HashTable.lookup g (n1,n2),H,T,G_Table(g))
@@ -214,24 +219,41 @@ fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 			in
 				(D,A,B,G_Table(g1))
 			end
+	|App(_,_,_,_,_,_) = raise InvalidInput
 	
 ;			
 
+fun InvertBDD(Node_Root(false))=Node_Root(true)
+	|InvertBDD(Node_Root(true))=Node_Root(false)
+	|InvertBDD(Node_Node(x,y,z))=Node_Node(x,InvertBDD(y),InvertBDD(z))
+;
 
 fun MakeBDD(H:H,T:T,G:G,Program.Constant(x):Program.BoolExpr): H*T*G*Node=(H,T,G,Node_Root(x))
 	|MakeBDD(H,T,G,Program.Variable(x))=(H,T,G,Node_Node(x,Node_Root(false),Node_Root(true)))
 	|MakeBDD(H,T,G,Program.OprBinary(l1,y,z))= 
 		let
 			val (app1,app2,app3,app4) = MakeBDD(H,T,G,y);
-			val q = print "done for first\n";
+			(*val q = print "done for first\n";*)
 			val (app5,app6,app7,app8) = MakeBDD(app1,app2,app3,z);
-			val q = print "done for second\n";
+			(*val q = print "done for second\n";*)
 			val (app9,app10,app11,app12) = App(app5,app6,app7,l1,app4,app8)
 		in
 			(app10,app11,app12,app9)
 		end
-	|MakeBDD(H,T,G,Program.OprUnary(x,Program.Variable(y)))= 
-		(H,T,G,Node_Node(y,Node_Root(true),Node_Root(false)))
+	|MakeBDD(H,T,G,Program.OprUnary(x,y))= 
+		let
+			val (_,_,_,bddfory) = MakeBDD(H,T,G,y);
+		in
+			(H,T,G,InvertBDD(bddfory))
+		end
+	|MakeBDD(H,T,G,Program.OprTernary(x,ifs,thens,elses))=
+		let
+			val p1 = Program.OprBinary(Program.AND,ifs,thens);
+			val p2 = Program.OprBinary(Program.AND,Program.OprUnary(Program.NOT,ifs),elses);
+			val rearranged = Program.OprBinary(Program.OR,p1,p2);
+		in
+			MakeBDD(H,T,G,rearranged)
+		end
 ;
 
 fun initT() =
@@ -272,8 +294,6 @@ val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");
 val writestream = TextIO.openOut "test.dot";
 (*TextIO.output(writestream, "This is a message to write to your stream.");*)
 
-
-
 val res =GetNode(MakeBDD(initH(),initT(),initG(),q));
 
 val strout= MakeTotalString(res);
@@ -284,4 +304,3 @@ TextIO.closeOut(writestream);
 (*val ht : (string, int) HashTable.hash_table = HashTable.mkTable(HashString.hashString, op=)(17, Domain);*)
 
 (*val ht : (Node, (string*Node*Node)) HashTable.hash_table = HashTable.mkTable(HashingNode, NodeEqual)(17, Domain);*)
-

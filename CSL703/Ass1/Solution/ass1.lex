@@ -29,8 +29,6 @@ ws = [\ \t];
 "\~" 	 => (Tokens.NOT(!pos,!pos));
 ")"		 => (Tokens.RPAREN(!pos,!pos));
 "("		 => (Tokens.LPAREN(!pos,!pos));
-"=>"	 => (Tokens.IMPLY(!pos,!pos));
 ";"		 => (Tokens.SEMI(!pos,!pos));
-"="		 => (Tokens.EQUAL(!pos,!pos));
 "\."	 => (Tokens.DOT(!pos,!pos));
 "."      => (error ("ignoring bad character "^yytext,!pos,!pos); lex());

@@ -18,8 +18,6 @@
 	| OR
 	| AND
 	| NOT
-	| IMPLY
-	| EQUAL
 	| IF
 	| SEMI
 	| COMMA
@@ -42,8 +40,6 @@ PROG: TERM							(TERM)
 TERM: TERM AND TERM 				(Program.OprBinary(Program.AND,TERM1,TERM2))
 	| TERM OR TERM 					(Program.OprBinary(Program.OR,TERM1, TERM2))
 	| NOT TERM 						(Program.OprUnary(Program.NOT, TERM))
-	| TERM IMPLY TERM 				(Program.OprBinary(Program.IMPLY, TERM1,TERM2))
-	| TERM EQUAL TERM 				(Program.OprBinary(Program.DOUBLEIMPLY, TERM1,TERM2))
 	| TERM IF TERM COMMA TERM 		(Program.OprTernary(Program.IFTHENELSE,TERM1,TERM2,TERM3))
 	| VAR 							(Program.Variable VAR)
 	| TRUE 							(Program.Constant true)
