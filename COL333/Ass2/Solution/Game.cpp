@@ -140,7 +140,7 @@ bool Game::GetValidMoveInsert(char newc,int posx,int posy)
 	return (Board[posx][posy]!='-');
 }
 
-bool GetValidMoveShift(int prevx,int prevy,int newx,int newy)
+bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 {
 	if (prevx==newx)
 	{
