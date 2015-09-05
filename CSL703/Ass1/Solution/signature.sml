@@ -280,6 +280,38 @@ fun initG() =
 	end
 ;
 
+fun GetVarList(Program.Constant(x))=[]
+	|GetVarList(Program.Variable(x))=[x]
+	|GetVarList(Program.OprUnary(x,y))= GetVarList(y)
+	|GetVarList(Program.OprBinary(x,y,z))= GetVarList(y)@GetVarList(z)
+	|GetVarList(Program.OprTernary(x,y,z,w))= GetVarList(y)@GetVarList(z)@GetVarList(w)
+;
+
+fun contains(a,[])=0
+	|contains(a,x::xs)= if (a=x) then 1+ contains(a,xs) else contains(a,xs)
+;
+
+fun GetDistinctVariable([],p)=p
+	|GetDistinctVariable(x::xs,p)= if (contains(x,p)=0) then GetDistinctVariable(xs,p) else GetDistinctVariable(xs, x::p)
+;
+
+fun GetCountOfVariables(allvars,[])=[]
+	|GetCountOfVariables(allvars, x::xs)= (x,contains(x,allvars))::GetCountOfVariables(allvars,xs)
+;
+
+fun Compare((a,b),(c,d))=  b<d;
+
+fun SortVars(p)=
+	let
+		val varlist = GetVarList(p);
+		val distvars = GetDistinctVariable(varlist,[]);
+		val counts = GetCountOfVariables(varlist,distvars);
+	in
+		(*ListMergeSort.sort Compare counts*)
+		counts
+	end
+;
+
 fun GenerateString(Node_Root(x)) = ""
 	|GenerateString(Node_Node(a,b,c)) = concat[concat([a," -> ", var(b)]),";",  concat([a, " -> ", var(c)]) , ";",GenerateString(b),GenerateString(c)]
 ;
