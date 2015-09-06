@@ -9,6 +9,12 @@ ChaosNode::ChaosNode(Game* g,char c,float p,ChanceNode* par)
 	parent = par;
 }
 
+ChaosNode::~ChaosNode()
+{
+	delete game;
+	delete parent;
+}
+
 ChaosNode::ChaosNode(Game* g,char c,float p)
 {
 	game = g;
@@ -17,21 +23,47 @@ ChaosNode::ChaosNode(Game* g,char c,float p)
 	parent = NULL;
 }
 
-Game* ChaosNode::getgame(ChaosNode* a)
+Game* ChaosNode::getgame()
 {
-	return a->game;
+	return game;
 }
 
-float ChaosNode::getprobability(ChaosNode* a)
+float ChaosNode::getprobability()
 {
-	return a->probability;
+	return probability;
 }
 
-ChanceNode* ChaosNode::getparent(ChaosNode* a)
+char ChaosNode::getcolor()
 {
-	return a->parent;
+	return color;
 }
 
+ChanceNode* ChaosNode::getparent()
+{
+	return parent;
+}
+
+std::vector<OrderNode*> ChaosNode::getchildren()
+{
+	std::vector<OrderNode*> child_chaos;
+	for(int i=0;i<this->getgame()->GetDimension();i++)
+	{
+		for(int j=0;j<this->getgame()->GetDimension();j++)
+		{
+			if(this->getgame()->GetValidMoveInsert(getcolor(),i,j))
+			{
+				Game* dup_game = GetDuplicate(this->getgame());
+				dup_game->AddNew(this->getcolor(),i,j);
+				int score = this->getgame()->GetNewScoreInsert(this->getcolor(),i,j);
+				OrderNode* child = new OrderNode(dup_game,score,this);
+				child_chaos.push_back(child);
+				delete dup_game;
+				delete child;
+			}
+		}
+	}
+	return child_chaos;
+}
 
 OrderNode::OrderNode(Game* g,float u,ChaosNode* par)
 {
@@ -40,15 +72,51 @@ OrderNode::OrderNode(Game* g,float u,ChaosNode* par)
 	utility = u;
 }
 
-
-Game* OrderNode::getgame(OrderNode* a)
+OrderNode::~OrderNode()
 {
-	return a->game;
+	delete game;
+	delete parent;
 }
 
-ChaosNode* OrderNode::getparent(OrderNode* a)
+Game* OrderNode::getgame()
 {
-	return a->parent;
+	return game;
+}
+
+ChaosNode* OrderNode::getparent()
+{
+	return parent;
+}
+
+std::vector<ChanceNode*> OrderNode::getchildren()
+{
+	std::vector<ChanceNode*> v;
+	for(int i=0;i<this->getgame()->GetDimension();i++)
+	{
+		for(int j=0;j<this->getgame()->GetDimension();j++)
+		{
+			for(int k=0;k<this->getgame()->GetDimension();k++)
+			{
+				for(int l=0;l<this->getgame()->GetDimension();l++)
+				{
+					if(i!=k || j!=l)
+					{
+						if(this->getgame()->GetValidMoveShift(i,j,k,l))
+						{
+							Game* dup_game = GetDuplicate(this->getgame());
+							dup_game->Move(i,j,k,l);
+							int score = this->getgame()->GetNewScoreMove(i,j,k,l);
+							ChanceNode* child = new ChanceNode(dup_game,score,this);
+							v.push_back(child);
+							delete dup_game;
+							delete child;
+						}
+					}
+				}
+			}
+		}
+	}
+	return v;
 }
 
 ChanceNode::ChanceNode(Game* g, float u, OrderNode* par)
@@ -58,13 +126,31 @@ ChanceNode::ChanceNode(Game* g, float u, OrderNode* par)
 	parent = par;
 }
 
-Game* ChanceNode::getgame(ChanceNode* a)
+ChanceNode::~ChanceNode()
 {
-	return a->game;
+	delete game;
+	delete parent;
 }
 
-OrderNode* ChanceNode::getparent(ChanceNode* a)
+Game* ChanceNode::getgame()
 {
-	return a->parent;
+	return game;
+}
+
+OrderNode* ChanceNode::getparent()
+{
+	return parent;
+}
+
+std::vector<ChaosNode*> ChanceNode::getchildren()
+{
+	std::vector<ChaosNode*> v;
+	for(int i=0;i<this->getgame()->GetDimension();i++)
+	{
+		ChaosNode* child = new ChaosNode(this->getgame(),i+'A',(this->getgame()->GetProbabilities())[i],this);
+		v.push_back(child);
+		delete child;
+	}
+	return v;
 }
 
