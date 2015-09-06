@@ -102,6 +102,7 @@ while True:
 		updateCode(dct)
 	
 	elif (dct['purpose'] == 'update_only'):
+		print "In this"
 		aiProc.stdin.write(dct['payload'])
 
 
