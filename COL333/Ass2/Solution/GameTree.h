@@ -9,19 +9,24 @@ class ChanceNode;
 class ChaosNode
 {
 public:
-	ChaosNode(Game*,char,float);
+	ChaosNode(Game*,char,float,float);
 	~ChaosNode();
-	ChaosNode(Game*,char,float,ChanceNode*);
+	ChaosNode(Game*,char,float,float,ChanceNode*);
 	Game* getgame();
 	float getprobability();
+	float getutility();
 	ChanceNode* getparent();
 	std::vector<OrderNode*> getchildren();	//	to complete
 	char getcolor();
+	void setutility(float);
+	bool children_visited;
+
 
 private:
 	Game* game;
 	char color;
 	float probability;
+	float utility;
 	ChanceNode* parent;
 };
 
@@ -34,6 +39,9 @@ public:
 	Game* getgame();
 	std::vector<ChanceNode*> getchildren();		// to complete
 	ChaosNode* getparent();
+	float getutility();
+	void setutility(float);
+	bool children_visited;
 private:
 	Game* game;
 	ChaosNode* parent;
@@ -47,7 +55,11 @@ public:
 	~ChanceNode();
 	Game* getgame();
 	std::vector<ChaosNode*> getchildren();		// to complete
-	OrderNode* getparent();	
+	OrderNode* getparent();
+	float getutility();
+	void setutility(float);
+	bool children_visited;
+
 private:
 	Game* game;
 	float utility;
