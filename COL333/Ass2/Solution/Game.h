@@ -9,6 +9,7 @@
 bool CheckPalindrome(char*,int,int);
 bool CheckValidPalin(char*,int,int);
 int ScoreString(char*,int,int);
+int GetEntireScore(char*,int);
 
 class Game
 {
@@ -28,6 +29,7 @@ public:
 
 private:
 	char **Board;
+	char **BoardT;
 	bool TypePlayer; // 0 for Order, 1 for Chaos
 	int Dimension;
 	int Pscore;
