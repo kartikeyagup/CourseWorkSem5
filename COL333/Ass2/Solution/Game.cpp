@@ -164,21 +164,23 @@ int Game::GetPresentScore()
 void Game::Move(int initx,int inity, int finx, int finy)
 {
 	// (initx)(inity) -> (finx)(finy)
+	Pscore = GetNewScoreMove(initx,inity,finx,finy);
+
 	Board[finx][finy]=Board[initx][inity];
 	Board[initx][inity]='-';
 
 	BoardT[finy][finx]=BoardT[inity][initx];
 	BoardT[inity][initx]='-';
-	// TODO: Put in Pscore change
 }
 
 void Game::AddNew(char nchar,int xpos, int ypos)
 {
+	Pscore = GetNewScoreInsert(nchar,xpos,ypos);
+
 	Board[xpos][ypos]=nchar;
 	BoardT[ypos][xpos]=nchar;
 	NumCompleted +=1;
 	ColCompleted[nchar-'A']+=1;
-	// TODO: Put in Pscore change
 }
 
 int Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
