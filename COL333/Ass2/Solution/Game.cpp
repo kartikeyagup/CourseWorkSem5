@@ -86,7 +86,7 @@ Game::Game(int dim,bool type)
 	memset(ColCompleted,0,Dimension);
 }
 
-Game::Game(int dim,bool ty,char** board, char** boardt,int score,int numcomp,int* coloursfilled)
+Game::Game(int dim,bool ty,char** board, char** boardt,float score,int numcomp,int* coloursfilled)
 {
 	Dimension=dim;
 	TypePlayer = ty;
@@ -149,7 +149,7 @@ int Game::CalculateScore()
 void Game::ShowPresent()
 {
 	char endl='\n';
-	fprintf(stderr,"Playing as: %d, 0 is order 1 is chaos\nDimension: %d,Present Score: %d\n",TypePlayer,Dimension,Pscore);
+	fprintf(stderr,"Playing as: %d, 0 is order 1 is chaos\nDimension: %d,Present Score: %f\n",TypePlayer,Dimension,Pscore);
 	for (int i=0; i<Dimension; i++)
 	{
 		// fputs(stderr,Board[i]);
@@ -166,7 +166,7 @@ void Game::ShowPresent()
 	std::cerr <<"\n";
 }
 
-int Game::GetPresentScore()
+float Game::GetPresentScore()
 {
 	return Pscore;
 }
@@ -193,7 +193,7 @@ void Game::AddNew(char nchar,int xpos, int ypos)
 	ColCompleted[nchar-'A']+=1;
 }
 
-int Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
+float Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
 {
 	// Give the new score on inserting nchar at xpos,ypos but not making any change in the memory
 	int scorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
@@ -210,10 +210,10 @@ bool Game::IsCompleted()
 	return (NumCompleted==(Dimension*Dimension));
 }
 
-int Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
+float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 {
 	// Give the new score on moving the tile from (prevxy,prevy) to (newx,newy) without making change in memory
-	int ans=0;
+	float ans=0;
 	if (newx==prevx)
 	{
 		//Same row motion
@@ -339,7 +339,7 @@ Game* GetDuplicate(Game* inp)
 	bool t = inp->GetType();
 	char** board = inp->GetBoard();
 	char** boardt = inp->GetBoardT();
-	int pscore = inp->GetPresentScore();
+	float pscore = inp->GetPresentScore();
 	int numcompleted= inp->GetNumCompleted();
 	int* colcomp = inp->GetColCompleted();
 
@@ -361,6 +361,56 @@ Game* GetDuplicate(Game* inp)
 		newcolcomp[i]=colcomp[i];
 	}
 	Game* newgame = new Game(dim,t,newb,newbt,pscore,numcompleted,newcolcomp);
+}
+
+std::pair<int,int> GetDifferenceInsert(Game* previous,Game* present)
+{
+	char** boardprev= previous->GetBoard();
+	char** boardnew= present->GetBoard();
+	int dim = previous->GetDimension();
+	for (int i=0; i<dim; i++)
+	{
+		for (int j=0; j<dim; j++)
+		{
+			if (boardnew[i][j]!=boardprev[i][j])
+			{
+				return std::pair<int,int> (i,j);
+			}
+		}
+	}
+	std::cerr<<"Some error has happened. Check the boards given\n";
+}
+
+std::pair<std::pair<int,int>,std::pair<int,int> > GetDifferenceMove(Game* previous, Game* present)
+{
+	char **boardprev= previous->GetBoard();
+	char **boardnew = present->GetBoard();
+	int dim= previous->GetDimension();
+	int prevx,prevy;
+	int newx,newy;
+	for (int i=0; i<dim; i++)
+	{
+		for (int j=0; j<dim; j++)
+		{
+			if (boardnew[i][j]!=boardprev[i][j])
+			{
+				if (boardprev[i][j]=='-')
+				{
+					newx = i;
+					newy = j;
+				}
+				else
+				{
+					prevx = i;
+					prevy = j;
+				}
+			}
+		}
+	}
+	std::pair<int,int> st1, end1;
+	st1 = std::pair<int,int> (prevx,prevy);
+	end1 = std::pair<int,int> (newx,newy);
+	return std::pair<std::pair<int,int>,std::pair<int,int> > (st1,end1);
 }
 
 // int main(int argc, char const *argv[])

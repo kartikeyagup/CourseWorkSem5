@@ -16,7 +16,7 @@ class Game
 public:
 	Game();
 	Game(int,bool);
-	Game(int,bool,char**,char**,int,int,int*);
+	Game(int,bool,char**,char**,float,int,int*);
 
 	~Game();
 
@@ -24,7 +24,7 @@ public:
 	bool GetType();
 	char** GetBoard();
 	char** GetBoardT();
-	int GetPresentScore();
+	float GetPresentScore();
 	int GetNumCompleted();
 	int *GetColCompleted();
 
@@ -32,8 +32,8 @@ public:
 	void ShowPresent();
 	void Move(int,int,int,int);
 	void AddNew(char,int,int);
-	int GetNewScoreInsert(char,int,int);
-	int GetNewScoreMove(int,int,int,int);
+	float GetNewScoreInsert(char,int,int);
+	float GetNewScoreMove(int,int,int,int);
 	bool IsCompleted();
 	bool GetValidMoveInsert(char,int,int);
 	bool GetValidMoveShift(int,int,int,int);
@@ -44,11 +44,13 @@ private:
 	char **BoardT;
 	bool TypePlayer; // 0 for Order, 1 for Chaos
 	int Dimension;
-	int Pscore;
+	float Pscore;
 	int NumCompleted;
 	int *ColCompleted;
 };
 
 Game* GetDuplicate(Game*);
+std::pair<int,int> GetDifferenceInsert(Game*,Game*);
+std::pair<std::pair<int,int>,std::pair<int,int> > GetDifferenceMove(Game*,Game*);
 
 #endif
