@@ -61,22 +61,7 @@ Game::Game()
 	BoardT = new char*[1];
 	BoardT[0]= new char[1];
 	Pscore=0;
-}
-
-int Game::CalculateScore()
-{
-	int sccal=0;
-	for (int i=0; i<Dimension; i++)
-	{
-		sccal += GetEntireScore(Board[i],Dimension);
-		// char *vert= new char[Dimension];
-		// for (int j=0; j<Dimension; j++)
-		// {
-		// 	vert[j]=Board[j][i];
-		// }
-		sccal += GetEntireScore(BoardT[i],Dimension);
-	}
-	return sccal;
+	ColCompleted = new int[1];
 }
 
 Game::Game(int dim,bool type)
@@ -94,20 +79,47 @@ Game::Game(int dim,bool type)
 		BoardT[i]=new char[Dimension];
 		memset(BoardT[i],'-',Dimension);
 	}
+	ColCompleted = new int[Dimension];
+	memset(ColCompleted,0,Dimension);
+}
+
+
+int Game::CalculateScore()
+{
+	int sccal=0;
+	for (int i=0; i<Dimension; i++)
+	{
+		sccal += GetEntireScore(Board[i],Dimension);
+		// char *vert= new char[Dimension];
+		// for (int j=0; j<Dimension; j++)
+		// {
+		// 	vert[j]=Board[j][i];
+		// }
+		sccal += GetEntireScore(BoardT[i],Dimension);
+	}
+	return sccal;
 }
 
 
 void Game::ShowPresent()
 {
 	char endl='\n';
-	printf("Playing as: %d, 0 is order 1 is chaos\nDimension: %d,Present Score: %d\n",TypePlayer,Dimension,Pscore);
+	fprintf(stderr,"Playing as: %d, 0 is order 1 is chaos\nDimension: %d,Present Score: %d\n",TypePlayer,Dimension,Pscore);
 	for (int i=0; i<Dimension; i++)
 	{
-		puts(Board[i]);
-		putchar(endl);
+		// fputs(stderr,Board[i]);
+		// fprintf(stderr,Board[i]);
+		std::cerr << Board[i] <<"\n";
+		// fprintf(stderr,"\n");
+		// fputchar(stderr,endl);
 	}
+	fprintf(stderr,"Present colour counts: ");
+	for (int i=0; i<Dimension; i++)
+	{
+		std::cerr << ColCompleted[i] <<" ";
+	}
+	std::cerr <<"\n";
 }
-
 
 int Game::GetPresentScore()
 {
@@ -129,6 +141,8 @@ void Game::AddNew(char nchar,int xpos, int ypos)
 {
 	Board[xpos][ypos]=nchar;
 	BoardT[ypos][xpos]=nchar;
+	NumCompleted +=1;
+	ColCompleted[nchar-'A']+=1;
 	// TODO: Put in Pscore change
 }
 
@@ -142,6 +156,11 @@ int Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
 	Board[xpos][ypos]='-';
 	BoardT[ypos][xpos]='-';
 	return Pscore + newscorepresentrowcol - scorepresentrowcol;
+}
+
+bool Game::IsCompleted()
+{
+	return (NumCompleted==(Dimension*Dimension));
 }
 
 int Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
@@ -252,6 +271,20 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 	return false;
 }
 
+int* Game::GetColCompleted()
+{
+	return ColCompleted;
+}
+
+float* Game::GetProbabilities()
+{
+	float *ans = new float[Dimension];
+	for (int i=0; i<Dimension; i++)
+	{
+		ans[i]=((Dimension-ColCompleted[i])*1.0)/(Dimension*Dimension - NumCompleted);
+	}
+	return ans;
+}
 
 // int main(int argc, char const *argv[])
 // {

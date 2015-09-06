@@ -24,15 +24,20 @@ public:
 	void AddNew(char,int,int);
 	int GetNewScoreInsert(char,int,int);
 	int GetNewScoreMove(int,int,int,int);
+	bool IsCompleted();
 	bool GetValidMoveInsert(char,int,int);
 	bool GetValidMoveShift(int,int,int,int);
-
+	int *GetColCompleted();
+	float *GetProbabilities();
+	
 private:
 	char **Board;
 	char **BoardT;
 	bool TypePlayer; // 0 for Order, 1 for Chaos
 	int Dimension;
 	int Pscore;
+	int NumCompleted;
+	int *ColCompleted;
 };
 
 #endif
