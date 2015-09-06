@@ -253,15 +253,15 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 }
 
 
-int main(int argc, char const *argv[])
-{
-	/* code */
-	int dim;
-	std::cin >> dim;
-	bool type;
-	std::cin>> type;
-	Game g1 = Game(dim,type);
-	g1.ShowPresent();
-	std::cout << g1.CalculateScore() <<" is calculated\n";
-	return 0;
-}
+// int main(int argc, char const *argv[])
+// {
+// 	/* code */
+// 	int dim;
+// 	std::cin >> dim;
+// 	bool type;
+// 	std::cin>> type;
+// 	Game g1 = Game(dim,type);
+// 	g1.ShowPresent();
+// 	std::cout << g1.CalculateScore() <<" is calculated\n";
+// 	return 0;
+// }
