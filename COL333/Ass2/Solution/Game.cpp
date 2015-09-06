@@ -1,5 +1,8 @@
 #include "Game.h"
 
+// TODO: Check the palindrome from a pivot point. 
+// Will make the complexity order n^2 instead of present n^3
+
 bool CheckPalindrome(char* inp,int st,int en)
 {
 	// From st to en, both included
