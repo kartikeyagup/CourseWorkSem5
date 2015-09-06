@@ -16,9 +16,17 @@ class Game
 public:
 	Game();
 	Game(int,bool);
+	Game(int,bool,char**,char**,int,int,int*);
+
+	int GetDimension();
+	bool GetType();
+	char** GetBoard();
+	char** GetBoardT();
+	int GetPresentScore();
+	int GetNumCompleted();
+	int *GetColCompleted();
 
 	int CalculateScore();
-	int GetPresentScore();
 	void ShowPresent();
 	void Move(int,int,int,int);
 	void AddNew(char,int,int);
@@ -27,9 +35,8 @@ public:
 	bool IsCompleted();
 	bool GetValidMoveInsert(char,int,int);
 	bool GetValidMoveShift(int,int,int,int);
-	int *GetColCompleted();
 	float *GetProbabilities();
-	
+
 private:
 	char **Board;
 	char **BoardT;
@@ -39,5 +46,7 @@ private:
 	int NumCompleted;
 	int *ColCompleted;
 };
+
+Game* GetDuplicate(Game*);
 
 #endif

@@ -83,6 +83,41 @@ Game::Game(int dim,bool type)
 	memset(ColCompleted,0,Dimension);
 }
 
+Game::Game(int dim,bool ty,char** board, char** boardt,int score,int numcomp,int* coloursfilled)
+{
+	Dimension=dim;
+	TypePlayer = ty;
+	NumCompleted=numcomp;
+	Pscore=score;
+	Board = board;
+	BoardT = boardt;
+	ColCompleted = coloursfilled;
+}
+
+int Game::GetDimension()
+{
+	return Dimension;	
+}
+
+bool Game::GetType()
+{
+	return TypePlayer;
+}
+
+char** Game::GetBoard()
+{
+	return Board;
+}
+
+int Game::GetNumCompleted()
+{
+	return NumCompleted;
+}
+
+char** Game::GetBoardT()
+{
+	return BoardT;
+}
 
 int Game::CalculateScore()
 {
@@ -284,6 +319,36 @@ float* Game::GetProbabilities()
 		ans[i]=((Dimension-ColCompleted[i])*1.0)/(Dimension*Dimension - NumCompleted);
 	}
 	return ans;
+}
+
+Game* GetDuplicate(Game* inp)
+{
+	int dim= inp->GetDimension();
+	bool t = inp->GetType();
+	char** board = inp->GetBoard();
+	char** boardt = inp->GetBoardT();
+	int pscore = inp->GetPresentScore();
+	int numcompleted= inp->GetNumCompleted();
+	int* colcomp = inp->GetColCompleted();
+
+	char **newb = new char*[dim];
+	char **newbt= new char*[dim];
+	int *newcolcomp = new int[dim];
+	for (int i=0; i<dim; i++)
+	{
+		newb[i]=new char[dim];
+		newbt[i]=new char[dim];
+	}
+	for (int i=0; i<dim; i++)
+	{
+		for (int j=0; j<dim; j++)
+		{
+			newb[i][j]=board[i][j];
+			newbt[i][j]=boardt[i][j];
+		}
+		newcolcomp[i]=colcomp[i];
+	}
+	Game* newgame = new Game(dim,t,newb,newbt,pscore,numcompleted,newcolcomp);
 }
 
 // int main(int argc, char const *argv[])
