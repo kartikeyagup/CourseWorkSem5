@@ -18,6 +18,8 @@ public:
 	Game(int,bool);
 	Game(int,bool,char**,char**,int,int,int*);
 
+	~Game();
+
 	int GetDimension();
 	bool GetType();
 	char** GetBoard();

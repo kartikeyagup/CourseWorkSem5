@@ -94,6 +94,13 @@ Game::Game(int dim,bool ty,char** board, char** boardt,int score,int numcomp,int
 	ColCompleted = coloursfilled;
 }
 
+Game::~Game()
+{
+	delete Board;
+	delete BoardT;
+	delete ColCompleted;
+}
+
 int Game::GetDimension()
 {
 	return Dimension;	
