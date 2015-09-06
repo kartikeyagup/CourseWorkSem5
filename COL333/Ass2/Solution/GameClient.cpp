@@ -42,21 +42,21 @@ int main(int argc, char const *argv[])
 	}
 	else
 	{
-		//Playing as Order
-		while (true)
-		{
-			int posx,posy;
-			char col;
-			std::cin >> posx,posy,col;
-			GameToPlay->AddNew(col,posx,posy);
-			if (GameToPlay->IsCompleted())
-			{
-				break;
-			}
-			std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder(GameToPlay);
-			GameToPlay->Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
-			std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
-		}
+		// //Playing as Order
+		// while (true)
+		// {
+		// 	int posx,posy;
+		// 	char col;
+		// 	std::cin >> posx,posy,col;
+		// 	GameToPlay->AddNew(col,posx,posy);
+		// 	if (GameToPlay->IsCompleted())
+		// 	{
+		// 		break;
+		// 	}
+		// 	std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder(GameToPlay);
+		// 	GameToPlay->Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
+		// 	std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
+		// }
 	}
 
 	// fprintf(stderr,"This is an error print\n");

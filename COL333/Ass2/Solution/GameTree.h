@@ -35,6 +35,7 @@ class OrderNode
 public:
 	//OrderNode();
 	OrderNode(Game*,float,ChaosNode*);
+	OrderNode(Game*,float);
 	~OrderNode();
 	Game* getgame();
 	std::vector<ChanceNode*> getchildren();		// to complete

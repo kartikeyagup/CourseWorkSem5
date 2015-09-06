@@ -88,6 +88,13 @@ OrderNode::OrderNode(Game* g,float u,ChaosNode* par)
 	children_visited = 0;
 }
 
+OrderNode::OrderNode(Game* g,float u)
+{
+	game = g;
+	parent = NULL;
+	utility = u;
+	children_visited = 0;
+}
 OrderNode::~OrderNode()
 {
 	delete game;
@@ -196,7 +203,8 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 
 	// depth d;
 	int d = 5;
-	ChaosNode* node_chaos = new ChaosNode(a,b,a->GetProbabilities()[b-'A'],0);
+	float init_util = 10000.0;
+	ChaosNode* node_chaos = new ChaosNode(a,b,1.0,init_util);
 	std::stack<std::pair<OrderNode*,int> > order_stack;
 	std::stack<std::pair<ChaosNode*,int> > chaos_stack;
 	std::stack<std::pair<ChanceNode*,int> > chance_stack;
@@ -214,24 +222,51 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 
 	// push children of the first order node into the stack chance
 
-	std::vector<ChanceNode*> a_v = v[0]->getchildren();
+	std::vector<ChanceNode*> a_v = v[v.size()-1]->getchildren();
 	for(int i=0;i<a_v.size();i++)
 	{
 		chance_stack.push(std::make_pair(a_v[i],2));
 
 	}
 
-	// make boolean of node v[0] to be true
-	v[0]->children_visited = 0;
+	// make boolean of node v[v.size()-1] to be true
+	v[v.size()-1]->children_visited = 1;
+	float min_utility = 100000.0;			// minimum utility of the chaos node
+	OrderNode* c;
 
 
-
+	int depth_order;
+	int depth_chaos;
+	int depth_chance;
 	while(!order_stack.empty() || !chaos_stack.empty() || !chance_stack.empty())
 	{
-		int depth_chaos = chaos_stack.top().second;
-		int depth_order = order_stack.top().second;
-		int depth_chance = chance_stack.top().second;
+		if(order_stack.empty())
+		{
+			depth_order = -1;
+		}
+		else
+		{
+			depth_order = order_stack.top().second;
+			
+		}
+		if(chaos_stack.empty())
+		{
+			depth_chaos=-1;
+		}
+		else
+		{
+			depth_chaos = chaos_stack.top().second;
+		}
+		if(chance_stack.empty())
+		{
+			depth_chance = -1;
+		}
+		else
+		{
+			depth_chance = chance_stack.top().second;
+		}
 
+		// find which stack has maximum depth
 		int max = depth_chaos;
 		if(depth_order>max)
 		{
@@ -241,6 +276,8 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 		{
 			max = depth_chance;
 		}
+
+
 		if(max == depth_chaos)
 		{
 			// do operation in the chaos stack
@@ -270,7 +307,10 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				{
 					ChaosNode* n_chaos = chaos_stack.top().first;
 					chaos_stack.pop();
-					n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
+					if(n_chaos->getparent!=NULL)
+					{
+						n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
+					}
 				}
 
 			}
@@ -332,6 +372,14 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				}
 				else
 				{
+					if(order_stack.top().second == 1)
+					{
+						if(min_utility>order_stack.top().first->getutility())
+						{
+							c = order_stack.top().first;
+							min_utility = order_stack.top().first->getutility();
+						}
+					}
 					OrderNode* n_order = order_stack.top().first;
 					order_stack.pop();
 					if(n_order->getutility()<n_order->getparent()->getutility())
@@ -342,5 +390,5 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 			}
 		}
 	}
-
+	return (GetDifferenceInsert(a,c->getgame()));
 }
