@@ -1,2 +1,2 @@
 #!/bin/bash
-g++ Game.cpp GameClient.cpp -O3
+g++ Game.cpp GameTree.cpp GameClient.cpp -O3

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Game.h"
 
 class ChaosNode;
@@ -11,7 +12,7 @@ public:
 	ChaosNode(Game*,char,float);
 	ChaosNode(Game*,char,float,ChanceNode*);
 	Game* getgame(ChaosNode*);
-	float getprobabiltiy(ChaosNode*);
+	float getprobability(ChaosNode*);
 	ChanceNode* getparent(ChaosNode*);
 	std::vector<OrderNode*> getchildren(ChaosNode*);	//	to complete
 
@@ -39,9 +40,8 @@ private:
 class ChanceNode
 {
 public:
-	ChanceNode();
-	ChanceNode(Game*,float);
-	Game* getgame();
+	ChanceNode(Game*,float,OrderNode*);
+	Game* getgame(ChanceNode*);
 	std::vector<ChaosNode*> getchildren(ChanceNode*);		// to complete
 	OrderNode* getparent(ChanceNode*);	
 private:
