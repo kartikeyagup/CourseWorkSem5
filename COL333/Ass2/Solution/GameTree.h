@@ -1,31 +1,37 @@
 #include <iostream>
 #include "Game.h"
 
+class ChaosNode;
+class OrderNode;
+class ChanceNode;
+
 class ChaosNode
 {
 public:
-	ChaosNode();
+	ChaosNode(Game*,char,float);
+	ChaosNode(Game*,char,float,ChanceNode*);
 	Game* getgame(ChaosNode*);
 	float getprobabiltiy(ChaosNode*);
 	ChanceNode* getparent(ChaosNode*);
+	std::vector<OrderNode*> getchildren(ChaosNode*);	//	to complete
 
 private:
 	Game* game;
 	char color;
 	float probability;
 	ChanceNode* parent;
-	std::vector<OrderNode*> children;
 };
 
 class OrderNode
 {
 public:
-	Game* getgame();
-	std::vector<ChanceNode*> getchildren(OrderNode*);
+	//OrderNode();
+	OrderNode(Game*,float,ChaosNode*);
+	Game* getgame(OrderNode*);
+	std::vector<ChanceNode*> getchildren(OrderNode*);		// to complete
 	ChaosNode* getparent(OrderNode*);
 private:
 	Game* game;
-	std::vector<ChanceNode*> children;
 	ChaosNode* parent;
 	float utility;
 };
@@ -33,13 +39,14 @@ private:
 class ChanceNode
 {
 public:
+	ChanceNode();
+	ChanceNode(Game*,float);
 	Game* getgame();
-	std::vector<ChaosNode*> getchildren(ChanceNode*);
-	OrderNode* getparent(ChanceNode*);
+	std::vector<ChaosNode*> getchildren(ChanceNode*);		// to complete
+	OrderNode* getparent(ChanceNode*);	
 private:
 	Game* game;
 	float utility;
-	std::vector<ChaosNode*> children;
 	OrderNode* parent;
 	//int* colorbag;			// contains no. of tiles present of each color
 };
