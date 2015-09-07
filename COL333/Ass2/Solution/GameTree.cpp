@@ -1,5 +1,7 @@
 #include "GameTree.h"
 #include <stack>
+#define CHAOS_DEFAULT 10000.0
+#define ORDER_DEFAULT -10000.0
 
 
 ChaosNode::ChaosNode(Game* g,char c,float p,float u,ChanceNode* par)
@@ -69,8 +71,8 @@ std::vector<OrderNode*> ChaosNode::getchildren()
 			{
 				Game* dup_game = GetDuplicate(this->getgame());
 				dup_game->AddNew(this->getcolor(),i,j);
-				int score = this->getgame()->GetNewScoreInsert(this->getcolor(),i,j);
-				OrderNode* child = new OrderNode(dup_game,score,this);
+				// int score = this->getgame()->GetNewScoreInsert(this->getcolor(),i,j);
+				OrderNode* child = new OrderNode(dup_game,ORDER_DEFAULT,this);
 				child_chaos.push_back(child);
 				delete dup_game;
 				delete child;
@@ -138,8 +140,8 @@ std::vector<ChanceNode*> OrderNode::getchildren()
 						{
 							Game* dup_game = GetDuplicate(this->getgame());
 							dup_game->Move(i,j,k,l);
-							int score = this->getgame()->GetNewScoreMove(i,j,k,l);
-							ChanceNode* child = new ChanceNode(dup_game,score,this);
+							// int score = this->getgame()->GetNewScoreMove(i,j,k,l);
+							ChanceNode* child = new ChanceNode(dup_game,0,this);
 							v.push_back(child);
 							delete dup_game;
 							delete child;
@@ -191,7 +193,7 @@ std::vector<ChaosNode*> ChanceNode::getchildren()
 	std::vector<ChaosNode*> v;
 	for(int i=0;i<this->getgame()->GetDimension();i++)
 	{
-		ChaosNode* child = new ChaosNode(this->getgame(),i+'A',(this->getgame()->GetProbabilities())[i],this->getgame()->GetPresentScore(),this);
+		ChaosNode* child = new ChaosNode(this->getgame(),i+'A',(this->getgame()->GetProbabilities())[i],CHAOS_DEFAULT,this);
 		v.push_back(child);
 		delete child;
 	}
@@ -287,7 +289,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				ChaosNode* n_chaos = chaos_stack.top().first;
 				chaos_stack.pop();
 				// look at its parent and change the utility accordingly
-				n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
+				n_chaos -> getparent() -> setutility (n_chaos->getgame()->GetPresentScore() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
 			}
 			else
 			{
@@ -323,7 +325,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				chance_stack.pop();
 				if(n_chance->getutility()>n_chance->getparent()->getutility())
 				{
-					n_chance->getparent()->setutility(n_chance->getutility());
+					n_chance->getparent()->setutility(n_chance->getgame()->GetPresentScore());
 				}
 			}
 			else
@@ -356,7 +358,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				order_stack.pop();
 				if(n_order->getutility()<n_order->getparent()->getutility())
 				{
-					n_order->getparent()->setutility(n_order->getutility());
+					n_order->getparent()->setutility(n_order->getgame()->GetPresentScore());
 				}
 			}
 			else
