@@ -307,7 +307,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				{
 					ChaosNode* n_chaos = chaos_stack.top().first;
 					chaos_stack.pop();
-					if(n_chaos->getparent!=NULL)
+					if(n_chaos->getparent()!=NULL)
 					{
 						n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
 					}
