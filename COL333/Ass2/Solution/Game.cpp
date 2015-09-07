@@ -90,7 +90,10 @@ Game::Game(int dim,bool type)
 		memset(BoardT[i],'-',Dimension);
 	}
 	ColCompleted = new int[Dimension];
-	memset(ColCompleted,0,Dimension);
+	for (int i=0; i<Dimension; i++)
+	{
+		ColCompleted[i]=0;
+	}
 }
 
 Game::Game(int dim,bool ty,char** board, char** boardt,float score,int numcomp,int* coloursfilled)
@@ -271,11 +274,13 @@ float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 
 bool Game::GetValidMoveInsert(char newc,int posx,int posy)
 {
-	return (Board[posx][posy]!='-');
+	return (Board[posx][posy]=='-');
 }
 
 bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 {
+	if (Board[prevx][prevy]=='-')
+		return false;
 	if (prevx==newx)
 	{
 		if (newy>prevy)

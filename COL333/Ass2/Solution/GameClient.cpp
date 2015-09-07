@@ -1,5 +1,7 @@
 #include "GameClient.h"
 
+std::unordered_map<std::string,int> PalidromeScoreData;
+
 int main(int argc, char const *argv[])
 {
 	int dim;
@@ -18,6 +20,7 @@ int main(int argc, char const *argv[])
 		//Playing as Chaos
 		char inp;
 		std::cin >>inp;
+		std::cerr << "Char obtained is: " << inp <<"\n";
 		std::pair<int,int> mbest= getbestmoveChaos(GameToPlay,inp);
 		GameToPlay->AddNew(inp,mbest.first,mbest.second);
 		std::cout << mbest.first <<" "<<mbest.second <<"\n";
