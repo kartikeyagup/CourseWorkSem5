@@ -31,10 +31,27 @@ def makeall(b):
 
 allstr= makeall([""])
 
-mapped=map(lambda x: (x,scorestring(x)),allstr)
+mapped1 = map(scorestring,allstr)
 
-def converttoform(x):
-	return 'PalidromeScoreData["'+x[0]+'"]='+str(x[1])+";"
+# string1 ="{"
+# for elem in allstr:
+# 	string1 += '"'+elem +'",'
 
-for i in mapped:
-	print converttoform(i)
+# string1 +="}"
+string1 ="{"
+for elem in mapped1:
+	string1 += str(elem) +','
+
+string1 +="}"
+
+print string1
+# print mapped1
+# print allstr
+
+# mapped=map(lambda x: (x,scorestring(x)),allstr)
+
+# def converttoform(x):
+# 	return 'PalidromeScoreData["'+x[0]+'"]='+str(x[1])+";"
+
+# for i in mapped:
+# 	print converttoform(i)
