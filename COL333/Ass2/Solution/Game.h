@@ -5,6 +5,9 @@
 #include <cstdio>
 #include <string>
 #include <iostream>
+#include <unordered_map>
+
+std::unordered_map<std::string,int> PalidromeScoreData;
 
 bool CheckPalindrome(char*,int,int);
 bool CheckValidPalin(char*,int,int);

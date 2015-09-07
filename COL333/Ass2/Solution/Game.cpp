@@ -2,6 +2,7 @@
 
 // TODO: Check the palindrome from a pivot point. 
 // Will make the complexity order n^2 instead of present n^3
+// No need for this, use a hastable. 8)
 
 bool CheckPalindrome(char* inp,int st,int en)
 {

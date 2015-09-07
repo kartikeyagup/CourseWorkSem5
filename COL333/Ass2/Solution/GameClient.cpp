@@ -9,6 +9,8 @@ int main(int argc, char const *argv[])
 
 	bool typeg = (role=="CHAOS");
 
+	PopulateTable();
+
 	Game *GameToPlay =new Game(dim,typeg);
 
 	if (typeg)
