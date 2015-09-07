@@ -56,6 +56,12 @@ int GetEntireScore(char* inp, int leng)
 	return sc;
 }
 
+int GetEntireScore2(char* inp)
+{
+	std::string temp(inp);
+	return PalidromeScoreData[inp];
+}
+
 Game::Game()
 {
 	Dimension=0;
@@ -135,13 +141,15 @@ int Game::CalculateScore()
 	int sccal=0;
 	for (int i=0; i<Dimension; i++)
 	{
-		sccal += GetEntireScore(Board[i],Dimension);
+		// sccal += GetEntireScore(Board[i],Dimension);
+		sccal += GetEntireScore2(Board[i]);
 		// char *vert= new char[Dimension];
 		// for (int j=0; j<Dimension; j++)
 		// {
 		// 	vert[j]=Board[j][i];
 		// }
-		sccal += GetEntireScore(BoardT[i],Dimension);
+		// sccal += GetEntireScore(BoardT[i],Dimension);
+		sccal += GetEntireScore2(BoardT[i]);
 	}
 	return sccal;
 }
@@ -197,10 +205,12 @@ void Game::AddNew(char nchar,int xpos, int ypos)
 float Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
 {
 	// Give the new score on inserting nchar at xpos,ypos but not making any change in the memory
-	int scorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
+	// int scorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
+	int scorepresentrowcol = GetEntireScore2(Board[xpos]) + GetEntireScore2(BoardT[ypos]);
 	Board[xpos][ypos]=nchar;
 	BoardT[ypos][xpos]=nchar;
-	int newscorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
+	// int newscorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
+	int newscorepresentrowcol = GetEntireScore2(Board[xpos]) + GetEntireScore2(BoardT[ypos]);
 	Board[xpos][ypos]='-';
 	BoardT[ypos][xpos]='-';
 	return Pscore + newscorepresentrowcol - scorepresentrowcol;
@@ -224,12 +234,14 @@ float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 		}
 		else 
 		{
-			int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+			// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+			int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(BoardT[prevy])+GetEntireScore2(BoardT[newy]);
 			Board[newx][newy]=Board[prevx][prevy];
 			Board[prevx][prevy]='-';
 			BoardT[newy][newx]=BoardT[prevy][prevx];
 			BoardT[prevy][prevx]='-';
-			int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+			// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+			int scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(BoardT[prevy])+GetEntireScore2(BoardT[newy]);
 			Board[prevx][prevy]=Board[newx][newy];
 			Board[newx][newy]='-';
 			BoardT[prevy][prevx]=BoardT[newy][newx];
@@ -240,12 +252,14 @@ float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 	else
 	{
 		// Same column Motion
-		int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+		// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+		int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(BoardT[newy]);
 		Board[prevx][prevy]='-';
 		Board[newx][newy]=Board[prevx][prevy];
 		BoardT[newy][newx]=BoardT[prevy][prevx];
 		BoardT[prevy][prevx]='-';
-		int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+		// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+		int scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(BoardT[newy]);
 		Board[prevx][prevy]=Board[newx][newy];
 		Board[newx][newy]='-';
 		BoardT[prevy][prevx]=BoardT[newy][newx];
