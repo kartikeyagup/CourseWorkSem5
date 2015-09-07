@@ -394,3 +394,200 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 	}
 	return (GetDifferenceInsert(a,c->getgame()));
 }
+
+std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
+{
+	int d = 5;  // cut-off depth;
+
+	OrderNode* node_order = new OrderNode(a,ORDER_DEFAULT);
+	//ChaosNode* node_chaos = new ChaosNode(a,b,1.0,init_util);
+	std::stack<std::pair<OrderNode*,int> > order_stack;
+	std::stack<std::pair<ChaosNode*,int> > chaos_stack;
+	std::stack<std::pair<ChanceNode*,int> > chance_stack;
+	
+	// push children of chaos node into the stack
+	std::vector<ChanceNode*> v = node_order->getchildren();
+	order_stack.push(std::make_pair(node_order,0));
+	for(int i=0;i<v.size();i++)
+	{
+		chance_stack.push(std::make_pair(v[i],1));		
+	}
+
+	// make boolean of chaos node to be true
+	node_order->children_visited = 1;
+
+	// push children of the first order node into the stack chance
+
+	std::vector<ChaosNode*> a_v = v[v.size()-1]->getchildren();
+	for(int i=0;i<a_v.size();i++)
+	{
+		chaos_stack.push(std::make_pair(a_v[i],2));
+
+	}
+
+	// make boolean of node v[v.size()-1] to be true
+	v[v.size()-1]->children_visited = 1;
+	float min_utility = ORDER_DEFAULT;			// minimum utility of the chaos node
+	ChanceNode* c;
+
+
+	int depth_order;
+	int depth_chaos;
+	int depth_chance;
+	while(!order_stack.empty() || !chaos_stack.empty() || !chance_stack.empty())
+	{
+		if(order_stack.empty())
+		{
+			depth_order = -1;
+		}
+		else
+		{
+			depth_order = order_stack.top().second;
+			
+		}
+		if(chaos_stack.empty())
+		{
+			depth_chaos=-1;
+		}
+		else
+		{
+			depth_chaos = chaos_stack.top().second;
+		}
+		if(chance_stack.empty())
+		{
+			depth_chance = -1;
+		}
+		else
+		{
+			depth_chance = chance_stack.top().second;
+		}
+
+		// find which stack has maximum depth
+		int max = depth_chaos;
+		if(depth_order>max)
+		{
+			max = depth_order;
+		}
+		if(depth_chance>max)
+		{
+			max = depth_chance;
+		}
+
+
+		if(max == depth_chaos)
+		{
+			// do operation in the chaos stack
+			if(depth_chaos == d)
+			{
+				// then pop from the chaos stack
+				ChaosNode* n_chaos = chaos_stack.top().first;
+				chaos_stack.pop();
+				// look at its parent and change the utility accordingly
+				n_chaos -> getparent() -> setutility (n_chaos->getgame()->GetPresentScore() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
+			}
+			else
+			{
+
+				// if the boolean is 0 then do a top and push the children into the order stack
+				if(chaos_stack.top().first->children_visited == 0)
+				{
+					std::vector<OrderNode*> v_children = chaos_stack.top().first->getchildren();
+					for(int i=0;i<v_children.size();i++)
+					{
+						order_stack.push(std::make_pair(v_children[i],depth_chaos+1));
+					}
+					// make boolean of chaos_stack.top as 1
+					chaos_stack.top().first->children_visited =1;
+				}
+				else
+				{
+					ChaosNode* n_chaos = chaos_stack.top().first;
+					chaos_stack.pop();
+					if(n_chaos->getparent()!=NULL)
+					{
+						n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
+					}
+				}
+
+			}
+		}
+		else if(max == depth_chance)
+		{
+			if(depth_chance == d)
+			{
+				ChanceNode* n_chance = chance_stack.top().first;
+				chance_stack.pop();
+				if(n_chance->getutility()>n_chance->getparent()->getutility())
+				{
+					n_chance->getparent()->setutility(n_chance->getgame()->GetPresentScore());
+				}
+			}
+			else
+			{
+				if(chance_stack.top().first->children_visited ==0)
+				{
+					std::vector<ChaosNode*> v_children = chance_stack.top().first->getchildren();
+					for(int i=0;i<v_children.size();i++)
+					{
+						chaos_stack.push(std::make_pair(v_children[i],depth_chance+1));
+					}
+					chance_stack.top().first->children_visited = 1;
+				}
+				else
+				{
+					if(chance_stack.top().second==1)
+					{
+						if(chance_stack.top().first->getutility()>chance_stack.top().first->getparent()->getutility())
+						{
+							c = chance_stack.top().first;
+							chance_stack.top().first->getparent()->setutility(chance_stack.top().first->getutility());
+						}
+					}
+					ChanceNode* n_chance = chance_stack.top().first;
+					chance_stack.pop();
+					if(n_chance->getutility()>n_chance->getparent()->getutility())
+					{
+						n_chance->getparent()->setutility(n_chance->getutility());
+					}
+				}
+			}
+		}
+		else
+		{
+			if(depth_order == d)
+			{
+				OrderNode* n_order = order_stack.top().first;
+				order_stack.pop();
+				if(n_order->getutility()<n_order->getparent()->getutility())
+				{
+					n_order->getparent()->setutility(n_order->getgame()->GetPresentScore());
+				}
+			}
+			else
+			{
+				if( order_stack.top().first->children_visited==0)
+				{
+					std::vector<ChanceNode*> v_children = order_stack.top().first->getchildren();
+					for(int i=0;i<v_children.size();i++)
+					{
+						chance_stack.push(std::make_pair(v_children[i],depth_order+1));
+					}
+					order_stack.top().first->children_visited = 1;
+				}
+				else
+				{
+					OrderNode* n_order = order_stack.top().first;
+					order_stack.pop();
+					if(n_order->getparent()!=NULL)
+					{
+						if(n_order->getutility()<n_order->getparent()->getutility())
+						{
+							n_order->getparent()->setutility(n_order->getutility());
+						}
+					}
+				}
+			}
+		}
+	}
+	return (GetDifferenceMove(a,c->getgame()));
+}
