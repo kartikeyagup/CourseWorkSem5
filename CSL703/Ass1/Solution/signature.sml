@@ -322,6 +322,7 @@ fun GetNode(_,_,_,x)=x;
 
 (*val q:Program.BoolExpr=Calc.parse_string("(x2*x1);");*)
 val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");
+(*val q:Program.BoolExpr=Calc.parse_string("x1+(~(x1));");*)
 
 val writestream = TextIO.openOut "test.dot";
 (*TextIO.output(writestream, "This is a message to write to your stream.");*)
