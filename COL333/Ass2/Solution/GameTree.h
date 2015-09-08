@@ -20,7 +20,9 @@ public:
 	char getcolor();
 	void setutility(float);
 	bool children_visited;
-
+	float alpha;
+	float beta;
+	bool hasinferred;
 
 private:
 	Game* game;
@@ -43,6 +45,10 @@ public:
 	float getutility();
 	void setutility(float);
 	bool children_visited;
+	float alpha;
+	float beta;
+	bool hasinferred;
+
 private:
 	Game* game;
 	ChaosNode* parent;
@@ -59,8 +65,11 @@ public:
 	OrderNode* getparent();
 	float getutility();
 	void setutility(float);
-	bool children_visited;
-
+	bool children_visited;	
+	float alpha;
+	float beta;
+	bool hasinferred;
+	
 private:
 	Game* game;
 	float utility;

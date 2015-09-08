@@ -59,7 +59,7 @@ int GetEntireScore(char* inp, int leng)
 int GetEntireScore2(char* inp)
 {
 	std::string temp(inp);
-	return PalidromeScoreData[inp];
+	return PalidromeScoreData[temp];
 }
 
 Game::Game()
