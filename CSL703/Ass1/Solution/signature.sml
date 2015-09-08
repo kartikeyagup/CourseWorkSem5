@@ -103,9 +103,11 @@ fun Mk(H_Table(h),T_Table(t),G,i:string,lo:Node,hi:Node): H*T*G*Node=
 		end
 ;
 
+fun GetPriority(a,[])= ~1
+	|GetPriority(a,(b,c)::bs)= if a=b then c else GetPriority(a,bs)
+;
 
-
-fun App(H,T,G_Table(g),Program.AND,n1,n2)=
+fun App(H:H,T:T,G_Table(g):G,Program.AND,n1:Node,n2:Node,lst:((string*int) list))=
 		if (HashTable.inDomain g (n1,n2)) then (HashTable.lookup g (n1,n2),H,T,G_Table(g))
 		else if (CheckRoot(n1) andalso CheckRoot(n2)) then 
 			let
@@ -134,14 +136,14 @@ fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 				(n2,H,T,G_Table(g))
 		else if (var(n1)=var(n2)) then
 			let
-				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),GetLow(n2))
-				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),GetHigh(n2))
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),GetLow(n2),lst)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),GetHigh(n2),lst)
 				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
 				val addeding = HashTable.insert g1 ((n1,n2), D) 
 			in
 				(D,A,B,G_Table(g1))
 			end
-		else if (var(n1)<var(n2)) then
+		else if (GetPriority(var(n1),lst)>=GetPriority(var(n2),lst)) then
 			let
 				val d1 = print "in else if\n";
 				val d1 = print "string for n1 ";
@@ -150,11 +152,11 @@ fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 				val d1 = print "string for n2 ";
 				val d1= print (StringEquiv(n2));
 				val d1 =print "\n";
-				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),n2)
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),n2,lst)
 				val d1 = print "string for app1 ";
 				val d1= print (StringEquiv(app1));
 				val d1 =print "\n";
-				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),n2)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),n2,lst)
 				val d1 = print "string for app5 ";
 				val d1= print (StringEquiv(app5));
 				val d1 =print "\n";
@@ -166,14 +168,14 @@ fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 			end
 		else
 			let
-				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,(n1),GetLow(n2))
-				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,(n1),GetHigh(n2))
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,(n1),GetLow(n2),lst)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,(n1),GetHigh(n2),lst)
 				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n2),app1,app5)
 				val addeding = HashTable.insert g1 ((n1,n2), D) 
 			in
 				(D,A,B,G_Table(g1))
 			end
-	|App(H,T,G_Table(g),Program.OR,n1,n2)=
+	|App(H,T,G_Table(g),Program.OR,n1,n2,lst)=
 		if (HashTable.inDomain g (n1,n2)) then (HashTable.lookup g (n1,n2),H,T,G_Table(g))
 		else if (CheckRoot(n1) andalso CheckRoot(n2)) then 
 			let
@@ -194,17 +196,17 @@ fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 				(n1,H,T,G_Table(g))
 		else if (var(n1)=var(n2)) then
 			let
-				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),GetLow(n2))
-				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),GetHigh(n2))
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),GetLow(n2),lst)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),GetHigh(n2),lst)
 				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
 				val addeding = HashTable.insert g1 ((n1,n2), D) 
 			in
 				(D,A,B,G_Table(g1))
 			end
-		else if (var(n1)<var(n2)) then
+		else if (GetPriority( var(n1),lst)>=GetPriority(var(n2),lst)) then
 			let
-				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),n2)
-				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),n2)
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),n2,lst)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),n2,lst)
 				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
 				val addeding = HashTable.insert g1 ((n1,n2), D) 
 			in
@@ -212,14 +214,14 @@ fun App(H,T,G_Table(g),Program.AND,n1,n2)=
 			end
 		else
 			let
-				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,(n1),GetLow(n2))
-				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,(n1),GetHigh(n2))
+				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,(n1),GetLow(n2),lst)
+				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,(n1),GetHigh(n2),lst)
 				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n2),app1,app5)
 				val addeding = HashTable.insert g1 ((n1,n2), D) 
 			in
 				(D,A,B,G_Table(g1))
 			end
-	|App(_,_,_,_,_,_) = raise InvalidInput
+	|App(_,_,_,_,_,_,_) = raise InvalidInput
 	
 ;			
 
@@ -228,31 +230,31 @@ fun InvertBDD(Node_Root(false))=Node_Root(true)
 	|InvertBDD(Node_Node(x,y,z))=Node_Node(x,InvertBDD(y),InvertBDD(z))
 ;
 
-fun MakeBDD(H:H,T:T,G:G,Program.Constant(x):Program.BoolExpr): H*T*G*Node=(H,T,G,Node_Root(x))
-	|MakeBDD(H,T,G,Program.Variable(x))=(H,T,G,Node_Node(x,Node_Root(false),Node_Root(true)))
-	|MakeBDD(H,T,G,Program.OprBinary(l1,y,z))= 
+fun MakeBDD(H:H,T:T,G:G,Program.Constant(x):Program.BoolExpr,lst): H*T*G*Node=(H,T,G,Node_Root(x))
+	|MakeBDD(H,T,G,Program.Variable(x),lst)=(H,T,G,Node_Node(x,Node_Root(false),Node_Root(true)))
+	|MakeBDD(H,T,G,Program.OprBinary(l1,y,z),lst)= 
 		let
-			val (app1,app2,app3,app4) = MakeBDD(H,T,G,y);
+			val (app1,app2,app3,app4) = MakeBDD(H,T,G,y,lst);
 			(*val q = print "done for first\n";*)
-			val (app5,app6,app7,app8) = MakeBDD(app1,app2,app3,z);
+			val (app5,app6,app7,app8) = MakeBDD(app1,app2,app3,z,lst);
 			(*val q = print "done for second\n";*)
-			val (app9,app10,app11,app12) = App(app5,app6,app7,l1,app4,app8)
+			val (app9,app10,app11,app12) = App(app5,app6,app7,l1,app4,app8,lst)
 		in
 			(app10,app11,app12,app9)
 		end
-	|MakeBDD(H,T,G,Program.OprUnary(x,y))= 
+	|MakeBDD(H,T,G,Program.OprUnary(x,y),lst)= 
 		let
-			val (_,_,_,bddfory) = MakeBDD(H,T,G,y);
+			val (_,_,_,bddfory) = MakeBDD(H,T,G,y,lst);
 		in
 			(H,T,G,InvertBDD(bddfory))
 		end
-	|MakeBDD(H,T,G,Program.OprTernary(x,ifs,thens,elses))=
+	|MakeBDD(H,T,G,Program.OprTernary(x,ifs,thens,elses),lst)=
 		let
 			val p1 = Program.OprBinary(Program.AND,ifs,thens);
 			val p2 = Program.OprBinary(Program.AND,Program.OprUnary(Program.NOT,ifs),elses);
 			val rearranged = Program.OprBinary(Program.OR,p1,p2);
 		in
-			MakeBDD(H,T,G,rearranged)
+			MakeBDD(H,T,G,rearranged,lst)
 		end
 ;
 
@@ -292,7 +294,7 @@ fun contains(a,[])=0
 ;
 
 fun GetDistinctVariable([],p)=p
-	|GetDistinctVariable(x::xs,p)= if (contains(x,p)=0) then GetDistinctVariable(xs,p) else GetDistinctVariable(xs, x::p)
+	|GetDistinctVariable(x::xs,p)= if (contains(x,p)=0) then GetDistinctVariable(xs,x::p) else GetDistinctVariable(xs, p)
 ;
 
 fun GetCountOfVariables(allvars,[])=[]
@@ -327,7 +329,11 @@ val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");
 val writestream = TextIO.openOut "test.dot";
 (*TextIO.output(writestream, "This is a message to write to your stream.");*)
 
-val res =GetNode(MakeBDD(initH(),initT(),initG(),q));
+val sorted = SortVars(q);
+
+val s = print "sorted and stuff\n";
+
+val res =GetNode(MakeBDD(initH(),initT(),initG(),q,sorted));
 
 val strout= MakeTotalString(res);
 
