@@ -24,7 +24,8 @@ int main(int argc, char const *argv[])
 		std::pair<int,int> mbest= getbestmoveChaos(GameToPlay,inp);
 		GameToPlay->AddNew(inp,mbest.first,mbest.second);
 		std::cout << mbest.first <<" "<<mbest.second <<"\n";
-
+		GameToPlay->ShowPresent();
+		
 		while (true)
 		{
 			if (GameToPlay->IsCompleted())
@@ -43,6 +44,7 @@ int main(int argc, char const *argv[])
 			mbest = getbestmoveChaos(GameToPlay,inp);
 			GameToPlay->AddNew(inp,mbest.first,mbest.second);
 			std::cout << mbest.first <<" "<<mbest.second <<"\n";
+			GameToPlay->ShowPresent();
 		}
 	}
 	else

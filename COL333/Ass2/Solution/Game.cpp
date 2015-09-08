@@ -109,8 +109,11 @@ Game::Game(int dim,bool ty,char** board, char** boardt,float score,int numcomp,i
 
 Game::~Game()
 {
-	delete Board;
-	delete BoardT;
+	for (int i=0; i<Dimension; i++)
+	{
+		delete Board[i];
+		delete BoardT[i];
+	}
 	delete ColCompleted;
 }
 
@@ -381,6 +384,7 @@ Game* GetDuplicate(Game* inp)
 		newcolcomp[i]=colcomp[i];
 	}
 	Game* newgame = new Game(dim,t,newb,newbt,pscore,numcompleted,newcolcomp);
+	return newgame;
 }
 
 std::pair<int,int> GetDifferenceInsert(Game* previous,Game* present)
