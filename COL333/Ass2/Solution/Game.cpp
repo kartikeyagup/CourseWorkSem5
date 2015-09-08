@@ -411,9 +411,10 @@ std::pair<std::pair<int,int>,std::pair<int,int> > GetDifferenceMove(Game* previo
 {
 	char **boardprev= previous->GetBoard();
 	char **boardnew = present->GetBoard();
+	// previous->ShowPresent();
+	// present->ShowPresent();
 	int dim= previous->GetDimension();
-	int prevx,prevy;
-	int newx,newy;
+	int prevx=-1,prevy=-1,newx=-1,newy=-1;
 	for (int i=0; i<dim; i++)
 	{
 		for (int j=0; j<dim; j++)
@@ -433,6 +434,23 @@ std::pair<std::pair<int,int>,std::pair<int,int> > GetDifferenceMove(Game* previo
 			}
 		}
 	}
+	if (prevx==-1 || newx==-1)
+	{
+		for (int i=0; i<dim; i++)
+		{
+			for (int j=0; j<dim; j++)
+			{
+				if (boardprev[i][j]!='-')
+				{
+					prevx=i;
+					newx=i;
+					prevy=j;
+					newy=j;
+				}
+			}
+		}
+	}
+	// std::cerr << prevx <<"\t" << prevy <<"\t" <<newx <<"\t" << newy <<"\n";
 	std::pair<int,int> st1, end1;
 	st1 = std::pair<int,int> (prevx,prevy);
 	end1 = std::pair<int,int> (newx,newy);

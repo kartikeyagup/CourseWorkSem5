@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
 	PopulateTable();
 
 	Game *GameToPlay =new Game(dim,typeg);
-
+	std::cerr<<"Type: "<<typeg<<"\n";
 	if (typeg)
 	{
 		//Playing as Chaos
@@ -50,21 +50,24 @@ int main(int argc, char const *argv[])
 	}
 	else
 	{
-		// //Playing as Order
-		// while (true)
-		// {
-		// 	int posx,posy;
-		// 	char col;
-		// 	std::cin >> posx,posy,col;
-		// 	GameToPlay->AddNew(col,posx,posy);
-		// 	if (GameToPlay->IsCompleted())
-		// 	{
-		// 		break;
-		// 	}
-		// 	std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder(GameToPlay);
-		// 	GameToPlay->Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
-		// 	std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
-		// }
+		std::cerr<<"In the else case\n";
+		//Playing as Order
+		while (true)
+		{
+			GameToPlay->ShowPresent();
+			int posx,posy;
+			char col;
+			std::cin >> posx>>posy>>col;
+			GameToPlay->AddNew(col,posx,posy);
+			if (GameToPlay->IsCompleted())
+			{
+				break;
+			}
+			std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder(GameToPlay);
+			std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
+			GameToPlay->Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
+			std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
+		}
 	}
 
 	// fprintf(stderr,"This is an error print\n");

@@ -225,36 +225,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 	std::stack<std::pair<ChanceNode*,int> > chance_stack;
 	
 	chaos_stack.push(std::make_pair(node_chaos,0));
-	// push children of chaos node into the stack
-	// std::vector<OrderNode*> v = node_chaos->getchildren();
-	// for(int i=0;i<v.size();i++)
-	// {
-	// 	order_stack.push(std::make_pair(v[i],1));		
-	// }
 
-	// std::cerr << "Created order stack\n";
-
-	// // make boolean of chaos node to be true
-	// node_chaos->children_visited = 1;
-
-	// // push children of the first order node into the stack chance
-	// std::cerr << "chaos children visted set\t" << v.size() <<"\n";
-
-	// std::vector<ChanceNode*> a_v = v[v.size()-1]->getchildren();
-	// // v[v.size()-1]->getgame()->ShowPresent();
-	// std::cerr << "chaos children obtained\n";
-
-	// for(int i=0;i<a_v.size();i++)
-	// {
-	// 	chance_stack.push(std::make_pair(a_v[i],2));
-
-	// }
-
-
-	// std::cerr << "Created chance stack\n";
-
-	// // make boolean of node v[v.size()-1] to be true
-	// v[v.size()-1]->children_visited = 1;
 	float min_utility = 100000.0;			// minimum utility of the chaos node
 	OrderNode* c;
 	std::vector<OrderNode*> Level1Order;	// to finally delete level 1 order nodes
@@ -483,28 +454,10 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 	
 	// push children of chaos node into the stack
 	order_stack.push(std::make_pair(node_order,0));
-	// std::vector<ChanceNode*> v = node_order->getchildren();
-	// for(int i=0;i<v.size();i++)
-	// {
-	// 	chance_stack.push(std::make_pair(v[i],1));		
-	// }
 
-	// // make boolean of chaos node to be true
-	// node_order->children_visited = 1;
-
-	// // push children of the first order node into the stack chance
-
-	// std::vector<ChaosNode*> a_v = v[v.size()-1]->getchildren();
-	// for(int i=0;i<a_v.size();i++)
-	// {
-	// 	chaos_stack.push(std::make_pair(a_v[i],2));
-
-	// }
-
-	// // make boolean of node v[v.size()-1] to be true
-	// v[v.size()-1]->children_visited = 1;
 	float min_utility = ORDER_DEFAULT;			// minimum utility of the chaos node
 	ChanceNode* c;
+	std::vector<ChanceNode*> Level1Chance;
 
 
 	int depth_order;
@@ -560,6 +513,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				chaos_stack.pop();
 				// look at its parent and change the utility accordingly
 				n_chaos -> getparent() -> setutility (n_chaos->getgame()->GetPresentScore() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
+				delete n_chaos;
 			}
 			else
 			{
@@ -583,6 +537,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 					{
 						n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
 					}
+					delete n_chaos;
 				}
 
 			}
@@ -597,6 +552,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				{
 					n_chance->getparent()->setutility(n_chance->getgame()->GetPresentScore());
 				}
+				delete n_chance;
 			}
 			else
 			{
@@ -618,12 +574,23 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 							c = chance_stack.top().first;
 							chance_stack.top().first->getparent()->setutility(chance_stack.top().first->getutility());
 						}
+						ChanceNode* n_chance = chance_stack.top().first;
+						chance_stack.pop();
+						Level1Chance.push_back(n_chance);
+						if(n_chance->getutility()>n_chance->getparent()->getutility())
+						{
+							n_chance->getparent()->setutility(n_chance->getutility());
+						}
 					}
-					ChanceNode* n_chance = chance_stack.top().first;
-					chance_stack.pop();
-					if(n_chance->getutility()>n_chance->getparent()->getutility())
+					else
 					{
-						n_chance->getparent()->setutility(n_chance->getutility());
+						ChanceNode* n_chance = chance_stack.top().first;
+						chance_stack.pop();
+						if(n_chance->getutility()>n_chance->getparent()->getutility())
+						{
+							n_chance->getparent()->setutility(n_chance->getutility());
+						}
+						delete n_chance;						
 					}
 				}
 			}
@@ -638,6 +605,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				{
 					n_order->getparent()->setutility(n_order->getgame()->GetPresentScore());
 				}
+				delete n_order;
 			}
 			else
 			{
@@ -661,9 +629,18 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 							n_order->getparent()->setutility(n_order->getutility());
 						}
 					}
+					if(depth_order!=0)
+					{
+						delete n_order;
+					}
 				}
 			}
 		}
 	}
-	return (GetDifferenceMove(a,c->getgame()));
+	auto ans =GetDifferenceMove(a,c->getgame()); 
+	for(std::vector<ChanceNode*>::iterator it = Level1Chance.begin();it!= Level1Chance.end();++it)
+	{
+		delete *it;
+	}
+	return (ans);
 }
