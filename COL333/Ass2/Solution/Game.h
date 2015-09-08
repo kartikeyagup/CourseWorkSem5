@@ -6,7 +6,6 @@
 #include <string>
 #include <iostream>
 #include <unordered_map>
-#include <algorithm>
 
 extern std::unordered_map<std::string,int> PalidromeScoreData;
 
@@ -20,14 +19,14 @@ class Game
 public:
 	Game();
 	Game(int,bool);
-	Game(int,bool,char**,char**,float,int,int*);
+	Game(int,bool,char**,float,int,int*);
 
 	~Game();
 
 	int GetDimension();
 	bool GetType();
 	char** GetBoard();
-	char** GetBoardT();
+	char* GetColumn(int);
 	float GetPresentScore();
 	int GetNumCompleted();
 	int *GetColCompleted();
@@ -45,7 +44,6 @@ public:
 
 private:
 	char **Board;
-	char **BoardT;
 	bool TypePlayer; // 0 for Order, 1 for Chaos
 	int Dimension;
 	float Pscore;

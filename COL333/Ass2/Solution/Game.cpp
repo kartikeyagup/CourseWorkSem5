@@ -4,6 +4,16 @@
 // Will make the complexity order n^2 instead of present n^3
 // No need for this, use a hastable. 8)
 
+char* Game::GetColumn(int col)
+{
+	char* ans= new char[Dimension];
+	for (int i=0; i<Dimension; i++)
+	{
+		ans[i]=Board[i][col];
+	}
+	return ans;
+}
+
 bool CheckPalindrome(char* inp,int st,int en)
 {
 	// From st to en, both included
@@ -58,7 +68,10 @@ int GetEntireScore(char* inp, int leng)
 
 int GetEntireScore2(char* inp)
 {
-	std::string temp(inp);
+	// std::string temp(inp);
+	std::string temp;
+	temp.assign(inp,5);
+	// std::cerr << temp << " was scored to: " << PalidromeScoreData[inp]
 	return PalidromeScoreData[temp];
 }
 
@@ -68,8 +81,6 @@ Game::Game()
 	TypePlayer=0;
 	Board = new char*[1];
 	Board[0] = new char[1];
-	BoardT = new char*[1];
-	BoardT[0]= new char[1];
 	Pscore=0;
 	ColCompleted = new int[1];
 }
@@ -81,13 +92,10 @@ Game::Game(int dim,bool type)
 	Dimension = dim;
 	Pscore=0;
 	Board = new char*[Dimension];
-	BoardT = new char*[Dimension];
 	for (int i=0; i<dim;i++)
 	{
 		Board[i]=new char[Dimension];
 		memset(Board[i],'-',Dimension);
-		BoardT[i]=new char[Dimension];
-		memset(BoardT[i],'-',Dimension);
 	}
 	ColCompleted = new int[Dimension];
 	for (int i=0; i<Dimension; i++)
@@ -96,14 +104,13 @@ Game::Game(int dim,bool type)
 	}
 }
 
-Game::Game(int dim,bool ty,char** board, char** boardt,float score,int numcomp,int* coloursfilled)
+Game::Game(int dim,bool ty,char** board,float score,int numcomp,int* coloursfilled)
 {
 	Dimension=dim;
 	TypePlayer = ty;
 	NumCompleted=numcomp;
 	Pscore=score;
 	Board = board;
-	BoardT = boardt;
 	ColCompleted = coloursfilled;
 }
 
@@ -112,8 +119,8 @@ Game::~Game()
 	for (int i=0; i<Dimension; i++)
 	{
 		delete Board[i];
-		delete BoardT[i];
 	}
+	delete Board;
 	delete ColCompleted;
 }
 
@@ -137,11 +144,6 @@ int Game::GetNumCompleted()
 	return NumCompleted;
 }
 
-char** Game::GetBoardT()
-{
-	return BoardT;
-}
-
 int Game::CalculateScore()
 {
 	int sccal=0;
@@ -149,13 +151,13 @@ int Game::CalculateScore()
 	{
 		// sccal += GetEntireScore(Board[i],Dimension);
 		sccal += GetEntireScore2(Board[i]);
-		// char *vert= new char[Dimension];
-		// for (int j=0; j<Dimension; j++)
-		// {
-		// 	vert[j]=Board[j][i];
-		// }
+		char *vert= new char[Dimension];
+		for (int j=0; j<Dimension; j++)
+		{
+			vert[j]=Board[j][i];
+		}
 		// sccal += GetEntireScore(BoardT[i],Dimension);
-		sccal += GetEntireScore2(BoardT[i]);
+		sccal += GetEntireScore2(vert);
 	}
 	return sccal;
 }
@@ -189,23 +191,23 @@ float Game::GetPresentScore()
 void Game::Move(int initx,int inity, int finx, int finy)
 {
 	// (initx)(inity) -> (finx)(finy)
+	// std::cerr << "previous score move " << Pscore << "\t";
 	Pscore = GetNewScoreMove(initx,inity,finx,finy);
+	// std::cerr << "final score move" << Pscore << "\n";
 
 	if (initx!=finx || inity!=finy)
 	{
 		Board[finx][finy]=Board[initx][inity];
 		Board[initx][inity]='-';
-
-		BoardT[finy][finx]=BoardT[inity][initx];
-		BoardT[inity][initx]='-';
 	}
 }
 
 void Game::AddNew(char nchar,int xpos, int ypos)
 {
+	// std::cerr << "previous score move" << Pscore << "\t";
 	Pscore = GetNewScoreInsert(nchar,xpos,ypos);
+	// std::cerr << "final score move" << Pscore << "\n";
 	Board[xpos][ypos]=nchar;
-	BoardT[ypos][xpos]=nchar;
 	NumCompleted +=1;
 	ColCompleted[nchar-'A']+=1;
 }
@@ -214,13 +216,12 @@ float Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
 {
 	// Give the new score on inserting nchar at xpos,ypos but not making any change in the memory
 	// int scorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
-	int scorepresentrowcol = GetEntireScore2(Board[xpos]) + GetEntireScore2(BoardT[ypos]);
+	int scorepresentrowcol = GetEntireScore2(Board[xpos]) + GetEntireScore2(GetColumn(ypos));
 	Board[xpos][ypos]=nchar;
-	BoardT[ypos][xpos]=nchar;
 	// int newscorepresentrowcol = GetEntireScore(Board[xpos],Dimension) + GetEntireScore(BoardT[ypos],Dimension);
-	int newscorepresentrowcol = GetEntireScore2(Board[xpos]) + GetEntireScore2(BoardT[ypos]);
+	int newscorepresentrowcol = GetEntireScore2(Board[xpos]) + GetEntireScore2(GetColumn(ypos));
 	Board[xpos][ypos]='-';
-	BoardT[ypos][xpos]='-';
+	// std::cerr << "row col "<<scorepresentrowcol << "\t" << newscorepresentrowcol <<"\n";
 	return Pscore + newscorepresentrowcol - scorepresentrowcol;
 }
 
@@ -243,17 +244,13 @@ float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 		else 
 		{
 			// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
-			int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(BoardT[prevy])+GetEntireScore2(BoardT[newy]);
+			int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
 			Board[newx][newy]=Board[prevx][prevy];
 			Board[prevx][prevy]='-';
-			BoardT[newy][newx]=BoardT[prevy][prevx];
-			BoardT[prevy][prevx]='-';
 			// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
-			int scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(BoardT[prevy])+GetEntireScore2(BoardT[newy]);
+			int scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
 			Board[prevx][prevy]=Board[newx][newy];
 			Board[newx][newy]='-';
-			BoardT[prevy][prevx]=BoardT[newy][newx];
-			BoardT[newy][newx]='-';
 			ans = scoreconschange - scorecons;
 		}
 	}
@@ -261,19 +258,16 @@ float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 	{
 		// Same column Motion
 		// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
-		int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(BoardT[newy]);
+		int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
 		Board[newx][newy]=Board[prevx][prevy];
 		Board[prevx][prevy]='-';
-		BoardT[newy][newx]=BoardT[prevy][prevx];
-		BoardT[prevy][prevx]='-';
 		// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
-		int scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(BoardT[newy]);
+		int scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
 		Board[prevx][prevy]=Board[newx][newy];
 		Board[newx][newy]='-';
-		BoardT[prevy][prevx]=BoardT[newy][newx];
-		BoardT[newy][newx]='-';
 		ans = scoreconschange - scorecons;	
 	}
+	// std::cerr << "ans is" << Pscore << " " << ans<<"\n";
 	return Pscore+ans;
 }
 
@@ -363,29 +357,25 @@ Game* GetDuplicate(Game* inp)
 	int dim= inp->GetDimension();
 	bool t = inp->GetType();
 	char** board = inp->GetBoard();
-	char** boardt = inp->GetBoardT();
 	float pscore = inp->GetPresentScore();
 	int numcompleted= inp->GetNumCompleted();
 	int* colcomp = inp->GetColCompleted();
 
 	char **newb = new char*[dim];
-	char **newbt= new char*[dim];
 	int *newcolcomp = new int[dim];
 	for (int i=0; i<dim; i++)
 	{
 		newb[i]=new char[dim];
-		newbt[i]=new char[dim];
 	}
 	for (int i=0; i<dim; i++)
 	{
 		for (int j=0; j<dim; j++)
 		{
 			newb[i][j]=board[i][j];
-			newbt[i][j]=boardt[i][j];
 		}
 		newcolcomp[i]=colcomp[i];
 	}
-	Game* newgame = new Game(dim,t,newb,newbt,pscore,numcompleted,newcolcomp);
+	Game* newgame = new Game(dim,t,newb,pscore,numcompleted,newcolcomp);
 	return newgame;
 }
 

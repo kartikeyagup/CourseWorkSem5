@@ -52,6 +52,7 @@ int main(int argc, char const *argv[])
 	{
 		std::cerr<<"In the else case\n";
 		//Playing as Order
+		return 0;
 		while (true)
 		{
 			GameToPlay->ShowPresent();

@@ -248,7 +248,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 {
 
 	// depth d;
-	int d = 7;
+	int d = 5;
 	float init_util = 10000.0;
 	ChaosNode* node_chaos = new ChaosNode(a,b,1.0,init_util);
 	std::stack<std::pair<OrderNode*,int> > order_stack;
@@ -407,7 +407,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 					n_chance->getparent()->hasinferred = 1;
 				}
 
-				if(n_chance->getparent()->alpha >= n_chance->getparent()->beta)
+				if(n_chance->getparent()->alpha > n_chance->getparent()->beta)
 				{
 					while(!chance_stack.empty() && chance_stack.top().second==depth_chance)
 					{
@@ -459,7 +459,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 						n_chance->getparent()->hasinferred = 1;
 					}
 
-					if(n_chance->getparent()->alpha >= n_chance->getparent()->beta)
+					if(n_chance->getparent()->alpha > n_chance->getparent()->beta)
 					{
 						while(!chance_stack.empty() && chance_stack.top().second == depth_chance)
 						{
@@ -500,7 +500,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 					n_order->getparent()->hasinferred = 1;
 				}
 
-				if(n_order->getparent()->alpha>=n_order->getparent()->beta)
+				if(n_order->getparent()->alpha>n_order->getparent()->beta)
 				{
 					while(!order_stack.empty() && order_stack.top().second == depth_order)
 					{
@@ -530,8 +530,6 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 					{
 						delete n_order;
 					}
-					
-
 				}
 			}
 			else
@@ -566,7 +564,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 						Level1Order.push_back(n_order);
 						// std::cerr << "Removing node from order\n";
 
-						if(n_order->getparent()->alpha>=n_order->getparent()->beta)
+						if(n_order->getparent()->alpha>n_order->getparent()->beta)
 						{
 							while(order_stack.top().second == depth_order)
 							{
@@ -584,10 +582,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 								n_order->getparent()->setutility(n_order->getutility());
 							}
 							// std::cerr<<"Deleting order node: "<<depth_order<<"\n";			
-
-						}
-	
-
+						}	
 					}
 					else 
 					{
@@ -605,7 +600,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 						}
 						// std::cerr << "Removing node from order\n";
 
-						if(n_order->getparent()->alpha>=n_order->getparent()->beta)
+						if(n_order->getparent()->alpha>n_order->getparent()->beta)
 						{
 							while(!order_stack.empty() && order_stack.top().second == depth_order)
 							{
