@@ -22,6 +22,7 @@ int main(int argc, char const *argv[])
 		std::cin >>inp;
 		std::cerr << "Char obtained is: " << inp <<"\n";
 		std::pair<int,int> mbest= getbestmoveChaos(GameToPlay,inp);
+		std::cerr << "received move from ronak\n";
 		GameToPlay->AddNew(inp,mbest.first,mbest.second);
 		std::cout << mbest.first <<" "<<mbest.second <<"\n";
 		GameToPlay->ShowPresent();

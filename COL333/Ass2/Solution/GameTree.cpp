@@ -69,8 +69,11 @@ std::vector<OrderNode*> ChaosNode::getchildren()
 			// std::cerr << ""
 			if(this->getgame()->GetValidMoveInsert(getcolor(),i,j))
 			{
+				// std::cerr << "Adding this color\t" << this->getcolor() << "\t" << i << "\t" <<j <<"\n";
 				Game* dup_game = GetDuplicate(this->getgame());
+				// dup_game->ShowPresent();
 				dup_game->AddNew(this->getcolor(),i,j);
+				// dup_game->ShowPresent();
 				// int score = this->getgame()->GetNewScoreInsert(this->getcolor(),i,j);
 				OrderNode* child = new OrderNode(dup_game,ORDER_DEFAULT,this);
 				child_chaos.push_back(child);
@@ -142,8 +145,16 @@ std::vector<ChanceNode*> OrderNode::getchildren()
 							// std::cerr<< i << "\t" << j <<"\t" << k <<"\t" << l <<"\n";
 							Game* dup_game = GetDuplicate(this->getgame());
 							dup_game->Move(i,j,k,l);
+							// std::cerr<< "dup node printing ********************\n";
+							// dup_game->ShowPresent();
+							// std::cerr<< "dup node printing ********************\n";
+							
+
 							// int score = this->getgame()->GetNewScoreMove(i,j,k,l);
 							ChanceNode* child = new ChanceNode(dup_game,0,this);
+							// std::cerr<< "chance node printing ********************\n";
+							// child -> getgame()->ShowPresent();
+							// std::cerr<< "chance node printing ********************\n";
 							v.push_back(child);
 							// delete dup_game;
 							// delete child;
@@ -194,7 +205,8 @@ std::vector<ChaosNode*> ChanceNode::getchildren()
 	std::vector<ChaosNode*> v;
 	for(int i=0;i<this->getgame()->GetDimension();i++)
 	{
-		ChaosNode* child = new ChaosNode(this->getgame(),i+'A',(this->getgame()->GetProbabilities())[i],CHAOS_DEFAULT,this);
+		Game* dup_game = GetDuplicate(this->getgame());
+		ChaosNode* child = new ChaosNode(dup_game,i+'A',(dup_game->GetProbabilities())[i],CHAOS_DEFAULT,this);
 		v.push_back(child);
 		// delete child;
 	}
@@ -245,7 +257,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 	// v[v.size()-1]->children_visited = 1;
 	float min_utility = 100000.0;			// minimum utility of the chaos node
 	OrderNode* c;
-
+	std::vector<OrderNode*> Level1Order;	// to finally delete level 1 order nodes
 
 	int depth_order;
 	int depth_chaos;
@@ -306,10 +318,10 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				chaos_stack.pop();
 				// look at its parent and change the utility accordingly
 				n_chaos -> getparent() -> setutility (n_chaos->getgame()->GetPresentScore() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
-				std::cerr << "Done for: ";
-				n_chaos->getgame()->ShowPresent();
+			// 	std::cerr << "Done for: ";
+			// 	n_chaos->getgame()->ShowPresent();
 				delete n_chaos;
-				std::cerr << "Deleted it\n";
+			// 	std::cerr << "Deleted it\n";
 			}
 			else
 			{
@@ -334,7 +346,14 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 					{
 						n_chaos -> getparent() -> setutility (n_chaos->getutility() * n_chaos->getprobability() + n_chaos->getparent()->getutility());
 					}
-					// delete n_chaos;
+					// std::cerr<<"Depth is :"<<depth_chaos<<"\n";
+					// std::cerr<<"Board Printing:"<<"\n";
+					// n_chaos->getgame()->ShowPresent();
+					// std::cerr<<"Board Printing"<<"\n";
+					if(depth_chaos!=0)
+					{
+						delete n_chaos;
+					}
 				}
 
 			}
@@ -359,6 +378,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 					std::vector<ChaosNode*> v_children = chance_stack.top().first->getchildren();
 					for(int i=0;i<v_children.size();i++)
 					{
+						// v_children[i]->getgame()->ShowPresent();
 						chaos_stack.push(std::make_pair(v_children[i],depth_chance+1));
 					}
 					chance_stack.top().first->children_visited = 1;
@@ -372,7 +392,8 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 					{
 						n_chance->getparent()->setutility(n_chance->getutility());
 					}
-					// delete n_chance;
+					// std::cerr<<"Deleting chance nodes :"<<depth_chance<<"\n";
+					delete n_chance;
 				}
 			}
 		}
@@ -387,6 +408,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 				{
 					n_order->getparent()->setutility(n_order->getgame()->GetPresentScore());
 				}
+				// std::cerr<<"Deleting order node: "<<depth_order<<"\n";
 				delete n_order;
 			}
 			else
@@ -412,6 +434,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 
 						OrderNode* n_order = order_stack.top().first;
 						order_stack.pop();
+						Level1Order.push_back(n_order);
 						// std::cerr << "Removing node from order\n";
 	
 						if(n_order->getutility()<n_order->getparent()->getutility())
@@ -430,7 +453,8 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 						{
 							n_order->getparent()->setutility(n_order->getutility());
 						}
-						// delete n_order;
+						// std::cerr<<"Deleting order nodes: "<<depth_order<<"\n";
+						delete n_order;
 					}
 				}
 			}
@@ -438,6 +462,11 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 	}
 
 	std::pair<int,int> ans = GetDifferenceInsert(a,c->getgame());
+	// delete node_chaos;
+	for(std::vector<OrderNode*>::iterator it = Level1Order.begin();it!=Level1Order.end();++it)
+	{
+		delete *it;
+	}
 	// delete node_chaos;
 	return ans;
 }

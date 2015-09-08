@@ -191,17 +191,19 @@ void Game::Move(int initx,int inity, int finx, int finy)
 	// (initx)(inity) -> (finx)(finy)
 	Pscore = GetNewScoreMove(initx,inity,finx,finy);
 
-	Board[finx][finy]=Board[initx][inity];
-	Board[initx][inity]='-';
+	if (initx!=finx || inity!=finy)
+	{
+		Board[finx][finy]=Board[initx][inity];
+		Board[initx][inity]='-';
 
-	BoardT[finy][finx]=BoardT[inity][initx];
-	BoardT[inity][initx]='-';
+		BoardT[finy][finx]=BoardT[inity][initx];
+		BoardT[inity][initx]='-';
+	}
 }
 
 void Game::AddNew(char nchar,int xpos, int ypos)
 {
 	Pscore = GetNewScoreInsert(nchar,xpos,ypos);
-
 	Board[xpos][ypos]=nchar;
 	BoardT[ypos][xpos]=nchar;
 	NumCompleted +=1;
@@ -260,8 +262,8 @@ float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
 		// Same column Motion
 		// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
 		int scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(BoardT[newy]);
-		Board[prevx][prevy]='-';
 		Board[newx][newy]=Board[prevx][prevy];
+		Board[prevx][prevy]='-';
 		BoardT[newy][newx]=BoardT[prevy][prevx];
 		BoardT[prevy][prevx]='-';
 		// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
@@ -288,7 +290,7 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 	{
 		if (newy>prevy)
 		{
-			for(int i=prevy+1; i<newy; i++)
+			for(int i=prevy+1; i<=newy; i++)
 			{
 				if (Board[prevx][i]!='-')
 				{
@@ -299,7 +301,7 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 		}
 		else if (prevy>newy)
 		{
-			for (int i=newy +1; i<prevy; i++)
+			for (int i=newy +1; i<=prevy; i++)
 			{
 				if (Board[prevx][i]!='-')
 				{
@@ -315,7 +317,7 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 	{
 		if (newx>prevx)
 		{
-			for (int i=prevx+1;i<newx; i++)
+			for (int i=prevx+1;i<=newx; i++)
 			{
 				if (Board[i][prevy]!='-')
 				{
@@ -326,7 +328,7 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 		}
 		else if(prevx>newx)
 		{
-			for(int i=newx+1; i<prevx; i++)
+			for(int i=newx+1; i<=prevx; i++)
 			{
 				if (Board[i][newy]!='-')
 				{
