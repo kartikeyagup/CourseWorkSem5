@@ -212,37 +212,37 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 	std::stack<std::pair<ChaosNode*,int> > chaos_stack;
 	std::stack<std::pair<ChanceNode*,int> > chance_stack;
 	
-	// push children of chaos node into the stack
-	std::vector<OrderNode*> v = node_chaos->getchildren();
 	chaos_stack.push(std::make_pair(node_chaos,0));
-	for(int i=0;i<v.size();i++)
-	{
-		order_stack.push(std::make_pair(v[i],1));		
-	}
+	// push children of chaos node into the stack
+	// std::vector<OrderNode*> v = node_chaos->getchildren();
+	// for(int i=0;i<v.size();i++)
+	// {
+	// 	order_stack.push(std::make_pair(v[i],1));		
+	// }
 
-	std::cerr << "Created order stack\n";
+	// std::cerr << "Created order stack\n";
 
-	// make boolean of chaos node to be true
-	node_chaos->children_visited = 1;
+	// // make boolean of chaos node to be true
+	// node_chaos->children_visited = 1;
 
-	// push children of the first order node into the stack chance
-	std::cerr << "chaos children visted set\t" << v.size() <<"\n";
+	// // push children of the first order node into the stack chance
+	// std::cerr << "chaos children visted set\t" << v.size() <<"\n";
 
-	std::vector<ChanceNode*> a_v = v[v.size()-1]->getchildren();
-	// v[v.size()-1]->getgame()->ShowPresent();
-	std::cerr << "chaos children obtained\n";
+	// std::vector<ChanceNode*> a_v = v[v.size()-1]->getchildren();
+	// // v[v.size()-1]->getgame()->ShowPresent();
+	// std::cerr << "chaos children obtained\n";
 
-	for(int i=0;i<a_v.size();i++)
-	{
-		chance_stack.push(std::make_pair(a_v[i],2));
+	// for(int i=0;i<a_v.size();i++)
+	// {
+	// 	chance_stack.push(std::make_pair(a_v[i],2));
 
-	}
+	// }
 
 
-	std::cerr << "Created chance stack\n";
+	// std::cerr << "Created chance stack\n";
 
-	// make boolean of node v[v.size()-1] to be true
-	v[v.size()-1]->children_visited = 1;
+	// // make boolean of node v[v.size()-1] to be true
+	// v[v.size()-1]->children_visited = 1;
 	float min_utility = 100000.0;			// minimum utility of the chaos node
 	OrderNode* c;
 
@@ -453,27 +453,27 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 	std::stack<std::pair<ChanceNode*,int> > chance_stack;
 	
 	// push children of chaos node into the stack
-	std::vector<ChanceNode*> v = node_order->getchildren();
 	order_stack.push(std::make_pair(node_order,0));
-	for(int i=0;i<v.size();i++)
-	{
-		chance_stack.push(std::make_pair(v[i],1));		
-	}
+	// std::vector<ChanceNode*> v = node_order->getchildren();
+	// for(int i=0;i<v.size();i++)
+	// {
+	// 	chance_stack.push(std::make_pair(v[i],1));		
+	// }
 
-	// make boolean of chaos node to be true
-	node_order->children_visited = 1;
+	// // make boolean of chaos node to be true
+	// node_order->children_visited = 1;
 
-	// push children of the first order node into the stack chance
+	// // push children of the first order node into the stack chance
 
-	std::vector<ChaosNode*> a_v = v[v.size()-1]->getchildren();
-	for(int i=0;i<a_v.size();i++)
-	{
-		chaos_stack.push(std::make_pair(a_v[i],2));
+	// std::vector<ChaosNode*> a_v = v[v.size()-1]->getchildren();
+	// for(int i=0;i<a_v.size();i++)
+	// {
+	// 	chaos_stack.push(std::make_pair(a_v[i],2));
 
-	}
+	// }
 
-	// make boolean of node v[v.size()-1] to be true
-	v[v.size()-1]->children_visited = 1;
+	// // make boolean of node v[v.size()-1] to be true
+	// v[v.size()-1]->children_visited = 1;
 	float min_utility = ORDER_DEFAULT;			// minimum utility of the chaos node
 	ChanceNode* c;
 
