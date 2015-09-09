@@ -2,9 +2,6 @@
  * Control.Print.printDepth := 100;
  *)
 
-fun print_error (s,i,_) =
-  TextIO.output(TextIO.stdOut,
-    "Error, line " ^ (Int.toString i) ^ ", " ^ s ^ "\n")
 
 structure Calc = struct
 
@@ -18,6 +15,11 @@ structure Calc = struct
     Join(structure LrParser = LrParser
 	 structure ParserData = CalcLrVals.ParserData
 	 structure Lex = CalcLex)
+
+ fun print_error (s,i,_) =
+  TextIO.output(TextIO.stdOut,
+    "Error, line " ^ (Int.toString i) ^ ", " ^ s ^ "\n")
+
 
   fun invoke lexstream =
        CalcParser.parse(0,lexstream,print_error,())

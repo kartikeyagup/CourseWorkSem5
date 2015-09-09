@@ -1,1 +1,1 @@
-digraph G { x1 -> false;x1 -> x2;x2 -> false;x2 -> true;}
+digraph G { a -> b;a -> b;b -> c;b -> false;c -> d;c -> d;d -> true;d -> false;d -> false;d -> true;b -> false;b -> c;c -> d;c -> d;d -> true;d -> false;d -> false;d -> true;}

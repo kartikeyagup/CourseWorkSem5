@@ -232,6 +232,20 @@ fun InvertBDD(Node_Root(false))=Node_Root(true)
 
 fun MakeBDD(H:H,T:T,G:G,Program.Constant(x):Program.BoolExpr,lst): H*T*G*Node=(H,T,G,Node_Root(x))
 	|MakeBDD(H,T,G,Program.Variable(x),lst)=(H,T,G,Node_Node(x,Node_Root(false),Node_Root(true)))
+	|MakeBDD(H,T,G,Program.OprBinary(Program.IMPLY,x,y),lst) = 
+		let
+			val prog = Program.OprBinary(Program.OR,Program.OprUnary(Program.NOT,x),y);
+		in
+			MakeBDD(H,T,G,prog,lst)
+		end
+	|MakeBDD(H,T,G,Program.OprBinary(Program.DOUBLEIMPLY,x,y),lst)=
+		let
+			val prog1 = Program.OprBinary(Program.AND,x,y);
+			val prog2 = Program.OprBinary(Program.AND,Program.OprUnary(Program.NOT,x),Program.OprUnary(Program.NOT,y))
+			val prog = Program.OprBinary(Program.OR,prog1,prog2);
+		in
+			MakeBDD(H,T,G,prog,lst)
+		end
 	|MakeBDD(H,T,G,Program.OprBinary(l1,y,z),lst)= 
 		let
 			val (app1,app2,app3,app4) = MakeBDD(H,T,G,y,lst);
@@ -323,8 +337,10 @@ fun MakeTotalString(l)= concat["digraph G { ", GenerateString(l) , "}"];
 fun GetNode(_,_,_,x)=x;
 
 (*val q:Program.BoolExpr=Calc.parse_string("(x2*x1);");*)
-val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");
+(*val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");*)
 (*val q:Program.BoolExpr=Calc.parse_string("x1+(~(x1));");*)
+(*val q:Program.BoolExpr=Calc.parse_string("(x1=x1)*(x2);");*)
+val q:Program.BoolExpr=Calc.parse_string("(a=b)*(c=d);");
 
 val writestream = TextIO.openOut "test.dot";
 (*TextIO.output(writestream, "This is a message to write to your stream.");*)
