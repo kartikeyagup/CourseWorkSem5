@@ -295,7 +295,7 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 		}
 		else if (prevy>newy)
 		{
-			for (int i=newy +1; i<=prevy; i++)
+			for (int i=prevy-1 ; i>=newy; i--)
 			{
 				if (Board[prevx][i]!='-')
 				{
@@ -322,7 +322,7 @@ bool Game::GetValidMoveShift(int prevx,int prevy,int newx,int newy)
 		}
 		else if(prevx>newx)
 		{
-			for(int i=newx+1; i<=prevx; i++)
+			for(int i=prevx-1; i>=newx; i--)
 			{
 				if (Board[i][newy]!='-')
 				{

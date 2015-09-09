@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
 	{
 		std::cerr<<"In the else case\n";
 		//Playing as Order
-		return 0;
+		// return 0;
 		while (true)
 		{
 			GameToPlay->ShowPresent();
@@ -64,6 +64,7 @@ int main(int argc, char const *argv[])
 			{
 				break;
 			}
+			GameToPlay->ShowPresent();
 			std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder(GameToPlay);
 			std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
 			GameToPlay->Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
