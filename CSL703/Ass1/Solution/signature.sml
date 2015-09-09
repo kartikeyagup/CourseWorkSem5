@@ -329,7 +329,7 @@ fun SortVars(p)=
 ;
 
 fun GenerateString(Node_Root(x)) = ""
-	|GenerateString(Node_Node(a,b,c)) = concat[concat([a," -> ", var(b)]),";",  concat([a, " -> ", var(c)]) , ";",GenerateString(b),GenerateString(c)]
+	|GenerateString(Node_Node(a,b,c)) = concat[concat([a," -> ", var(b)]),";\n",  concat([a, " -> ", var(c)]) , ";\n",GenerateString(b),GenerateString(c)]
 ;
 
 fun MakeTotalString(l)= concat["digraph G { ", GenerateString(l) , "}"];
