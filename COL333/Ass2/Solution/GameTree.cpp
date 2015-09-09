@@ -772,7 +772,12 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				{
 					if(chance_stack.top().second==1)
 					{
-						std::cerr << chance_stack.top().first->getutility() <<"\n";
+						// std::cerr << chance_stack.top().first->getutility() <<"\n";
+						if (chance_stack.top().first->getutility()<=0)
+						{
+							chance_stack.top().first->setutility(chance_stack.top().first->getgame()->GetPresentScore());
+						}
+
 						if(max_utility<chance_stack.top().first->getutility())
 						{
 							c = chance_stack.top().first;
@@ -785,10 +790,10 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 						// 	c = chance_stack.top().first;
 						// 	chance_stack.top().first->getparent()->setutility(chance_stack.top().first->getutility());
 						// }
-						if (c==NULL)
-						{
-							c = chance_stack.top().first;		
-						}
+						// if (c==NULL)
+						// {
+						// 	c = chance_stack.top().first;		
+						// }
 						ChanceNode* n_chance = chance_stack.top().first;
 						chance_stack.pop();
 						Level1Chance.push_back(n_chance);
@@ -805,7 +810,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 						{
 							n_chance->getparent()->setutility(n_chance->getutility());
 						}
-						// delete n_chance;						
+						delete n_chance;						
 					}
 				}
 			}
@@ -853,7 +858,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 			}
 		}
 	}
-	std::cerr << "done with computations, now taking difference\t" << Level1Chance.size() <<"\t" << max_utility <<"\n" ;
+	// std::cerr << "done with computations, now taking difference\t" << Level1Chance.size() <<"\t" << max_utility <<"\n" ;
 	a->ShowPresent();
 	c->getgame()->ShowPresent();
 	auto ans =GetDifferenceMove(a,c->getgame()); 
