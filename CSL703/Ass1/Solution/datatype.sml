@@ -9,6 +9,8 @@ signature PROGRAM =
 		and BoolOpr = AND
 				| OR
 				| NOT
+				| IMPLY
+				| DOUBLEIMPLY
 				| IFTHENELSE
 end
 
@@ -23,5 +25,7 @@ structure Program :> PROGRAM =
 		and BoolOpr = AND
 				| OR
 				| NOT
+				| IMPLY
+				| DOUBLEIMPLY
 				| IFTHENELSE
 end;

@@ -25,6 +25,8 @@ ws = [\ \t];
 "0"		 => (Tokens.FALSE(!pos,!pos));
 {alphanum}+ => (Tokens.VAR(yytext,!pos,!pos));
 "+"		 => (Tokens.OR(!pos,!pos));
+"->"	 => (Tokens.IMPLY(!pos,!pos));
+"="		 => (Tokens.DOUBLEIMPLY(!pos,!pos));
 "\*"	 => (Tokens.AND(!pos,!pos));
 "\~" 	 => (Tokens.NOT(!pos,!pos));
 ")"		 => (Tokens.RPAREN(!pos,!pos));
