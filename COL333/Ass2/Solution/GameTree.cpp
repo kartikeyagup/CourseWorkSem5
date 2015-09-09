@@ -143,40 +143,64 @@ std::vector<ChanceNode*> OrderNode::getchildren()
 	// TODO: improve complexity and ordering (reverse orderings)
 	// std::cerr << "Starting get children of order\n";
 	std::vector<ChanceNode*> v;
+	bool dupdone=false;
 	// std::cerr << "Starting get children of order\n";
 	for(int i=0;i<this->getgame()->GetDimension();i++)
 	{
 		for(int j=0;j<this->getgame()->GetDimension();j++)
 		{
-			for(int k=0;k<this->getgame()->GetDimension();k++)
+			if (!this->getgame()->GetValidMoveInsert('A',i,j))
 			{
-				for(int l=0;l<this->getgame()->GetDimension();l++)
+				for(int k=0;k<this->getgame()->GetDimension();k++)
 				{
-					// if(i!=k || j!=l)
-					// {
-						if(this->getgame()->GetValidMoveShift(i,j,k,l))
-						{
-							// std::cerr<< i << "\t" << j <<"\t" << k <<"\t" << l <<"\n";
-							Game* dup_game = GetDuplicate(this->getgame());
-							dup_game->Move(i,j,k,l);
-							// std::cerr<< "dup node printing ********************\n";
-							// dup_game->ShowPresent();
-							// std::cerr<< "dup node printing ********************\n";
-							
+					for(int l=0;l<this->getgame()->GetDimension();l++)
+					{
+						// if(i!=k || j!=l)
+						// {
+							if(this->getgame()->GetValidMoveShift(i,j,k,l))
+							{
+								// std::cerr<< i << "\t" << j <<"\t" << k <<"\t" << l <<"\n";
+								Game* dup_game = GetDuplicate(this->getgame());
+								dup_game->Move(i,j,k,l);
+								// std::cerr<< "dup node printing ********************\n";
+								// dup_game->ShowPresent();
+								// std::cerr<< "dup node printing ********************\n";
+								// int score = this->getgame()->GetNewScoreMove(i,j,k,l);
+								if (i==k && j==l)
+								{
+									if (!dupdone)
+									{
+										dupdone=true;
+										ChanceNode* child = new ChanceNode(dup_game,0,this);
+										v.push_back(child);
+									}
+								}
+								else
+								{
+									ChanceNode* child = new ChanceNode(dup_game,0,this);
+									v.push_back(child);	
+								}
 
-							// int score = this->getgame()->GetNewScoreMove(i,j,k,l);
-							ChanceNode* child = new ChanceNode(dup_game,0,this);
-							// std::cerr<< "chance node printing ********************\n";
-							// child -> getgame()->ShowPresent();
-							// std::cerr<< "chance node printing ********************\n";
-							v.push_back(child);
-							// delete dup_game;
-							// delete child;
-						}
-					// }
+								// ChanceNode* child = new ChanceNode(dup_game,0,this);
+								// std::cerr<< "chance node printing ********************\n";
+								// child -> getgame()->ShowPresent();
+								// std::cerr<< "chance node printing ********************\n";
+								// v.push_back(child);
+								// delete dup_game;
+								// delete child;
+							}
+						// }
+					}
 				}
 			}
 		}
+	}
+	if (v.size()==0)
+	{
+		Game* dup_game = GetDuplicate(this->getgame());
+		dup_game->Move(0,0,0,0);
+		ChanceNode* child = new ChanceNode(dup_game,0,this);
+		v.push_back(child);
 	}
 	return v;
 }
