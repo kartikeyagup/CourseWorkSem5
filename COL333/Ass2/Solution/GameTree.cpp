@@ -272,7 +272,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 {
 
 	// depth d;
-	int d = 5;
+	int d = 6;
 	float init_util = 10000.0;
 	ChaosNode* node_chaos = new ChaosNode(a,b,1.0,init_util);
 	std::stack<std::pair<OrderNode*,int> > order_stack;
@@ -667,7 +667,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 
 std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 {
-	int d = 5;  // cut-off depth;
+	int d = 6;  // cut-off depth;
 
 	OrderNode* node_order = new OrderNode(a,ORDER_DEFAULT);
 	//ChaosNode* node_chaos = new ChaosNode(a,b,1.0,init_util);
