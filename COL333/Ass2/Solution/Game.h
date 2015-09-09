@@ -7,7 +7,7 @@
 #include <iostream>
 #include <unordered_map>
 
-extern std::unordered_map<std::string,int> PalidromeScoreData;
+extern std::unordered_map<std::string,float> PalidromeScoreData;
 
 bool CheckPalindrome(char*,int,int);
 bool CheckValidPalin(char*,int,int);

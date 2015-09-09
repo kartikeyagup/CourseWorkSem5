@@ -1,6 +1,6 @@
 #include "GameClient.h"
 
-std::unordered_map<std::string,int> PalidromeScoreData;
+std::unordered_map<std::string,float> PalidromeScoreData;
 
 int main(int argc, char const *argv[])
 {
