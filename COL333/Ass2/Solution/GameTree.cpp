@@ -724,6 +724,8 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				// if the boolean is 0 then do a top and push the children into the order stack
 				if(chaos_stack.top().first->children_visited == 0)
 				{
+					chaos_stack.top().first->alpha = chaos_stack.top().first->getparent()->alpha;
+					chaos_stack.top().first->beta = chaos_stack.top().first->getparent()->beta;
 					std::vector<OrderNode*> v_children = chaos_stack.top().first->getchildren();
 					for(int i=0;i<v_children.size();i++)
 					{
@@ -751,16 +753,33 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 			{
 				ChanceNode* n_chance = chance_stack.top().first;
 				chance_stack.pop();
-				if(n_chance->getutility()>n_chance->getparent()->getutility())
+				if(n_chance->getparent()->alpha >= n_chance->getparent()->beta)
 				{
-					n_chance->getparent()->setutility(n_chance->getgame()->GetPresentScore());
+					while(!chance_stack.empty() && chance_stack.top().second == depth_chance)
+					{
+						ChanceNode* prune = chance_stack.top().first;
+						chance_stack.pop();
+						// delete prune;
+					}
 				}
-				delete n_chance;
+				else
+				{
+					// chance_stack.pop();
+					n_chance->getparent()->alpha = std::max(n_chance->getgame()->GetPresentScore(),n_chance->getparent()->alpha);
+					if(n_chance->getutility()>n_chance->getparent()->getutility())
+					{
+						n_chance->getparent()->setutility(n_chance->getgame()->GetPresentScore());
+					}
+					delete n_chance;
+				}
+				
 			}
 			else
 			{
 				if(chance_stack.top().first->children_visited ==0)
 				{
+					chance_stack.top().first->alpha = chance_stack.top().first->getparent()->alpha;
+					chance_stack.top().first->beta = chance_stack.top().first->getparent()->beta;
 					std::vector<ChaosNode*> v_children = chance_stack.top().first->getchildren();
 					for(int i=0;i<v_children.size();i++)
 					{
@@ -770,47 +789,64 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				}
 				else
 				{
-					if(chance_stack.top().second==1)
+					ChanceNode* n_chance = chance_stack.top().first;
+					// chance_stack.pop();
+					if(n_chance->getparent()->alpha >= n_chance->getparent()->beta)
 					{
-						// std::cerr << chance_stack.top().first->getutility() <<"\n";
-						if (chance_stack.top().first->getutility()<=0)
+						while(!chance_stack.empty() && chance_stack.top().second == depth_chance)
 						{
-							chance_stack.top().first->setutility(chance_stack.top().first->getgame()->GetPresentScore());
-						}
-
-						if(max_utility<chance_stack.top().first->getutility())
-						{
-							c = chance_stack.top().first;
-							max_utility = chance_stack.top().first->getutility();
-						}
-						// chance_stack.top().first->getgame()->ShowPresent();
-
-						// if(chance_stack.top().first->getutility()>chance_stack.top().first->getparent()->getutility())
-						// {
-						// 	c = chance_stack.top().first;
-						// 	chance_stack.top().first->getparent()->setutility(chance_stack.top().first->getutility());
-						// }
-						// if (c==NULL)
-						// {
-						// 	c = chance_stack.top().first;		
-						// }
-						ChanceNode* n_chance = chance_stack.top().first;
-						chance_stack.pop();
-						Level1Chance.push_back(n_chance);
-						if(n_chance->getutility()>n_chance->getparent()->getutility())
-						{
-							n_chance->getparent()->setutility(n_chance->getutility());
+							ChanceNode* prune = chance_stack.top().first;
+							chance_stack.pop();
+							// delete prune;
 						}
 					}
 					else
 					{
-						ChanceNode* n_chance = chance_stack.top().first;
-						chance_stack.pop();
-						if(n_chance->getutility()>n_chance->getparent()->getutility())
+						n_chance->getparent()->alpha = std::max(n_chance->getutility(),n_chance->getparent()->alpha);
+						if(chance_stack.top().second==1)
 						{
-							n_chance->getparent()->setutility(n_chance->getutility());
+							// std::cerr << chance_stack.top().first->getutility() <<"\n";
+							
+
+							if (chance_stack.top().first->getutility()<=0)
+							{
+								chance_stack.top().first->setutility(chance_stack.top().first->getgame()->GetPresentScore());
+							}
+
+							if(max_utility<chance_stack.top().first->getutility())
+							{
+								c = chance_stack.top().first;
+								max_utility = chance_stack.top().first->getutility();
+							}
+							// chance_stack.top().first->getgame()->ShowPresent();
+
+							// if(chance_stack.top().first->getutility()>chance_stack.top().first->getparent()->getutility())
+							// {
+							// 	c = chance_stack.top().first;
+							// 	chance_stack.top().first->getparent()->setutility(chance_stack.top().first->getutility());
+							// }
+							// if (c==NULL)
+							// {
+							// 	c = chance_stack.top().first;		
+							// }
+							chance_stack.pop();
+							Level1Chance.push_back(n_chance);
+							// std::cerr<<"Pushing into the vector:"<<Level1Chance.size()<<"\n";
+							if(n_chance->getutility()>n_chance->getparent()->getutility())
+							{
+								n_chance->getparent()->setutility(n_chance->getutility());
+							}
 						}
-						delete n_chance;						
+						else
+						{
+							ChanceNode* n_chance = chance_stack.top().first;
+							chance_stack.pop();
+							if(n_chance->getutility()>n_chance->getparent()->getutility())
+							{
+								n_chance->getparent()->setutility(n_chance->getutility());
+							}
+							delete n_chance;						
+						}
 					}
 				}
 			}
@@ -821,16 +857,35 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 			{
 				OrderNode* n_order = order_stack.top().first;
 				order_stack.pop();
-				if(n_order->getutility()<n_order->getparent()->getutility())
+				if(n_order->getparent()->alpha>=n_order->getparent()->beta)
 				{
-					n_order->getparent()->setutility(n_order->getgame()->GetPresentScore());
+					while(!order_stack.empty() && order_stack.top().second == depth_order)
+					{
+						OrderNode* prune = order_stack.top().first;
+						order_stack.pop();
+						// delete prune;
+					}
 				}
-				delete n_order;
+				else
+				{
+					n_order->getparent()->beta = std::min(n_order->getparent()->beta,n_order->getgame()->GetPresentScore());
+					// order_stack.pop();
+					if(n_order->getutility()<n_order->getparent()->getutility())
+					{
+						n_order->getparent()->setutility(n_order->getgame()->GetPresentScore());
+					}
+					delete n_order;
+				}
 			}
 			else
 			{
 				if( order_stack.top().first->children_visited==0)
 				{
+					if(order_stack.top().first->getparent()!=NULL)
+					{
+						order_stack.top().first->alpha = order_stack.top().first->getparent()->alpha;
+						order_stack.top().first->beta = order_stack.top().first->getparent()->beta;
+					}
 					std::vector<ChanceNode*> v_children = order_stack.top().first->getchildren();
 					for(int i=0;i<v_children.size();i++)
 					{
@@ -841,15 +896,31 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 				}
 				else
 				{
+
 					OrderNode* n_order = order_stack.top().first;
 					order_stack.pop();
 					if(n_order->getparent()!=NULL)
 					{
-						if(n_order->getutility()<n_order->getparent()->getutility())
+						if(n_order->getparent()->alpha>=n_order->getparent()->beta)
 						{
-							n_order->getparent()->setutility(n_order->getutility());
+							while(!order_stack.empty() && order_stack.top().second == depth_order)
+							{
+								OrderNode* prune = order_stack.top().first;
+								order_stack.pop();
+								// delete prune;
+							}
+						}
+						else
+						{
+							n_order->getparent()->beta = std::min(n_order->getparent()->beta,n_order->getutility());
+							// order_stack.pop();
+							if(n_order->getutility()<n_order->getparent()->getutility())
+							{
+								n_order->getparent()->setutility(n_order->getutility());
+							}
 						}
 					}
+
 					if(depth_order!=0)
 					{
 						delete n_order;
