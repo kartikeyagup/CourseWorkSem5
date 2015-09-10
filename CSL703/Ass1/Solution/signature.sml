@@ -119,7 +119,7 @@ fun App(H:H,T:T,G_Table(g):G,Program.AND,n1:Node,n2:Node,lst:((string*int) list)
 		else if (CheckRoot(n1) andalso CheckNode(n2)) then
 			if (GetBool(n1)) then 
 				let
-					val q = print "Bool value was true\n";
+					val q = "Bool value was true\n";
 				in
 					(n2,H,T,G_Table(g))		
 				end
@@ -143,25 +143,11 @@ fun App(H:H,T:T,G_Table(g):G,Program.AND,n1:Node,n2:Node,lst:((string*int) list)
 			in
 				(D,A,B,G_Table(g1))
 			end
-		else if (GetPriority(var(n1),lst)>=GetPriority(var(n2),lst)) then
+		else if ((GetPriority(var(n1),lst)>GetPriority(var(n2),lst)) orelse (GetPriority(var(n1),lst)=GetPriority(var(n2),lst) andalso var(n1)<var(n2))) then
 			let
-				val d1 = print "in else if\n";
-				val d1 = print "string for n1 ";
-				val d1= print (StringEquiv(n1));
-				val d1 =print "\n";
-				val d1 = print "string for n2 ";
-				val d1= print (StringEquiv(n2));
-				val d1 =print "\n";
 				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.AND,GetLow(n1),n2,lst)
-				val d1 = print "string for app1 ";
-				val d1= print (StringEquiv(app1));
-				val d1 =print "\n";
 				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.AND,GetHigh(n1),n2,lst)
-				val d1 = print "string for app5 ";
-				val d1= print (StringEquiv(app5));
-				val d1 =print "\n";
 				val (A,B,G_Table(g1),D) = Mk(app6,app7,app8,var(n1),app1,app5)
-				val d1 = print "made\n";
 				val addeding = HashTable.insert g1 ((n1,n2), D) 
 			in
 				(D,A,B,G_Table(g1))
@@ -203,7 +189,7 @@ fun App(H:H,T:T,G_Table(g):G,Program.AND,n1:Node,n2:Node,lst:((string*int) list)
 			in
 				(D,A,B,G_Table(g1))
 			end
-		else if (GetPriority( var(n1),lst)>=GetPriority(var(n2),lst)) then
+		else if ((GetPriority(var(n1),lst)>GetPriority(var(n2),lst)) orelse (GetPriority(var(n1),lst)=GetPriority(var(n2),lst) andalso var(n1)<var(n2))) then
 			let
 				val (app1,app2,app3,app4) = App(H,T,G_Table(g),Program.OR,GetLow(n1),n2,lst)
 				val (app5,app6,app7,app8) = App(app2,app3,app4,Program.OR,GetHigh(n1),n2,lst)
@@ -249,9 +235,7 @@ fun MakeBDD(H:H,T:T,G:G,Program.Constant(x):Program.BoolExpr,lst): H*T*G*Node=(H
 	|MakeBDD(H,T,G,Program.OprBinary(l1,y,z),lst)= 
 		let
 			val (app1,app2,app3,app4) = MakeBDD(H,T,G,y,lst);
-			(*val q = print "done for first\n";*)
 			val (app5,app6,app7,app8) = MakeBDD(app1,app2,app3,z,lst);
-			(*val q = print "done for second\n";*)
 			val (app9,app10,app11,app12) = App(app5,app6,app7,l1,app4,app8,lst)
 		in
 			(app10,app11,app12,app9)
@@ -336,26 +320,59 @@ fun MakeTotalString(l)= concat["digraph G { ", GenerateString(l) , "}"];
 
 fun GetNode(_,_,_,x)=x;
 
+fun FindPosition([],d)= ~1
+	|FindPosition((a:string,b:int,c:Node,d:int,e:int)::xs,noded:Node) = 
+		if NodeEqual(c,noded) then b
+		else FindPosition(xs,noded)
+; 
+
+fun InsertInList(l,Node_Root(true))= (l,0)
+	|InsertInList(l,Node_Root(false)) = (l,1)
+	|InsertInList(l,nodetoinsert)=
+	if (FindPosition(l,nodetoinsert)= ~1) then
+		let
+		 	val  low1 = GetLow(nodetoinsert);
+		 	val high1 = GetHigh(nodetoinsert);
+		 	val (ladded,ind1) = InsertInList(l,low1);
+		 	val (radded,ind2) = InsertInList(ladded,high1);
+		 	val nlist = radded @ [(var(nodetoinsert),length(radded),nodetoinsert,ind1,ind2)]
+		 in
+		 	(nlist,length(radded))
+		 end 
+	else (l,FindPosition(l,nodetoinsert))
+;
+
+fun MakeBaseList()=[("true",0,Node_Root(true),~1,~1),("false",1,Node_Root(false),~1,~1)];
+
+fun CorrectInsertion(Node_Root(x))=([(Bool.toString(x),0,Node_Root(x),0,0)],0)
+	|CorrectInsertion(x)=InsertInList(MakeBaseList(),x)
+;
+
+fun MakeStringElement((a,b,Node_Root(x),d,e))= concat[Int.toString(b)," [ label=", a, " ];"]
+	|MakeStringElement((a,b,c,d,e)) = concat[Int.toString(b)," [ label=", a, " ];",Int.toString(b),"->", Int.toString(d), "[style=dotted];\n",Int.toString(b),"->", Int.toString(e),";\n" ]
+;
+
+fun GiveEntireString([])=""
+	|GiveEntireString(x::xs)=concat[MakeStringElement(x),GiveEntireString(xs)]
+;
+
 (*val q:Program.BoolExpr=Calc.parse_string("(x2*x1);");*)
 (*val q:Program.BoolExpr=Calc.parse_string("x1*(x2*(x1+x3));");*)
-(*val q:Program.BoolExpr=Calc.parse_string("x1+(~(x1));");*)
+(*val q:Program.BoolExpr=Calc.parse_string("x1*(~(x1));");*)
 (*val q:Program.BoolExpr=Calc.parse_string("(x1=x1)*(x2);");*)
-val q:Program.BoolExpr=Calc.parse_string("(a=b)*(c=d);");
+(*val q:Program.BoolExpr=Calc.parse_string("(a=b)*(c=d);");*)
+val q:Program.BoolExpr=Calc.parse_string("(a= b) ? (c?(a + d) , (b*c)) , (a*d) ;")
 
 val writestream = TextIO.openOut "test.dot";
-(*TextIO.output(writestream, "This is a message to write to your stream.");*)
 
 val sorted = SortVars(q);
-
-val s = print "sorted and stuff\n";
-
+ 
 val res =GetNode(MakeBDD(initH(),initT(),initG(),q,sorted));
 
-val strout= MakeTotalString(res);
+val listedform = CorrectInsertion(res);
 
-TextIO.output(writestream,strout);
+val strans=concat["digraph {",GiveEntireString(#1(listedform)),"}"];
+
+TextIO.output(writestream,strans);
 
 TextIO.closeOut(writestream);
-(*val ht : (string, int) HashTable.hash_table = HashTable.mkTable(HashString.hashString, op=)(17, Domain);*)
-
-(*val ht : (Node, (string*Node*Node)) HashTable.hash_table = HashTable.mkTable(HashingNode, NodeEqual)(17, Domain);*)
