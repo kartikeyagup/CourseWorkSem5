@@ -1,0 +1,1 @@
+The heuristic I have used is based on the number of occurrences of a variable. The more it occurs, the more priority it is given. This is good because it starts removing the variables with maximum count which leads to a smaller width of the tree at the bottom. An example of this working effectively is in the last example in the file.
