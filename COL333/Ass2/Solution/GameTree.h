@@ -22,7 +22,7 @@ public:
 	bool children_visited;
 	float alpha;
 	float beta;
-	bool hasinferred;
+	// bool hasinferred;
 
 private:
 	Game* game;
@@ -47,7 +47,7 @@ public:
 	bool children_visited;
 	float alpha;
 	float beta;
-	bool hasinferred;
+	// bool hasinferred;
 
 private:
 	Game* game;
@@ -68,7 +68,7 @@ public:
 	bool children_visited;	
 	float alpha;
 	float beta;
-	bool hasinferred;
+	// bool hasinferred;
 	
 private:
 	Game* game;
