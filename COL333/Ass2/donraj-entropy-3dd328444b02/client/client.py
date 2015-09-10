@@ -13,7 +13,7 @@ import os
 sys.path.insert(0, os.path.realpath('../utils/'))
 from nbstreamreader import NonBlockingStreamReader as NBSR
 
-botname = 'bazooka'	 # PLEASE CHOOSE A UNIQUE BOTNAME
+botname = 'harvey_caffery'	 # PLEASE CHOOSE A UNIQUE BOTNAME
 
 SAFETY_TIMEOUT = 65 # For dumb clients, who think too much or die while thinking
 server_address = 'localhost'
@@ -55,13 +55,19 @@ def resetCode(args):
 		
 	aiProc = Popen (['sh', pathToRun], stdin = PIPE, stdout = PIPE, bufsize=0)
 	advStdout = NBSR(aiProc.stdout)
-	
+
+def writeToProc(payload):
+	try:
+		aiProc.stdin.write(payload)
+	except:
+		print 'Something bad happened with the client (# need to kill it (X1)?)'
+
 def updateCode(args):
 	try:
-		aiProc.stdin.write(args['payload'])
+		writeToProc(args['payload'])
 		my_move = advStdout.readline(SAFETY_TIMEOUT)
 	except:
-		print 'Something bad happened with the client (# need to kill it?)'
+		print 'Something bad happened with the client (# need to kill it (X2)?)'
 		my_move = None
 	
 	print 'My move (%s): %s'%(botname, my_move)
@@ -102,8 +108,9 @@ while True:
 		updateCode(dct)
 	
 	elif (dct['purpose'] == 'update_only'):
-		print "In this"
-		aiProc.stdin.write(dct['payload'])
+		writeToProc(dct['payload'])
+		
+
 
 
 

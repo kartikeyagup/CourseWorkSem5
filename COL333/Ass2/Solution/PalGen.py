@@ -86,13 +86,14 @@ for elem in mappedexpect:
 
 string2 +="}"
 
-print string2
+# print string2
 
 # print string1
 # print mapped1
 # print allstr
 
-# print fillin('---AB')
+# print fillin('-----')
+print giveexpect('AAAAB')
 
 # mapped=map(lambda x: (x,scorestring(x)),allstr)
 
