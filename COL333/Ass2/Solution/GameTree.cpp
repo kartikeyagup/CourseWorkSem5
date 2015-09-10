@@ -267,7 +267,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 {
 	count_no_chaos_moves ++;
 	int d = 7;
-	if(count_no_chaos_moves>5)
+	if(count_no_chaos_moves>5 && count_no_chaos_moves<10)
 	{
 		// depth d;
 		d = 7;
@@ -281,7 +281,7 @@ std::pair<int,int> getbestmoveChaos(Game* a,char b)
 	chaos_stack.push(std::make_pair(node_chaos,0));
 
 	float min_utility = 100000.0;			// minimum utility of the chaos node
-	OrderNode* c;
+	OrderNode* c=NULL;
 	std::vector<OrderNode*> Level1Order;	// to finally delete level 1 order nodes
 
 	int depth_order;
@@ -687,7 +687,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 {
 	count_no_order_moves++;
 	int d = 7;
-	if(count_no_order_moves>8 && count_no_order_moves<25)
+	if(count_no_order_moves>8 && count_no_order_moves<14)
 	{
 		d = 6;
 	}
