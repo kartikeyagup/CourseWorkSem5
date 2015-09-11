@@ -687,7 +687,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder(Game* a)
 {
 	count_no_order_moves++;
 	int d = 7;
-	if(count_no_order_moves>5 && count_no_order_moves<16)
+	if(count_no_order_moves>7 && count_no_order_moves<16)
 	{
 		d = 6;
 	}
