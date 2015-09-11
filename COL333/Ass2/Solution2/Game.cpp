@@ -66,7 +66,7 @@ int GetEntireScore(char* inp, int leng)
 	return sc;
 }
 
-int GetEntireScore2(char* inp)
+float GetEntireScore2(char* inp)
 {
 	// std::string temp(inp);
 	std::string temp;
@@ -151,7 +151,6 @@ int Game::CalculateScore()
 	{
 		// sccal += GetEntireScore(Board[i],Dimension);
 		sccal += GetEntireScore2(Board[i]);
-		char *vert= new char[Dimension];
 		for (int j=0; j<Dimension; j++)
 		{
 			vert[j]=Board[j][i];
@@ -447,15 +446,152 @@ std::pair<std::pair<int,int>,std::pair<int,int> > GetDifferenceMove(Game* previo
 	return std::pair<std::pair<int,int>,std::pair<int,int> > (st1,end1);
 }
 
-// int main(int argc, char const *argv[])
-// {
-// 	/* code */
-// 	int dim;
-// 	std::cin >> dim;
-// 	bool type;
-// 	std::cin>> type;
-// 	Game g1 = Game(dim,type);
-// 	g1.ShowPresent();
-// 	std::cout << g1.CalculateScore() <<" is calculated\n";
-// 	return 0;
-// }
+float Game::MoveOrder(OrderMove* Omove)
+{
+	// Give the new score on moving the tile from (prevxy,prevy) to (newx,newy) without making change in memory
+	int prevx= Omove->initx;
+	int prevy= Omove->inity;
+	int newx = Omove->finx;
+	int newy = Omove->finy;
+	float ans=0;
+	if (newx==prevx)
+	{
+		//Same row motion
+		if (newy==prevy)
+		{
+			ans=0;
+		}
+		else 
+		{
+			float scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
+			Board[newx][newy]=Board[prevx][prevy];
+			Board[prevx][prevy]='-';
+			float scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
+			ans = scoreconschange - scorecons;
+		}
+	}
+	else
+	{
+		float scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
+		Board[newx][newy]=Board[prevx][prevy];
+		Board[prevx][prevy]='-';
+		float scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
+		ans = scoreconschange - scorecons;	
+	}
+	Pscore += ans;
+	return Pscore;
+}
+
+float Game::MoveChaos(ChaosMove* Cmove)
+{
+	float scorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Board[Cmove->posx][Cmove->posy]=Cmove->color;
+	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Pscore = Pscore + newscorepresentrowcol - scorepresentrowcol;
+	NumCompleted +=1;
+	ColCompleted[(Cmove->color)-'A']+=1;
+	return Pscore;
+}
+
+float Game::MoveAndUndoOrder(OrderMove* Omove)
+{
+	// Give the new score on moving the tile from (prevxy,prevy) to (newx,newy) without making change in memory
+	int prevx= Omove->initx;
+	int prevy= Omove->inity;
+	int newx = Omove->finx;
+	int newy = Omove->finy;
+	float ans=0;
+	if (newx==prevx)
+	{
+		//Same row motion
+		if (newy==prevy)
+		{
+			ans=0;
+		}
+		else 
+		{
+			// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+			float scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
+			Board[newx][newy]=Board[prevx][prevy];
+			Board[prevx][prevy]='-';
+			// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(BoardT[prevy],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+			float scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
+			Board[prevx][prevy]=Board[newx][newy];
+			Board[newx][newy]='-';
+			ans = scoreconschange - scorecons;
+		}
+	}
+	else
+	{
+		// Same column Motion
+		// int scorecons = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+		float scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
+		Board[newx][newy]=Board[prevx][prevy];
+		Board[prevx][prevy]='-';
+		// int scoreconschange = GetEntireScore(Board[prevx],Dimension) + GetEntireScore(Board[newx],Dimension)+GetEntireScore(BoardT[newy],Dimension);
+		float scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
+		Board[prevx][prevy]=Board[newx][newy];
+		Board[newx][newy]='-';
+		ans = scoreconschange - scorecons;	
+	}
+	// std::cerr << "ans is" << Pscore << " " << ans<<"\n";
+	return Pscore+ans;
+}
+
+float Game::UndoMoveOrder(OrderMove* Omove)
+{
+	// Give the new score on moving the tile from (prevxy,prevy) to (newx,newy) without making change in memory
+	int newx= Omove->initx;
+	int newy= Omove->inity;
+	int prevx = Omove->finx;
+	int prevy = Omove->finy;
+	float ans=0;
+	if (newx==prevx)
+	{
+		//Same row motion
+		if (newy==prevy)
+		{
+			ans=0;
+		}
+		else 
+		{
+			float scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
+			Board[newx][newy]=Board[prevx][prevy];
+			Board[prevx][prevy]='-';
+			float scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(GetColumn(prevy))+GetEntireScore2(GetColumn(newy));
+			ans = scoreconschange - scorecons;
+		}
+	}
+	else
+	{
+		float scorecons = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
+		Board[newx][newy]=Board[prevx][prevy];
+		Board[prevx][prevy]='-';
+		float scoreconschange = GetEntireScore2(Board[prevx]) + GetEntireScore2(Board[newx])+GetEntireScore2(GetColumn(newy));
+		ans = scoreconschange - scorecons;	
+	}
+	Pscore += ans;
+	return Pscore;
+
+}
+
+float Game::UndoMoveChaos(ChaosMove* Cmove)
+{
+	float scorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Board[Cmove->posx][Cmove->posy]='-';
+	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Pscore = Pscore + newscorepresentrowcol - scorepresentrowcol;
+	NumCompleted -=1;
+	ColCompleted[(Cmove->color)-'A']-=1;
+	return Pscore;
+}
+
+float Game::MoveAndUndoChaos(ChaosMove* Cmove)
+{
+	// Give the new score on inserting nchar at xpos,ypos but not making any change in the memory
+	float scorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Board[Cmove->posx][Cmove->posy]=Cmove->color;
+	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Board[Cmove->posx][Cmove->posy]='-';
+	return Pscore + newscorepresentrowcol - scorepresentrowcol;
+}

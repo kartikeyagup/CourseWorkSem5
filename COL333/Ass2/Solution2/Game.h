@@ -8,8 +8,8 @@
 #include <unordered_map>
 #include <algorithm>
 
+extern char* vert;
 extern std::unordered_map<std::string,float> PalidromeScoreData;
-extern char**Board;
 
 bool CheckPalindrome(char*,int,int);
 bool CheckValidPalin(char*,int,int);
@@ -32,13 +32,14 @@ class Game
 public:
 	Game();
 	Game(int,bool);
-	Game(int,bool,float,int,int*);
+	Game(int,bool,char**,float,int,int*);
 
 	~Game();
 
 	int GetDimension();
 	bool GetType();
 	char* GetColumn(int);
+	char** GetBoard();
 	float GetPresentScore();
 	int GetNumCompleted();
 	int *GetColCompleted();
@@ -54,14 +55,17 @@ public:
 	bool GetValidMoveShift(int,int,int,int);
 	float *GetProbabilities();
 
-	void MoveOrder(OrderMove&);
-	void MoveChaos(ChaosMove&);
-	void UndoMoveOrder(OrderMove&);
-	void UndoMoveChaos(ChaosMove&);
+	float MoveOrder(OrderMove*);
+	float MoveChaos(ChaosMove*);
+	float MoveAndUndoOrder(OrderMove*);
+	float UndoMoveOrder(OrderMove*);
+	float UndoMoveChaos(ChaosMove*);
+	float MoveAndUndoChaos(ChaosMove*);
 
 private:
 	bool TypePlayer; // 0 for Order, 1 for Chaos
 	int Dimension;
+	char **Board;
 	float Pscore;
 	int NumCompleted;
 	int *ColCompleted;

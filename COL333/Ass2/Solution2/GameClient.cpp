@@ -1,7 +1,8 @@
 #include "GameClient.h"
 
 std::unordered_map<std::string,float> PalidromeScoreData;
-char**Board;
+Game GlobalGame;
+char* vert;
 
 int main(int argc, char const *argv[])
 {
@@ -14,7 +15,9 @@ int main(int argc, char const *argv[])
 
 	PopulateTable(typeg);
 
-	Game *GameToPlay =new Game(dim,typeg);
+	// Game *GlobalGame =new Game(dim,typeg);
+	GlobalGame= Game(dim,typeg);
+
 	std::cerr<<"Type: "<<typeg<<"\n";
 	if (typeg)
 	{
@@ -22,15 +25,15 @@ int main(int argc, char const *argv[])
 		char inp;
 		std::cin >>inp;
 		std::cerr << "Char obtained is: " << inp <<"\n";
-		std::pair<int,int> mbest= getbestmoveChaos(GameToPlay,inp);
+		std::pair<int,int> mbest= getbestmoveChaos(inp);
 		std::cerr << "received move from ronak\n";
-		GameToPlay->AddNew(inp,mbest.first,mbest.second);
+		GlobalGame.AddNew(inp,mbest.first,mbest.second);
 		std::cout << mbest.first <<" "<<mbest.second <<"\n";
-		GameToPlay->ShowPresent();
+		GlobalGame.ShowPresent();
 		
 		while (true)
 		{
-			if (GameToPlay->IsCompleted())
+			if (GlobalGame.IsCompleted())
 			{
 				break;
 			}
@@ -41,12 +44,12 @@ int main(int argc, char const *argv[])
 			int FinInity;
 
 			std::cin >> InpInitx >> InpInity >> FinInitx >> FinInity;
-			GameToPlay->Move(InpInitx,InpInity,FinInitx,FinInity);
+			GlobalGame.Move(InpInitx,InpInity,FinInitx,FinInity);
 			std::cin >> inp;
-			mbest = getbestmoveChaos(GameToPlay,inp);
-			GameToPlay->AddNew(inp,mbest.first,mbest.second);
+			mbest = getbestmoveChaos(GlobalGame,inp);
+			GlobalGame.AddNew(inp,mbest.first,mbest.second);
 			std::cout << mbest.first <<" "<<mbest.second <<"\n";
-			GameToPlay->ShowPresent();
+			GlobalGame.ShowPresent();
 		}
 	}
 	else
@@ -56,19 +59,19 @@ int main(int argc, char const *argv[])
 		// return 0;
 		while (true)
 		{
-			GameToPlay->ShowPresent();
+			GlobalGame.ShowPresent();
 			int posx,posy;
 			char col;
 			std::cin >> posx>>posy>>col;
-			GameToPlay->AddNew(col,posx,posy);
-			if (GameToPlay->IsCompleted())
+			GlobalGame.AddNew(col,posx,posy);
+			if (GlobalGame.IsCompleted())
 			{
 				break;
 			}
-			GameToPlay->ShowPresent();
-			std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder(GameToPlay);
+			GlobalGame.ShowPresent();
+			std::pair<std::pair<int,int>,std::pair<int,int> > mv = getbestmoveOrder();
 			std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
-			GameToPlay->Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
+			GlobalGame.Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
 			std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
 		}
 	}
@@ -77,7 +80,7 @@ int main(int argc, char const *argv[])
 	// printf("this is a normal print\n");
 
 	// Game x = Game(5,0);
-	// GameToPlay.ShowPresent();
+	// GlobalGame.ShowPresent();
 
 	fprintf(stderr,"This is another error print\n");
 	// printf("this is another normal print\n");
