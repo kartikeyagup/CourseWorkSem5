@@ -16,6 +16,17 @@ bool CheckValidPalin(char*,int,int);
 int ScoreString(char*,int,int);
 int GetEntireScore(char*,int);
 
+struct OrderMove
+{
+	int initx, inity, finx, finy;
+};
+
+struct ChaosMove
+{
+	int posx,posy;
+	char color;
+};
+
 class Game
 {
 public:
@@ -42,6 +53,11 @@ public:
 	bool GetValidMoveInsert(char,int,int);
 	bool GetValidMoveShift(int,int,int,int);
 	float *GetProbabilities();
+
+	void MoveOrder(OrderMove&);
+	void MoveChaos(ChaosMove&);
+	void UndoMoveOrder(OrderMove&);
+	void UndoMoveChaos(ChaosMove&);
 
 private:
 	bool TypePlayer; // 0 for Order, 1 for Chaos
