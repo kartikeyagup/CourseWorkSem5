@@ -15,8 +15,8 @@ int main(int argc, char const *argv[])
 
 	PopulateTable(typeg);
 
-	// Game *GlobalGame =new Game(dim,typeg);
-	GlobalGame= Game(dim,typeg);
+	Game *GlobalGame1 =new Game(dim,typeg);
+	GlobalGame= *GlobalGame1;
 
 	std::cerr<<"Type: "<<typeg<<"\n";
 	if (typeg)
@@ -25,6 +25,7 @@ int main(int argc, char const *argv[])
 		char inp;
 		std::cin >>inp;
 		std::cerr << "Char obtained is: " << inp <<"\n";
+		GlobalGame.ShowPresent();
 		std::pair<int,int> mbest= getbestmoveChaos(inp);
 		std::cerr << "received move from ronak\n";
 		GlobalGame.AddNew(inp,mbest.first,mbest.second);
@@ -45,8 +46,13 @@ int main(int argc, char const *argv[])
 
 			std::cin >> InpInitx >> InpInity >> FinInitx >> FinInity;
 			GlobalGame.Move(InpInitx,InpInity,FinInitx,FinInity);
+			std::cerr << "Doing order move\n";
+			GlobalGame.ShowPresent();
+			std::cerr << "Now starting chaos move\n";	
 			std::cin >> inp;
-			mbest = getbestmoveChaos(GlobalGame,inp);
+			mbest = getbestmoveChaos(inp);
+			std::cerr << "Obtained move from ronak\n";
+			GlobalGame.ShowPresent();
 			GlobalGame.AddNew(inp,mbest.first,mbest.second);
 			std::cout << mbest.first <<" "<<mbest.second <<"\n";
 			GlobalGame.ShowPresent();

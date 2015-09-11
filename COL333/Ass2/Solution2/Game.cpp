@@ -226,7 +226,7 @@ float Game::GetNewScoreInsert(char nchar,int xpos,int ypos)
 
 bool Game::IsCompleted()
 {
-	return (NumCompleted==(Dimension*Dimension));
+	return (NumCompleted>=(Dimension*Dimension));
 }
 
 float Game::GetNewScoreMove(int prevx,int prevy,int newx,int newy)
@@ -344,9 +344,19 @@ int* Game::GetColCompleted()
 float* Game::GetProbabilities()
 {
 	float *ans = new float[Dimension];
-	for (int i=0; i<Dimension; i++)
+	if (Dimension*Dimension==NumCompleted)
 	{
-		ans[i]=((Dimension-ColCompleted[i])*1.0)/(Dimension*Dimension - NumCompleted);
+		for (int i=0; i<Dimension; i++)
+		{
+			ans[i]=0.0;
+		}
+	}
+	else
+	{
+		for (int i=0; i<Dimension; i++)
+		{
+			ans[i]=((Dimension-ColCompleted[i])*1.0)/(Dimension*Dimension - NumCompleted);
+		}
 	}
 	return ans;
 }
