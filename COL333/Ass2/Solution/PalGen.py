@@ -107,7 +107,7 @@ def giveexpect2(s):
 	allpos = fillin2(s)
 	tot=0.0
 	for elem in allpos:
-		tot += scorestring(elem[0])*elem[1]
+		tot += (scorestring(elem[0])**2)*elem[1]
 	tot *=1.0
 	return tot
 
@@ -117,6 +117,8 @@ initialsedall= map(initialise,allstr)
 
 mappedexpect = map(giveexpect, allstr)
 mappedexpect2 = map(giveexpect2,initialsedall)
+
+
 # print mapped1[0:100]
 # print mappedexpect[0:100]
 
@@ -141,7 +143,7 @@ mappedexpect2 = map(giveexpect2,initialsedall)
 # print mappedexpect2
 
 # for i in xrange(len(mappedexpect)):
-	# print allstr[i],mappedexpect[i],mappedexpect2[i],mappedexpect[i]-mappedexpect2[i]
+# 	print allstr[i],mappedexpect[i],mappedexpect2[i],mappedexpect[i]-mappedexpect2[i]
 
 # x = initialsedall[-1]
 # print giveexpect2(x)
@@ -157,10 +159,10 @@ string3 +="}"
 
 print string3
 
-# mapped=map(lambda x: (x,scorestring(x)),allstr)
+# # mapped=map(lambda x: (x,scorestring(x)),allstr)
 
-# def converttoform(x):
-# 	return 'PalidromeScoreData["'+x[0]+'"]='+str(x[1])+";"
+# # def converttoform(x):
+# # 	return 'PalidromeScoreData["'+x[0]+'"]='+str(x[1])+";"
 
-# for i in mapped:
-# 	print converttoform(i)
+# # for i in mapped:
+# # 	print converttoform(i)
