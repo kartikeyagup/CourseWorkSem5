@@ -107,9 +107,9 @@ def giveexpect2(s):
 	allpos = fillin2(s)
 	tot=0.0
 	for elem in allpos:
-		tot += (scorestring(elem[0])**2)*elem[1]
+		tot += (scorestring(elem[0])**2)
 	tot *=1.0
-	return tot
+	return tot/len(allpos)
 
 
 initialsedall= map(initialise,allstr)

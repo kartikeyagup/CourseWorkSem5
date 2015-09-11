@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
 
 	bool typeg = (role=="CHAOS");
 
-	PopulateTable();
+	PopulateTable(typeg);
 
 	Game *GameToPlay =new Game(dim,typeg);
 	std::cerr<<"Type: "<<typeg<<"\n";

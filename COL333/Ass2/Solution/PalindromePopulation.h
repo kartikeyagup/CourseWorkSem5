@@ -3,6 +3,6 @@
 
 #include "Game.h"
 
-void PopulateTable();
+void PopulateTable(bool);
 
 #endif
