@@ -9,6 +9,7 @@
 #include <algorithm>
 
 extern std::unordered_map<std::string,float> PalidromeScoreData;
+extern char**Board;
 
 bool CheckPalindrome(char*,int,int);
 bool CheckValidPalin(char*,int,int);
@@ -20,13 +21,12 @@ class Game
 public:
 	Game();
 	Game(int,bool);
-	Game(int,bool,char**,float,int,int*);
+	Game(int,bool,float,int,int*);
 
 	~Game();
 
 	int GetDimension();
 	bool GetType();
-	char** GetBoard();
 	char* GetColumn(int);
 	float GetPresentScore();
 	int GetNumCompleted();
@@ -44,7 +44,6 @@ public:
 	float *GetProbabilities();
 
 private:
-	char **Board;
 	bool TypePlayer; // 0 for Order, 1 for Chaos
 	int Dimension;
 	float Pscore;

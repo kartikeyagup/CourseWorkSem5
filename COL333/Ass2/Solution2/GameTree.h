@@ -6,6 +6,8 @@ class ChaosNode;
 class OrderNode;
 class ChanceNode;
 
+extern char** Board;
+
 class ChaosNode
 {
 public:
