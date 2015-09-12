@@ -10,6 +10,7 @@
 
 extern char* vert;
 extern std::unordered_map<std::string,float> PalidromeScoreData;
+extern std::unordered_map<std::string,float>* AllPalindromesData;
 
 bool CheckPalindrome(char*,int,int);
 bool CheckValidPalin(char*,int,int);
@@ -43,6 +44,7 @@ public:
 	float GetPresentScore();
 	int GetNumCompleted();
 	int *GetColCompleted();
+	float GetEntireScore2(char*);
 
 	int CalculateScore();
 	void ShowPresent();

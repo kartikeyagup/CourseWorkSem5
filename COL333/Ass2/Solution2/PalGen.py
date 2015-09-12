@@ -77,6 +77,16 @@ def fillin2(s):
 			return fillin2((A,s[1]*GetProb(s[0],'A'))) + fillin2((B,s[1]*GetProb(s[0],'B'))) + fillin2((C,s[1]*GetProb(s[0],'C'))) + fillin2((D,s[1]*GetProb(s[0],'D'))) + fillin2((E,s[1]*GetProb(s[0],'E')))
 	return [s]
 
+def fillin3(s,c):
+	for i in xrange(len(s[0])):
+		if s[0][i]=='-':
+			A = list(s[0])
+			A[i]=c
+			A=''.join(A)
+			return fillin2((A,1.0))
+	return [s]
+
+
 allstr= makeall([""])
 
 mapped1 = map(scorestring,allstr)
@@ -116,6 +126,19 @@ def giveexpect2(s):
 	tot *=1.0
 	return tot/len(allpos)
 
+def giveexpect3(s):
+	x=[fillin3(s,'A'),fillin3(s,'B'),fillin3(s,'C'),fillin3(s,'D'),fillin3(s,'E')]
+	tots =[0.0]*5
+	for i in xrange(5):
+		for elem in x[i]:
+			if(elem[0]=='AAAAA' or elem[0]=='BBBBB' or elem[0]=='CCCCC' or elem[0]=='DDDDD' or elem[0]=='EEEEE'):
+				tots[i] +=(scorestring(elem[0]))
+			else:
+				tots[i] += (scorestring(elem[0])**2)		
+		tots[i]*=1.0;
+		tots[i]/=len(x[i])
+	return tots
+
 
 initialsedall= map(initialise,allstr)
 
@@ -123,7 +146,7 @@ initialsedall= map(initialise,allstr)
 mappedexpect = map(giveexpect, allstr)
 
 mappedexpect2 = map(giveexpect2,initialsedall)
-
+mappedexpect3 = map(giveexpect3,initialsedall)
 
 
 # print mapped1[0:100]
@@ -150,11 +173,17 @@ mappedexpect2 = map(giveexpect2,initialsedall)
 # print mappedexpect2
 
 # for i in xrange(len(mappedexpect)):
-# 	print allstr[i],mappedexpect[i],mappedexpect2[i],mappedexpect[i]-mappedexpect2[i]
+# 	print allstr[i],mappedexpect[i],mappedexpect2[i],mappedexpect3[i]
 
 # x = initialsedall[-1]
 # print giveexpect2(x)
 # print fillin2(x)
+
+# print len(fillin3(('-----',1.0),'A'))
+# print len(fillin3(('-----',1.0),'B'))
+# print len(fillin3(('-----',1.0),'C'))
+# print len(fillin3(('-----',1.0),'D'))
+# print len(fillin3(('-----',1.0),'E'))
 
 
 
@@ -164,7 +193,17 @@ for elem in mappedexpect2:
 
 string3 +="}"
 
-print string3
+strings= ["{"]*5
+for i in xrange(5):
+	for elem in mappedexpect3:
+		strings[i] += str(elem[i]) +','
+	strings[i] +="}"
+	a= open('file'+str(i)+'.txt','w')
+	a.write(strings[i])
+	a.close()
+
+# print string3
+
 
 # # mapped=map(lambda x: (x,scorestring(x)),allstr)
 

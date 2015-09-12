@@ -621,7 +621,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	count_no_order_moves++;
 	// int d = 7;
 	int d = std::min(7,(25-GlobalGame.GetNumCompleted())*2) ;
-	if(count_no_order_moves>10 && count_no_order_moves<14)
+	if(count_no_order_moves>6 && count_no_order_moves<14)
 	{
 		d = 6;
 	}

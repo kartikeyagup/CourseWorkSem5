@@ -66,13 +66,34 @@ int GetEntireScore(char* inp, int leng)
 	return sc;
 }
 
-float GetEntireScore2(char* inp)
+float Game::GetEntireScore2(char* inp)
 {
 	// std::string temp(inp);
 	std::string temp;
 	temp.assign(inp,5);
 	// std::cerr << temp << " was scored to: " << PalidromeScoreData[inp]
-	return PalidromeScoreData[temp];
+	if (TypePlayer)
+	{	
+		return PalidromeScoreData[temp];
+	}
+	else
+	{
+		// float a1=0.0;
+		// float a1 = (((5.0- ColCompleted[0])*AllPalindromesData[0][temp]));
+		float a1 = ((AllPalindromesData[0][temp])*(6-ColCompleted[0]))/(30-NumCompleted);
+		// std::cerr << a1 << "\t" << inp << "\t" << AllPalindromesData[0][temp] <<"\t" <<(5.0-ColCompleted[0])/(30-NumCompleted) <<"\n";
+		// if ((5.0-ColCompleted[0])/(30-NumCompleted)<0 || (5.0-ColCompleted[0])/(30-NumCompleted)>1)
+		// {
+		// 	std::cerr <<"***************************** WARNING *************************************************\n";
+		// 	ShowPresent();
+		// }
+				 // +(AllPalindromesData[1][temp]) +(AllPalindromesData[2][temp]) +(AllPalindromesData[3][temp]) +(AllPalindromesData[4][temp]) ;
+		a1 += (((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/(30.0-NumCompleted));
+		a1 += (((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/(30.0-NumCompleted));
+		a1 += (((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/(30.0-NumCompleted));
+		a1 += (((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/(30.0-NumCompleted)); 
+		return a1;
+	}
 }
 
 Game::Game()
@@ -83,6 +104,7 @@ Game::Game()
 	Board[0] = new char[1];
 	Pscore=0;
 	ColCompleted = new int[1];
+	NumCompleted=0;
 }
 
 Game::Game(int dim,bool type)
@@ -102,6 +124,7 @@ Game::Game(int dim,bool type)
 	{
 		ColCompleted[i]=0;
 	}
+	NumCompleted=0;
 }
 
 Game::Game(int dim,bool ty,char** board,float score,int numcomp,int* coloursfilled)

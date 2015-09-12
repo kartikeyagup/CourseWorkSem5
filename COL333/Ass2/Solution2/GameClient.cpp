@@ -1,8 +1,11 @@
 #include "GameClient.h"
 
 std::unordered_map<std::string,float> PalidromeScoreData;
+std::unordered_map<std::string,float>* AllPalindromesData;
 Game GlobalGame;
 char* vert;
+std::vector<std::string> AllStrings;
+std::vector<float> NormalPalindromeScores;
 
 int main(int argc, char const *argv[])
 {
@@ -12,9 +15,15 @@ int main(int argc, char const *argv[])
 	std::cin >>role;
 
 	bool typeg = (role=="CHAOS");
-
-	PopulateTable(typeg);
-
+	
+	AllPalindromesData= new std::unordered_map<std::string,float>[5];
+	Initialise(typeg);
+	std::cerr << "Done with all preprocessing\n";
+	// PopulateTable(typeg);
+	// PopulateAllTables(typeg);
+	// std::cerr << PalidromeScoreData["AC---"]<<"\n";
+	// std::cerr << AllPalindromesData[0]["-C---"] <<"\n";
+	// return 0;
 	Game *GlobalGame1 =new Game(dim,typeg);
 	GlobalGame= *GlobalGame1;
 
