@@ -72,15 +72,16 @@ float Game::GetEntireScore2(char* inp)
 	std::string temp;
 	temp.assign(inp,5);
 	// std::cerr << temp << " was scored to: " << PalidromeScoreData[inp]
-	if (TypePlayer)
-	{	
-		return PalidromeScoreData[temp];
-	}
-	else
-	{
+	// if (TypePlayer)
+	// {	
+		// return PalidromeScoreData[temp];
+	// }
+	// else
+	// {
 		// float a1=0.0;
 		// float a1 = (((5.0- ColCompleted[0])*AllPalindromesData[0][temp]));
-		float a1 = ((AllPalindromesData[0][temp])*(6-ColCompleted[0]))/(30-NumCompleted);
+		float a1 = PalidromeScoreData[temp];
+		a1 += ((AllPalindromesData[0][temp])*(6-ColCompleted[0]))/(30-NumCompleted);
 		// std::cerr << a1 << "\t" << inp << "\t" << AllPalindromesData[0][temp] <<"\t" <<(5.0-ColCompleted[0])/(30-NumCompleted) <<"\n";
 		// if ((5.0-ColCompleted[0])/(30-NumCompleted)<0 || (5.0-ColCompleted[0])/(30-NumCompleted)>1)
 		// {
@@ -93,7 +94,7 @@ float Game::GetEntireScore2(char* inp)
 		a1 += (((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/(30.0-NumCompleted));
 		a1 += (((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/(30.0-NumCompleted)); 
 		return a1;
-	}
+	// }
 }
 
 Game::Game()
@@ -519,10 +520,10 @@ float Game::MoveChaos(ChaosMove* Cmove)
 {
 	float scorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
 	Board[Cmove->posx][Cmove->posy]=Cmove->color;
-	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
-	Pscore = Pscore + newscorepresentrowcol - scorepresentrowcol;
 	NumCompleted +=1;
 	ColCompleted[(Cmove->color)-'A']+=1;
+	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Pscore = Pscore + newscorepresentrowcol - scorepresentrowcol;
 	return Pscore;
 }
 
@@ -612,10 +613,10 @@ float Game::UndoMoveChaos(ChaosMove* Cmove)
 {
 	float scorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
 	Board[Cmove->posx][Cmove->posy]='-';
-	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
-	Pscore = Pscore + newscorepresentrowcol - scorepresentrowcol;
 	NumCompleted -=1;
 	ColCompleted[(Cmove->color)-'A']-=1;
+	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
+	Pscore = Pscore + newscorepresentrowcol - scorepresentrowcol;
 	return Pscore;
 }
 
@@ -624,7 +625,11 @@ float Game::MoveAndUndoChaos(ChaosMove* Cmove)
 	// Give the new score on inserting nchar at xpos,ypos but not making any change in the memory
 	float scorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
 	Board[Cmove->posx][Cmove->posy]=Cmove->color;
+	NumCompleted +=1;
+	ColCompleted[(Cmove->color)-'A']+=1;
 	float newscorepresentrowcol = GetEntireScore2(Board[Cmove->posx]) + GetEntireScore2(GetColumn(Cmove->posy));
 	Board[Cmove->posx][Cmove->posy]='-';
+	NumCompleted -=1;
+	ColCompleted[(Cmove->color)-'A']-=1;
 	return Pscore + newscorepresentrowcol - scorepresentrowcol;
 }
