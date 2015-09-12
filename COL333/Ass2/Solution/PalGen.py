@@ -107,7 +107,7 @@ def giveexpect2(s):
 	allpos = fillin2(s)
 	tot=0.0
 	for elem in allpos:
-		tot += (scorestring(elem[0])**2)
+		tot += (scorestring(elem[0])**1.5)
 	tot *=1.0
 	return tot/len(allpos)
 

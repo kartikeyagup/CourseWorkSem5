@@ -107,7 +107,12 @@ def giveexpect2(s):
 	allpos = fillin2(s)
 	tot=0.0
 	for elem in allpos:
-		tot += (scorestring(elem[0])**2)
+		# print elem[0:5]
+		if(elem[0]=='AAAAA' or elem[0]=='BBBBB' or elem[0]=='CCCCC' or elem[0]=='DDDDD' or elem[0]=='EEEEE'):
+			tot+=(scorestring(elem[0]))
+		else:
+			
+			tot += (scorestring(elem[0])**2)		
 	tot *=1.0
 	return tot/len(allpos)
 
@@ -116,7 +121,9 @@ initialsedall= map(initialise,allstr)
 
 
 mappedexpect = map(giveexpect, allstr)
+
 mappedexpect2 = map(giveexpect2,initialsedall)
+
 
 
 # print mapped1[0:100]
@@ -137,7 +144,7 @@ mappedexpect2 = map(giveexpect2,initialsedall)
 # print allstr
 
 # print fillin('-----')
-# print giveexpect('AAAAB')
+# print giveexpect2('AAAAA')
 
 # print mappedexpect
 # print mappedexpect2
