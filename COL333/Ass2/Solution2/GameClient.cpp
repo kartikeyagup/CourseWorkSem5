@@ -35,8 +35,10 @@ int main(int argc, char const *argv[])
 		std::cin >>inp;
 		std::cerr << "Char obtained is: " << inp <<"\n";
 		GlobalGame.ShowPresent();
-		std::pair<int,int> mbest= getbestmoveChaos(inp);
-		std::cerr << "received move from ronak\n";
+		std::pair<int,int> mbest(1,1);
+		// std::pair<int,int> mbest= getbestmoveChaos(inp);
+		// std::cerr << "received move from ronak\n";
+
 		GlobalGame.AddNew(inp,mbest.first,mbest.second);
 		std::cout << mbest.first <<" "<<mbest.second <<"\n";
 		GlobalGame.ShowPresent();
