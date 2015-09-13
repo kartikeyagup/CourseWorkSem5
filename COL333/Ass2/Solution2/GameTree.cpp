@@ -620,11 +620,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 {
 	count_no_order_moves++;
 	// int d = 7;
-	int d = std::min(6,(25-GlobalGame.GetNumCompleted())*2) ;
-	// if(count_no_order_moves>6 && count_no_order_moves<14)
-	// {
-	// 	d = 6;
-	// }
+	int d = std::min(7,(25-GlobalGame.GetNumCompleted())*2) ;
+	if(count_no_order_moves>3 && count_no_order_moves<13)
+	{
+		d = 6;
+	}
 	//int d = 6;  // cut-off depth;
 
 	OrderNode* node_order = new OrderNode(ORDER_DEFAULT,0);
