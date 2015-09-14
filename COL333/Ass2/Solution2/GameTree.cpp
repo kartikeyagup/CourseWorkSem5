@@ -251,12 +251,14 @@ int count_no_chaos_moves = 0;
 std::pair<int,int> getbestmoveChaos(char b)
 {
 	count_no_chaos_moves ++;
-	int d = std::min(7,(25-GlobalGame.GetNumCompleted())*2) ;
-	// if(count_no_chaos_moves>2 && count_no_chaos_moves<20)
-	// {
-	// 	// depth d;
-	// 	d = 7;
-	// }
+	int d=7;
+	if(count_no_chaos_moves>=17)
+	{
+		// depth d;
+		d = 8;
+	}
+	d = std::min(d,(25-GlobalGame.GetNumCompleted())*2) ;
+	
 	//float init_util = 10000.0;
 	ChaosNode* node_chaos = new ChaosNode(b,1.0,CHAOS_DEFAULT,0);
 	std::stack<std::pair<OrderNode*,int> > order_stack;
@@ -272,7 +274,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 	int depth_order;
 	int depth_chaos;
 	int depth_chance;
-	std::cerr << "Initialised the stacks\n";
+	std::cerr << "Initialised the stacks for depth of "<< d << " \n";
 	std::cerr << "Elements in Order, chaos, chance: "<< order_stack.size() << "\t" << chaos_stack.size() << "\t" << chance_stack.size() <<"\n";
 	while(!order_stack.empty() || !chaos_stack.empty() || !chance_stack.empty())
 	{
@@ -621,7 +623,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	count_no_order_moves++;
 	// int d = 7;
 	int d = std::min(7,(25-GlobalGame.GetNumCompleted())*2) ;
+<<<<<<< HEAD
 	if(count_no_order_moves>3 && count_no_order_moves<14)
+=======
+	if(count_no_order_moves>4 && count_no_order_moves<17)
+>>>>>>> 4de7e0945456c820c1edd7bdae2b0b10adbf3093
 	{
 		d = 6;
 	}

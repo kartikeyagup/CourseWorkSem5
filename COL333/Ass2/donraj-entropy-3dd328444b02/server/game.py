@@ -9,6 +9,7 @@ gameN = 5
 board = []
 pcs = []
 timers = [60.0, 60.0]
+# counti = 0
 
 import os, sys
 if (os.path.realpath('../utils') not in sys.path):
@@ -36,7 +37,7 @@ def printBoard():
 
 
 def resetSelf():
-	global board, pcs, timers
+	global board, pcs, timers,counti
 	timers = [60.0, 60.0]
 	pcs = []
 	board = []
@@ -46,6 +47,7 @@ def resetSelf():
 			pcs.append(chr(i+ord('A')))
 			boardRow.append('-')
 		board.append(boardRow)
+	# counti+=1
 	random.shuffle(pcs)
 	# print(board)
 	# print(pcs)
@@ -115,7 +117,19 @@ def makeOrderMove(a, b, c, d):
 
 
 def nextColor():
-	return pcs.pop(0)
+
+	# if(counti == 1):
+		# filename = 'color.txt'
+		# a = open(filename,"a")
+		# a.write(str(pcs[0]) +  "\n")
+		# if(isGameOver()==True):
+			# counti = 1
+		return pcs.pop(0)
+	# else:
+		# filename = 'color.txt'
+		# a = open(filename,"r")
+		# b = a.readlines()
+		# return b.pop(0)
 
 # row is a list of colored items
 # TEST this thingy

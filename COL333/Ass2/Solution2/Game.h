@@ -44,7 +44,9 @@ public:
 	float GetPresentScore();
 	int GetNumCompleted();
 	int *GetColCompleted();
-	float GetEntireScore2(char*);
+	float GetEntireScore2(int);
+	std::pair<int,int> GetRandomMoveChaos();
+	std::pair<std::pair<int,int>, std::pair<int,int> > GetRandomMoveOrder();
 
 	int CalculateScore();
 	void ShowPresent();
