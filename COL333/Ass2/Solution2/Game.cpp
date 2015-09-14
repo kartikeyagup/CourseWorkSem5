@@ -254,7 +254,7 @@ std::pair<std::pair<int,int>, std::pair<int,int> > Game::GetRandomMoveOrder()
 	{
 		for (int j=0; j<Dimension; j++)
 		{
-			if (Board[i][j]=='-')
+			if (Board[i][j]!='-')
 			{
 				std::pair<int,int> p1(i,j);
 				std::pair<int,int> p2(i,j);
