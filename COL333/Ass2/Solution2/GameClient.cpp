@@ -37,7 +37,9 @@ int main(int argc, char const *argv[])
 		//Playing as Chaos
 		char inp;
 		timed_out = 0;
+		
 		std::cin >>inp;
+
 		t_chaos = clock()/double(CLOCKS_PER_SEC);
 
 		std::cerr << "Char obtained is: " << inp <<"\n";
