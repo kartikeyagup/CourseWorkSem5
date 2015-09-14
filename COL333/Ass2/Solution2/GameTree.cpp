@@ -252,11 +252,11 @@ std::pair<int,int> getbestmoveChaos(char b)
 {
 	count_no_chaos_moves ++;
 	int d=7;
-	// if(count_no_chaos_moves>=11)
-	// {
-	// 	// depth d;
-	// 	d = 8;
-	// }
+	if(count_no_chaos_moves>=10)
+	{
+		// depth d;
+		d = 8;
+	}
 	d = std::min(d,(25-GlobalGame.GetNumCompleted())*2) ;
 	
 	//float init_util = 10000.0;
