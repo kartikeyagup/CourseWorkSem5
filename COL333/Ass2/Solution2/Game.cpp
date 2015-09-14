@@ -98,7 +98,7 @@ float Game::GetEntireScore2(int val)
 		}
 	}
 	// std::cerr << temp << " was scored to: " << PalidromeScoreData[inp]
-	if (TypePlayer)
+	if (false)
 	{	
 		// float a1=0;
 		float a1 = PalidromeScoreData[temp];
@@ -119,9 +119,9 @@ float Game::GetEntireScore2(int val)
 	}
 	else
 	{
-		// float a1=0.0;
+		float a1=0.0;
 		// float a1 = (((5.0- ColCompleted[0])*AllPalindromesData[0][temp]));
-		float a1 = PalidromeScoreData[temp];
+		// float a1 = PalidromeScoreData[temp];
 		// std::cerr << a1 << "\t" << inp << "\t" << AllPalindromesData[0][temp] <<"\t" <<(5.0-ColCompleted[0])/(30-NumCompleted) <<"\n";
 		// if ((5.0-ColCompleted[0])/(30-NumCompleted)<0 || (5.0-ColCompleted[0])/(30-NumCompleted)>1)
 		// {
@@ -129,11 +129,18 @@ float Game::GetEntireScore2(int val)
 		// 	ShowPresent();
 		// }
 				 // +(AllPalindromesData[1][temp]) +(AllPalindromesData[2][temp]) +(AllPalindromesData[3][temp]) +(AllPalindromesData[4][temp]) ;
-		a1 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
-		a1 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
-		a1 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
-		a1 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
-		a1 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 
+		if (NumCompleted>15)
+		{
+			a1 = PalidromeScoreData[temp];
+		}
+		else
+		{
+			a1 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
+			a1 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
+			a1 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
+			a1 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
+			a1 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+		}
 		// delete ans1;
 		return a1;
 	}
