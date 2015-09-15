@@ -252,7 +252,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 {
 	count_no_chaos_moves ++;
 	int d=7;
-	if(count_no_chaos_moves>=17)
+	if(count_no_chaos_moves>=13)
 	{
 		// depth d;
 		d = 8;
@@ -274,8 +274,8 @@ std::pair<int,int> getbestmoveChaos(char b)
 	int depth_order;
 	int depth_chaos;
 	int depth_chance;
-	std::cerr << "Initialised the stacks for depth of "<< d << " \n";
-	std::cerr << "Elements in Order, chaos, chance: "<< order_stack.size() << "\t" << chaos_stack.size() << "\t" << chance_stack.size() <<"\n";
+	// std::cerr << "Initialised the stacks for depth of "<< d << " \n";
+	// std::cerr << "Elements in Order, chaos, chance: "<< order_stack.size() << "\t" << chaos_stack.size() << "\t" << chance_stack.size() <<"\n";
 	while(!order_stack.empty() || !chaos_stack.empty() || !chance_stack.empty())
 	{
 		// break;
@@ -623,7 +623,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	count_no_order_moves++;
 	// int d = 7;
 	int d = std::min(7,(25-GlobalGame.GetNumCompleted())*2) ;
-	if(count_no_order_moves>4 && count_no_order_moves<17)
+	if(count_no_order_moves>2 && count_no_order_moves<17)
 	{
 		d = 6;
 	}
@@ -646,8 +646,8 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	int depth_order;
 	int depth_chaos;
 	int depth_chance;
-	std::cerr << "Initialised the stacks\n";
-	std::cerr << "Elements in Order, chaos, chance: "<< order_stack.size() << "\t" << chaos_stack.size() << "\t" << chance_stack.size() <<"\n";
+	// std::cerr << "Initialised the stacks\n";
+	// std::cerr << "Elements in Order, chaos, chance: "<< order_stack.size() << "\t" << chaos_stack.size() << "\t" << chance_stack.size() <<"\n";
 	
 	while(!order_stack.empty() || !chaos_stack.empty() || !chance_stack.empty())
 	{
@@ -961,11 +961,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	// a->ShowPresent();
 	// c->getgame()->ShowPresent();
 	auto ans = std::make_pair(std::make_pair(c->move->initx,c->move->inity),std::make_pair(c->move->finx,c->move->finy));
-	std::cerr << "done with difference now deleting\n";
+	// std::cerr << "done with difference now deleting\n";
 	for(std::vector<ChanceNode*>::iterator it = Level1Chance.begin();it!= Level1Chance.end();++it)
 	{
 		delete *it;
 	}
-	std::cerr << "done with deleting\n";
+	// std::cerr << "done with deleting\n";
 	return (ans);
 }

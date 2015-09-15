@@ -43,7 +43,7 @@ int main(int argc, char const *argv[])
 		t_chaos = clock()/double(CLOCKS_PER_SEC);
 
 		std::cerr << "Char obtained is: " << inp <<"\n";
-		GlobalGame.ShowPresent();
+		// GlobalGame.ShowPresent();
 		std::pair<int,int> mbest(1,1);
 		// std::pair<int,int> mbest= getbestmoveChaos(inp);
 		// std::cerr << "received move from ronak\n";
@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
 		std::cout << mbest.first <<" "<<mbest.second <<"\n";
 		t_chaos = clock()/double(CLOCKS_PER_SEC) - t_chaos;
 		t_chaostime += t_chaos;
-		GlobalGame.ShowPresent();
+		// GlobalGame.ShowPresent();
 		
 		while (true)
 		{
@@ -69,26 +69,26 @@ int main(int argc, char const *argv[])
 			std::cin >> InpInitx >> InpInity >> FinInitx >> FinInity;
 			t_chaos = clock()/double(CLOCKS_PER_SEC);
 			GlobalGame.Move(InpInitx,InpInity,FinInitx,FinInity);
-			std::cerr << "Doing order move\n";
-			GlobalGame.ShowPresent();
-			std::cerr << "Now starting chaos move\n";	
+			// std::cerr << "Doing order move\n";
+			// GlobalGame.ShowPresent();
+			// std::cerr << "Now starting chaos move\n";	
 			std::cin >> inp;
 			if(t_chaostime<56.5555)
 			{
 				mbest = getbestmoveChaos(inp);
-				std::cerr << "Obtained move from ronak\n";
-				GlobalGame.ShowPresent();
+				// std::cerr << "Obtained move from ronak\n";
+				// GlobalGame.ShowPresent();
 				GlobalGame.AddNew(inp,mbest.first,mbest.second);
 				std::cout << mbest.first <<" "<<mbest.second <<"\n";
 				t_chaos = clock()/double(CLOCKS_PER_SEC) - t_chaos;
 				//std::cerr<<"Printing Clock  "<<t_chaos<<"\n";
 				t_chaostime += t_chaos;
-				GlobalGame.ShowPresent();
-				std::cerr<<"Printing time: "<<t_chaostime<<"\n";
+				// GlobalGame.ShowPresent();
+				// std::cerr<<"Printing time: "<<t_chaostime<<"\n";
 			}
 			else
 			{
-				std::cerr<<"**********************************************Timed out chaos\n";
+				// std::cerr<<"**********************************************Timed out chaos\n";
 				mbest = GlobalGame.GetRandomMoveChaos();
 				GlobalGame.AddNew(inp,mbest.first,mbest.second);
 				std::cout << mbest.first <<" "<<mbest.second <<"\n";
@@ -97,14 +97,14 @@ int main(int argc, char const *argv[])
 	}
 	else
 	{
-		std::cerr<<"In the else case\n";
+		// std::cerr<<"In the else case\n";
 		//Playing as Order
 		// return 0;
 		std::pair<std::pair<int,int>,std::pair<int,int> > mv;
 		timed_out = 0;
 		while (true)
 		{
-			GlobalGame.ShowPresent();
+			// GlobalGame.ShowPresent();
 			int posx,posy;
 			char col;
 			std::cin >> posx>>posy>>col;
@@ -114,20 +114,20 @@ int main(int argc, char const *argv[])
 			{
 				break;
 			}
-			GlobalGame.ShowPresent();
+			// GlobalGame.ShowPresent();
 			if(t_ordertime<56.55555)
 			{
 				mv = getbestmoveOrder();
-				std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
+				// std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
 				GlobalGame.Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
 				std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
 				t_order = clock()/double(CLOCKS_PER_SEC) - t_order;
 				t_ordertime += t_order;
-				std::cerr<<"Printing time spent: "<< t_ordertime <<"\n";
+				// std::cerr<<"Printing time spent: "<< t_ordertime <<"\n";
 			}
 			else
 			{
-				std::cerr<<"**********************************8Timed out\n";
+				// std::cerr<<"**********************************8Timed out\n";
 				mv = GlobalGame.GetRandomMoveOrder();
 				GlobalGame.Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
 				std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";

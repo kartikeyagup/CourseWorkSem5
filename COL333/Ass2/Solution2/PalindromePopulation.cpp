@@ -144,6 +144,14 @@ std::vector<std::string> GetFilledIn2(std::string s,char c)
 	return std::vector<std::string> (1,s);
 }
 
+bool CheckDude(std::string &inp)
+{
+	if ((inp[0]!='-') && inp[0]==inp[2] && inp[2]==inp[4])
+	{
+		return true;
+	}
+	return false;
+}
 
 
 float GiveExpect(std::string s)
@@ -171,7 +179,14 @@ float GiveExpect1(std::string s)
 	float tot=0.0;
 	for (int i=0; i< allpos.size(); i++)
 	{
-		tot += GetEntireScoreSt(allpos[i],5);
+		// if (CheckDude(allpos[i]))
+		// {
+		// 	tot += 5*GetEntireScoreSt(allpos[i],5);
+		// }
+		// else
+		// {
+			tot += GetEntireScoreSt(allpos[i],5);	
+		// }
 	}
 	tot /= allpos.size();
 	return tot;

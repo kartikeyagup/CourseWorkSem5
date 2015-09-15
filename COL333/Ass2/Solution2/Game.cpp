@@ -83,20 +83,20 @@ float Game::GetEntireScore2(int val)
 			temp[i]=Board[i][val-5];
 		}
 	}
-	int ans1[5];
-	for (int i=0; i<5; i++)
-	{
-		ans1[i]=0;
-	}
-	float numtotal=0.005;
-	for (int i=0; i<5; i++)
-	{
-		if (temp[i]-'A'>=0)
-		{
-			ans1[temp[i]-'A']+=1;
-			numtotal+=1;
-		}
-	}
+	// int ans1[5];
+	// for (int i=0; i<5; i++)
+	// {
+	// 	ans1[i]=0;
+	// }
+	// float numtotal=0.005;
+	// for (int i=0; i<5; i++)
+	// {
+	// 	if (temp[i]-'A'>=0)
+	// 	{
+	// 		ans1[temp[i]-'A']+=1;
+	// 		numtotal+=1;
+	// 	}
+	// }
 	// std::cerr << temp << " was scored to: " << PalidromeScoreData[inp]
 	if (false)
 	{	
@@ -140,6 +140,17 @@ float Game::GetEntireScore2(int val)
 			a1 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
 			a1 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
 			a1 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+			if (!TypePlayer)
+			{
+				if (val==0 || val==4 || val==5 || val ==9)
+				{
+					a1 *= 5;
+				}
+				else if (val==1 || val== 3 || val==6 || val==8)
+				{
+					a1 *= 2;
+				}
+			}
 		}
 		// delete ans1;
 		return a1;
