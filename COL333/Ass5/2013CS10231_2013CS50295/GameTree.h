@@ -7,6 +7,9 @@ class OrderNode;
 class ChanceNode;
 
 extern Game GlobalGame;
+extern float w1_chaos,w2_chaos,w1_order,w2_order;
+extern float learningrate_chaos,learningrate_order;
+extern float f1_chaos,f2_chaos,f1_order,f2_order;
 
 class ChaosNode
 {
@@ -29,7 +32,7 @@ public:
 private:
 	char color;
 	float probability;
-	float utility;
+	float utility;			// gives the backed up value
 	ChanceNode* parent;
 };
 
