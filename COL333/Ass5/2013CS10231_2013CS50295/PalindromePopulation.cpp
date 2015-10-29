@@ -227,7 +227,7 @@ void Initialise(bool typeinp)
 	std::queue<std::string> init;
 	init.push("");
 	makeallstrings(init);
-	std::cerr << "Got all strings from ronak\n";
+	std::cerr << "Got all strings from ronak\t" << AllStrings.size() <<"\n";
 	if (typeinp)
 	{
 		for (int i=0; i< AllStrings.size(); i++)
