@@ -252,12 +252,23 @@ std::pair<int,int> getbestmoveChaos(char b)
 {
 	count_no_chaos_moves ++;
 	int d=7;
-	if(count_no_chaos_moves>=13)
+	if (GlobalGame.GetDimension()==6)
 	{
-		// depth d;
-		d = 8;
+		d = std::min(5,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
-	d = std::min(d,(GlobalGame.GetDimension()*GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+	else if(GlobalGame.GetDimension()==7)
+	{
+		d = std::min(4,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+	}
+	else
+	{
+		if(count_no_chaos_moves>=13)
+		{
+			// depth d;
+			d = 8;
+		}
+		d = std::min(d,(GlobalGame.GetDimension()*GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+	}
 	
 	//float init_util = 10000.0;
 	ChaosNode* node_chaos = new ChaosNode(b,1.0,CHAOS_DEFAULT,0);
@@ -622,11 +633,25 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 {
 	count_no_order_moves++;
 	// int d = 7;
-	int d = std::min(7,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
-	if(count_no_order_moves>2 && count_no_order_moves<17)
+	int d=7;
+	if (GlobalGame.GetDimension()==6)
 	{
-		d = 6;
+		d = std::min(5,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
+	else if(GlobalGame.GetDimension()==7)
+	{
+		d = std::min(4,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+	}
+	else
+	{
+		int d = std::min(7,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+		if(count_no_order_moves>2 && count_no_order_moves<17)
+		{
+			d = 6;
+		}
+	}
+	
+	
 	//int d = 6;  // cut-off depth;
 
 	OrderNode* node_order = new OrderNode(ORDER_DEFAULT,0);

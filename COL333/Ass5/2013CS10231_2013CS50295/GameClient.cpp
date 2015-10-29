@@ -18,7 +18,8 @@ int main(int argc, char const *argv[])
 	bool typeg = (role=="CHAOS");
 	
 	GlobalGameDim = dim;
-	AllPalindromesData= new std::unordered_map<std::string,float>[5];
+	AllPalindromesData= new std::unordered_map<std::string,float>[dim];
+	std::cerr << "Starting preprocessing\n";
 	Initialise(typeg);
 	std::cerr << "Done with all preprocessing\n";
 	// PopulateTable(typeg);
@@ -98,7 +99,7 @@ int main(int argc, char const *argv[])
 				t_chaos = clock()/double(CLOCKS_PER_SEC) - t_chaos;
 				//std::cerr<<"Printing Clock  "<<t_chaos<<"\n";
 				t_chaostime += t_chaos;
-				// GlobalGame.ShowPresent();
+				GlobalGame.ShowPresent();
 				// std::cerr<<"Printing time: "<<t_chaostime<<"\n";
 			}
 			else
@@ -129,11 +130,12 @@ int main(int argc, char const *argv[])
 			{
 				break;
 			}
-			// GlobalGame.ShowPresent();
+			GlobalGame.ShowPresent();
 			if(t_ordertime<dim_timeout)
 			{
 				mv = getbestmoveOrder();
 				// std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
+				GlobalGame.ShowPresent();
 				GlobalGame.Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
 				std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
 				t_order = clock()/double(CLOCKS_PER_SEC) - t_order;
@@ -156,7 +158,7 @@ int main(int argc, char const *argv[])
 	// Game x = Game(5,0);
 	// GlobalGame.ShowPresent();
 
-	fprintf(stderr,"This is another error print\n");
+	// fprintf(stderr,"This is another error print\n");
 	// printf("this is another normal print\n");
 	return 0;
 }
