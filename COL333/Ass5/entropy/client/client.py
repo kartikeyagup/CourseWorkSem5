@@ -11,11 +11,12 @@ from subprocess import Popen, PIPE
 import sys, socket, json, time
 import os
 sys.path.insert(0, os.path.realpath('../utils/'))
+from log import *
 from nbstreamreader import NonBlockingStreamReader as NBSR
 
-botname = 'ron_squared'	 # PLEASE CHOOSE A UNIQUE BOTNAME
+botname = 'bazooka'	 # PLEASE CHOOSE A UNIQUE BOTNAME
 
-SAFETY_TIMEOUT = 65 # For dumb clients, who think too much or die while thinking
+SAFETY_TIMEOUT = 185 # For dumb clients, who think too much or die while thinking
 server_address = 'localhost'
 server_port = 8000
 aiProc = None
@@ -46,7 +47,7 @@ clientsocket.send(botname)
 
 print '%s connected to server (hopefully)'% botname
 if (botname != 'TA-AI'):
-	print ('extra options: python client.py <optional-port> <address>')
+	pr_header ('extra options: python client.py <optional-port> <address>')
 
 def resetCode(args):
 	global aiProc, advStdout
