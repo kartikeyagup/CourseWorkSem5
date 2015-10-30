@@ -136,6 +136,14 @@ int main(int argc, char const *argv[])
 				std::cout << mbest.first <<" "<<mbest.second <<"\n";
 			}
 		}
+		std::ofstream fil1;
+		fil1.open("ChaosWeights.txt");
+
+		fil1<<std::to_string(w1_chaos);
+		fil1<<" ";
+		fil1<<std::to_string(w2_chaos);
+
+		fil1.close();
 	}
 	else
 	{
@@ -189,26 +197,18 @@ int main(int argc, char const *argv[])
 				std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
 			}
 		}
+		std::ofstream fil1;
+		fil1.open("OrderWeights.txt");
+
+		fil1<<std::to_string(w1_order);
+		fil1<<" ";
+		fil1<<std::to_string(w2_order);
+
+		fil1.close();
 	}
 
 
-	std::ofstream fil;
-	fil.open("ChaosWeights.txt");
 
-	fil<<std::to_string(w1_chaos);
-	fil<<" ";
-	fil<<std::to_string(w2_chaos);
-
-	fil.close();
-
-
-	fil.open("OrderWeights.txt");
-
-	fil<<std::to_string(w1_order);
-	fil<<" ";
-	fil<<std::to_string(w2_order);
-
-	fil.close();
 
 
 
