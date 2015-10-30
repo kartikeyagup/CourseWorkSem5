@@ -120,13 +120,32 @@ std::vector<std::string> GetFilledIn(std::string s)
 			for (int j=0; j<GlobalGameDim ; j++)
 			{
 				std::string TempStr = s.c_str();
-				TempStr[i] = 'A'+i;
+				TempStr[i] = 'A'+j;
 				ans = ans+ GetFilledIn(TempStr);
 			}
 			return ans;
 		}
 	}
 	return std::vector<std::string> (1,s);
+}
+
+std::vector<std::string> GetFillinOne(std::string s)
+{
+	for (int i=0; i<s.size() ; i++)
+	{
+		if (s[i]=='-')
+		{
+			std::vector<std::string> ans;
+			for (int j=0; j<GlobalGameDim; j++)
+			{
+				std::string TempStr = s.c_str();
+				TempStr[i] = 'A'+j;
+				ans.push_back(TempStr);
+			}
+			return ans;
+		}
+	}	
+	return std::vector<std::string> {s};
 }
 
 std::vector<std::string> GetFilledIn2(std::string s,char c)
@@ -228,24 +247,63 @@ void Initialise(bool typeinp)
 	init.push("");
 	makeallstrings(init);
 	std::cerr << "Got all strings from ronak\t" << AllStrings.size() <<"\n";
-	if (typeinp)
-	{
+	// if (GlobalGameDim<7)
+	// {
 		for (int i=0; i< AllStrings.size(); i++)
 		{
-			NormalPalindromeScores.push_back(GiveExpect1(AllStrings[i]));
+			// NormalPalindromeScores.push_back(GiveExpect1(AllStrings[i]));
+			PopulateTable1(AllStrings[i]);
 		}
+		// for (int i=0; i<AllStrings.size(); i++)
+		// {
+		// 	if (abs(PalidromeScoreData[AllStrings[i]] - NormalPalindromeScores[i]) > 0.01 )
+		// 		std::cerr << "MISMATCH AT " << AllStrings[i] << "\t" << PalidromeScoreData[AllStrings[i]] <<"\t" << NormalPalindromeScores[i] <<"\n";
+		// }
+	// }
+	// std::cerr << "Obtained normal palindrome scores\n";
+	// if (GlobalGameDim==5)
+	// {
+	// 	PopulateTable1("-----");
+	// }
+	// else if (GlobalGameDim==6)
+	// {
+	// 	PopulateTable1("------");
+	// }
+	// else
+	// 	PopulateTable1("-------");
+	std::cerr << "Done with normal expectations\t" << AllStrings.size() <<"\t" << PalidromeScoreData.size() <<"\n";
+	PopulateTable(typeinp);
+	std::cerr << "Done with other tables\n";
+}
+
+float PopulateTable1(std::string b)
+{
+	if (PalidromeScoreData.find(b)==PalidromeScoreData.end())
+	{
+		std::vector<std::string> children = GetFillinOne(b);
+		float temp=0;
+		if (children.size()==1)
+		{
+			PalidromeScoreData[b] = GetEntireScoreSt(b,GlobalGameDim);
+		}
+		else
+		{
+			for (int i=0; i<children.size(); i++)
+			{
+				temp += PopulateTable1(children[i]);
+			}
+			temp /= children.size();
+			PalidromeScoreData[b]=temp;
+		}	
+		// std::cerr << b << "\t"<< PalidromeScoreData[b]<<"\n";	
+		return PalidromeScoreData[b];
 	}
 	else
 	{
-		for (int i=0; i< AllStrings.size(); i++)
-		{
-			NormalPalindromeScores.push_back(GiveExpect1(AllStrings[i]));
-		}
-	
+		return PalidromeScoreData[b];
 	}
-	std::cerr << "Obtained normal palindrome scores\n";
-	PopulateTable(typeinp);
 }
+
 
 void PopulateTable(bool x)
 {
@@ -259,10 +317,10 @@ void PopulateTable(bool x)
 	}
 	else
 	{
-		for (int i=0; i<AllStrings.size(); i++)
-		{
-			PalidromeScoreData[AllStrings[i]]=NormalPalindromeScores[i];
-		}
+		// for (int i=0; i<AllStrings.size(); i++)
+		// {
+		// 	PalidromeScoreData[AllStrings[i]]=NormalPalindromeScores[i];
+		// }
 	
 		for (int i=0; i<AllStrings.size(); i++)
 		{

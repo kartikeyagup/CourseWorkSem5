@@ -656,7 +656,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	}
 	else
 	{
-		int d = std::min(7,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+		d = std::min(7,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 		if(count_no_order_moves>2 && count_no_order_moves<17)
 		{
 			d = 6;

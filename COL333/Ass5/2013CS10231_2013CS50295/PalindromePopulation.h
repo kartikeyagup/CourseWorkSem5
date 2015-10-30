@@ -12,6 +12,7 @@ extern int GlobalGameDim;
 
 void Initialise(bool);
 void PopulateTable(bool);
+float PopulateTable1(std::string);
 void PopulateAllTables(bool);
 
 #endif
