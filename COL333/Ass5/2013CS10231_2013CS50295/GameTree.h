@@ -10,6 +10,7 @@ extern Game GlobalGame;
 extern float w1_chaos,w2_chaos,w1_order,w2_order;
 extern float learningrate_chaos,learningrate_order;
 extern float f1_chaos,f2_chaos,f1_order,f2_order;
+extern bool constantweights;			// denotes whether the player is playing with static weights or variable weights;
 
 class ChaosNode
 {

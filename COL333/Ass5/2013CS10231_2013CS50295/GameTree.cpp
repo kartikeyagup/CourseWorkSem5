@@ -274,7 +274,10 @@ std::pair<int,int> getbestmoveChaos(char b)
 	ChaosNode* node_chaos = new ChaosNode(b,1.0,CHAOS_DEFAULT,0);
 
 	// initial value of the state to be backed up
-	float initvalue = GlobalGame.CalculateScore();
+	if(!constantweights)
+	{
+		float initvalue = GlobalGame.CalculateScore();
+	}
 
 	std::stack<std::pair<OrderNode*,int> > order_stack;
 	std::stack<std::pair<ChaosNode*,int> > chaos_stack;
@@ -619,11 +622,13 @@ std::pair<int,int> getbestmoveChaos(char b)
 	}
 
 	// final backed up value
-	float finvalue = c->getutility();
-
-	// updating the weights for the heuristics
-	w1_chaos = w1_chaos + learningrate_chaos*(finvalue - initvalue)*f1_chaos;
-	w2_chaos = w2_chaos + learningrate_chaos*(finvalue - initvalue)*f2_chaos;
+	if(!constantweights)
+	{
+		float finvalue = c->getutility();
+		// updating the weights for the heuristics
+		w1_chaos = w1_chaos + learningrate_chaos*(finvalue - initvalue)*f1_chaos;
+		w2_chaos = w2_chaos + learningrate_chaos*(finvalue - initvalue)*f2_chaos;
+	}
 
 	std::pair<int,int> ans = std::make_pair(c->move->posx,c->move->posy);
 
