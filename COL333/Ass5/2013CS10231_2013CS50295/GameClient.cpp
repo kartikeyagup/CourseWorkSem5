@@ -42,6 +42,9 @@ int main(int argc, char const *argv[])
 	double t_chaostime = 0.0;
 	double t_ordertime = 0.0;
 	double dim_timeout ;
+
+	learningrate_order = 1.0;
+	learningrate_chaos = 1.0;
 	if(GlobalGame.GetDimension()==5)
 	{
 		dim_timeout = 56.66;
