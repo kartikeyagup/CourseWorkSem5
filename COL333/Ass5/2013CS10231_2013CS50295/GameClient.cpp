@@ -8,6 +8,14 @@ std::vector<std::string> AllStrings;
 std::vector<float> NormalPalindromeScores;
 int GlobalGameDim;
 
+float w1_chaos,w2_chaos,w1_order,w2_order;
+float learningrate_chaos,learningrate_order;
+float f1_chaos,f2_chaos,f1_order,f2_order;
+std::string constantweights;			// denotes whether the player is playing with static weights or variable weights;
+
+
+
+
 int main(int argc, char const *argv[])
 {
 	int dim;
@@ -48,9 +56,24 @@ int main(int argc, char const *argv[])
 	}
 	bool timed_out = 0;
 	std::cerr<<"Type: "<<typeg<<"\n";
+	constantweights = argv[1];
 	if (typeg)
 	{
 		//Playing as Chaos
+		std::ifstream fil;
+		fil.open("ChaosWeights.txt");
+		if(fil.is_open())
+		{
+			float a,b;
+			while(fil >> a >> b)
+			{
+				w1_chaos = a;
+				w2_chaos = b;
+			}
+			fil.close();
+		}
+
+
 		char inp;
 		timed_out = 0;
 		
@@ -116,6 +139,19 @@ int main(int argc, char const *argv[])
 		// std::cerr<<"In the else case\n";
 		//Playing as Order
 		// return 0;
+		std::ifstream fil;
+		fil.open("OrderWeights.txt");
+		if(fil.is_open())
+		{
+			float a,b;
+			while(fil >> a >> b)
+			{
+				w1_order = a;
+				w2_order = b;
+			}
+			fil.close();
+		}
+
 		std::pair<std::pair<int,int>,std::pair<int,int> > mv;
 		timed_out = 0;
 		while (true)
@@ -151,6 +187,27 @@ int main(int argc, char const *argv[])
 			}
 		}
 	}
+
+
+	std::ofstream fil;
+	fil.open("ChaosWeights.txt");
+
+	fil<<std::to_string(w1_chaos);
+	fil<<" ";
+	fil<<std::to_string(w2_chaos);
+
+	fil.close();
+
+
+	fil.open("OrderWeights.txt");
+
+	fil<<std::to_string(w1_order);
+	fil<<" ";
+	fil<<std::to_string(w2_order);
+
+	fil.close();
+
+
 
 	// fprintf(stderr,"This is an error print\n");
 	// printf("this is a normal print\n");

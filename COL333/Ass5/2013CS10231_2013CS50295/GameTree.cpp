@@ -274,9 +274,10 @@ std::pair<int,int> getbestmoveChaos(char b)
 	ChaosNode* node_chaos = new ChaosNode(b,1.0,CHAOS_DEFAULT,0);
 
 	// initial value of the state to be backed up
-	if(!constantweights)
+	float initvalue;
+	if(constantweights == "0")
 	{
-		float initvalue = GlobalGame.CalculateScore();
+		initvalue = GlobalGame.GetPresentScore();
 	}
 
 	std::stack<std::pair<OrderNode*,int> > order_stack;
@@ -622,7 +623,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 	}
 
 	// final backed up value
-	if(!constantweights)
+	if(constantweights == "0")
 	{
 		float finvalue = c->getutility();
 		// updating the weights for the heuristics
@@ -662,7 +663,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 			d = 6;
 		}
 	}
-	
+	float initvalue;
+	if(constantweights == "0")
+	{
+		initvalue = GlobalGame.GetPresentScore();
+	}
 	
 	//int d = 6;  // cut-off depth;
 
@@ -993,6 +998,14 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 				}
 			}
 		}
+	}
+
+	if(constantweights == "0")
+	{
+		float finvalue = c->getutility();
+		// updating the weights for the heuristics
+		w1_order = w1_order + learningrate_order*(finvalue - initvalue)*f1_order;
+		w2_order = w2_order + learningrate_order*(finvalue - initvalue)*f2_order;
 	}
 	// std::cerr << "done with computations, now taking difference\t" << Level1Chance.size() <<"\t" << max_utility <<"\n" ;
 	// a->ShowPresent();
