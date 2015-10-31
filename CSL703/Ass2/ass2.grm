@@ -1,0 +1,45 @@
+%%
+
+%eop EOF SEMI
+
+(* %pos declares the type of positions for terminals.
+   Each symbol has an associated left and right position. *)
+
+%pos int
+
+
+%term VAR of string
+	| DOT
+	| LPAREN
+	| RPAREN
+	| EOF
+	| OR
+	| AND
+	| NOT
+	| IMPLY
+	| SEMI
+	| EOP
+	| DOUBLEIMPLY
+
+%nonterm PROG of PropLogic.BoolExpr
+	| TERM of PropLogic.BoolExpr
+	
+%name Calc
+
+%start PROG
+
+%noshift EOF
+%verbose
+%%
+
+(* the parser returns the value associated with the expression *)
+
+PROG: TERM							(TERM)
+
+TERM: TERM AND TERM 				(PropLogic.AND(TERM1,TERM2))
+	| TERM OR TERM 					(PropLogic.OR(TERM1, TERM2))
+	| TERM IMPLY TERM 				(PropLogic.IMPLY(TERM1,TERM2))
+	| TERM DOUBLEIMPLY TERM 		(PropLogic.DOUBLEIMPLY(TERM1,TERM2))
+	| NOT TERM 						(PropLogic.NOT(TERM))
+	| VAR 							(PropLogic.Variable VAR)
+	| LPAREN TERM RPAREN 			(TERM)
