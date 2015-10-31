@@ -6,12 +6,6 @@ CM.make "sources.cm";
 
 open PropLogic;
 
-fun IsCompleted([])=true
-	|IsCompleted(Variable(X)::xs)= IsCompleted(xs)
-	|IsCompleted(NOT(Variable(X))::xs) =IsCompleted(xs)
-	|IsCompleted(_) = false
-; 
-
 fun CheckComplimentary(Variable(x),NOT(Variable(y))) = (x=y)
 	|CheckComplimentary(NOT(Variable(x)),Variable(y)) = (x=y)
 	|CheckComplimentary(_,_) = false
@@ -33,7 +27,6 @@ fun JoinOne(a,[])=[]
 fun JoinAll([],xs)=[]
 	|JoinAll(x::xs,y)=List.concat([JoinOne(x,y),JoinAll(xs,y)])
 ;
-
 
 fun MakeTableaux(Variable(x))= [[Variable(x)]]
 	|MakeTableaux(AND(x,y)) = JoinAll(MakeTableaux(x),MakeTableaux(y))

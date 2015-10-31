@@ -1,0 +1,57 @@
+%%
+
+%eop EOF SEMI
+
+(* %pos declares the type of positions for terminals.
+   Each symbol has an associated left and right position. *)
+
+%pos int
+
+
+%term VAR of string
+	| DOT
+	| LPAREN
+	| RPAREN
+	| BOXLPAREN
+	| BOXRPAREN
+	| EOF
+	| FORALL
+	| EXISTS
+	| COMMA
+	| OR
+	| AND
+	| NOT
+	| IMPLY
+	| SEMI
+	| EOP
+	| DOUBLEIMPLY
+
+%nonterm PROG of PredLogic.BoolExpr
+	| TERM of PredLogic.BoolExpr
+	| TERMLIST of PredLogic.BoolExpr list
+	
+%name Calc
+
+%start PROG
+
+%noshift EOF
+%verbose
+%%
+
+(* the parser returns the value associated with the expression *)
+
+PROG: TERM							(TERM)
+
+TERMLIST: TERM 						([TERM])
+	| TERM COMMA TERMLIST			([TERM]@TERMLIST)
+
+TERM: TERM AND TERM 				(PredLogic.AND(TERM1,TERM2))
+	| TERM OR TERM 					(PredLogic.OR(TERM1, TERM2))
+	| TERM IMPLY TERM 				(PredLogic.IMPLY(TERM1,TERM2))
+	| TERM DOUBLEIMPLY TERM 		(PredLogic.DOUBLEIMPLY(TERM1,TERM2))
+	| NOT TERM 						(PredLogic.NOT(TERM))
+	| FORALL LPAREN VAR COMMA TERM RPAREN (PredLogic.FORALL(VAR,TERM))
+	| EXISTS LPAREN VAR COMMA TERM RPAREN (PredLogic.EXISTS(VAR,TERM))
+	| VAR BOXLPAREN TERMLIST BOXRPAREN (PredLogic.FUNCTION(VAR,TERMLIST))
+	| VAR 							(PredLogic.Variable VAR)
+	| LPAREN TERM RPAREN 			(TERM)
