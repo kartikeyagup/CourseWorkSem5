@@ -43,19 +43,19 @@ int main(int argc, char const *argv[])
 	double t_ordertime = 0.0;
 	double dim_timeout ;
 
-	learningrate_order = 1.0;
-	learningrate_chaos = 1.0;
+	learningrate_order = 0.1;
+	learningrate_chaos = 0.1;
 	if(GlobalGame.GetDimension()==5)
 	{
-		dim_timeout = 56.66;
+		dim_timeout = 156.66;
 	}
 	else if(GlobalGame.GetDimension() == 6)
 	{
-		dim_timeout = 116.66;
+		dim_timeout = 1116.66;
 	}
 	else if(GlobalGame.GetDimension() == 7)
 	{
-		dim_timeout = 176.66;
+		dim_timeout = 1176.66;
 	}
 	bool timed_out = 0;
 	std::cerr<<"Type: "<<typeg<<"\n";
@@ -98,6 +98,8 @@ int main(int argc, char const *argv[])
 		
 		while (true)
 		{
+			std::cerr << w1_chaos <<"\t" << w2_chaos <<" are the weights\n";
+			std::cerr << learningrate_chaos << " is the learningrate_chaos\n";
 			if (GlobalGame.IsCompleted())
 			{
 				break;
@@ -111,6 +113,9 @@ int main(int argc, char const *argv[])
 			std::cin >> InpInitx >> InpInity >> FinInitx >> FinInity;
 			t_chaos = clock()/double(CLOCKS_PER_SEC);
 			GlobalGame.Move(InpInitx,InpInity,FinInitx,FinInity);
+			learningrate_chaos *= 0.985;
+			learningrate_order *= 0.985;
+
 			// std::cerr << "Doing order move\n";
 			// GlobalGame.ShowPresent();
 			// std::cerr << "Now starting chaos move\n";	
@@ -167,6 +172,8 @@ int main(int argc, char const *argv[])
 		timed_out = 0;
 		while (true)
 		{
+			std::cerr << w1_order <<"\t" << w2_order <<" are the weights\n";
+			std::cerr << learningrate_order << " is the learningrate_order\n";
 			// GlobalGame.ShowPresent();
 			int posx,posy;
 			char col;
@@ -177,7 +184,10 @@ int main(int argc, char const *argv[])
 			{
 				break;
 			}
-			GlobalGame.ShowPresent();
+			// GlobalGame.ShowPresent();
+			learningrate_chaos *= 0.985;
+			learningrate_order *= 0.985;
+
 			if(t_ordertime<dim_timeout)
 			{
 				mv = getbestmoveOrder();

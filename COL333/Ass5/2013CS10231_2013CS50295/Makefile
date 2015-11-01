@@ -3,6 +3,14 @@ all: a.out
 copy: a.out
 	cp a.out ../entropy/client/a.out
 
+resetweights:
+	cp ChaosWeights.txt ../entropy/clientRon/ChaosWeights.txt
+	cp OrderWeights.txt ../entropy/clientRon/OrderWeights.txt
+
+copyall: a.out
+	cp a.out ../entropy/clientKG/a.out
+	cp a.out ../entropy/clientRon/a.out
+
 debug: Game.cpp GameClient.cpp GameTree.cpp PalindromePopulation.cpp
 	g++ -o debug -g Game.cpp PalindromePopulation.cpp GameTree.cpp GameClient.cpp -std=gnu++11 -O3
 

@@ -53,7 +53,7 @@ public:
 	std::pair<int,int> GetRandomMoveChaos();
 	std::pair<std::pair<int,int>, std::pair<int,int> > GetRandomMoveOrder();
 
-	int CalculateScore();
+	float CalculateScore();
 	void ShowPresent();
 	void Move(int,int,int,int);
 	void AddNew(char,int,int);
@@ -70,6 +70,11 @@ public:
 	float UndoMoveOrder(OrderMove*);
 	float UndoMoveChaos(ChaosMove*);
 	float MoveAndUndoChaos(ChaosMove*);
+
+	float Calc1WayH1(int);
+	float Calc1WayH2(int);
+	float CalculateScoreH1();
+	float CalculateScoreH2();
 
 private:
 	bool TypePlayer; // 0 for Order, 1 for Chaos
