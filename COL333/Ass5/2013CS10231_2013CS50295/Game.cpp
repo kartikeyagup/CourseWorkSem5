@@ -228,9 +228,9 @@ int Game::GetNumCompleted()
 	return NumCompleted;
 }
 
-int Game::CalculateScore()
+float Game::CalculateScore()
 {
-	int sccal=0;
+	float sccal=0;
 	for (int i=0; i<Dimension; i++)
 	{
 		sccal += GetEntireScore2(i);
@@ -238,6 +238,101 @@ int Game::CalculateScore()
 	}
 	return sccal;
 }
+
+float Game::Calc1WayH1(int val)
+{
+	std::string temp;
+	if (val<Dimension)
+	{
+		temp.assign(Board[val],Dimension);
+	}
+	else
+	{
+		temp=std::string(Dimension,'A');
+		for (int i=0; i<Dimension; i++)
+		{
+			temp[i]=Board[i][val-Dimension];
+		}
+	}
+	float a1;
+	a1 = PalidromeScoreData[temp];
+	if (!TypePlayer)
+	{
+		if (val==0 || val==4 || val==5 || val ==9)
+		{
+			a1 *= 5;
+		}
+		else if (val==1 || val== 3 || val==6 || val==8)
+		{
+			a1 *= 2;
+		}
+	}
+	return a1;
+}
+
+float Game::Calc1WayH2(int val)
+{
+	// val lies in 0 to 5 for row and 5 to 10 for column
+	// std::string temp(inp);
+
+	std::string temp;
+	if (val<Dimension)
+	{
+		temp.assign(Board[val],Dimension);
+	}
+	else
+	{
+		temp=std::string(Dimension,'A');
+		for (int i=0; i<Dimension; i++)
+		{
+			temp[i]=Board[i][val-Dimension];
+		}
+	}
+
+	float a2;
+	a2 = 0.0;
+	
+	a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
+	a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
+	a2 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
+	a2 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
+	a2 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+	if (!TypePlayer)
+	{
+		if (val==0 || val==4 || val==5 || val ==9)
+		{
+			a2 *= 5;
+		}
+		else if (val==1 || val== 3 || val==6 || val==8)
+		{
+			a2 *= 2;
+		}
+	}
+	return a2;
+}
+
+float Game::CalculateScoreH1()
+{
+	float ans =0;
+	for (int i=0; i<5; i++)
+	{
+		ans += Calc1WayH1(i);
+		ans += Calc1WayH1(5+i);
+	}
+	return ans;
+}
+
+float Game::CalculateScoreH2()
+{
+	float ans =0;
+	for (int i=0; i<5; i++)
+	{
+		ans += Calc1WayH2(i);
+		ans += Calc1WayH2(5+i);
+	}
+	return ans;
+}
+
 
 std::pair<int,int> Game::GetRandomMoveChaos()
 {
