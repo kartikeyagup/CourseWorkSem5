@@ -106,14 +106,54 @@ fun MakeTableaux(Variable(x))= [[Variable(x)]]
 	|MakeTableaux(NOT(EXISTS(x,p))) = MakeTableaux(NOT(p))
 ;
 
+val variablelast = ref 0;
+
+fun RenameVariable(x,y,Variable(p))=if (p=x) then Variable(y) else Variable(p)
+	|RenameVariable(x,y,Constant(p))=Constant(p)
+	|RenameVariable(x,y,AND(a,b))=AND(RenameVariable(x,y,a),RenameVariable(x,y,b))
+	|RenameVariable(x,y,OR(a,b)) =OR(RenameVariable(x,y,a),RenameVariable(x,y,b))
+	|RenameVariable(x,y,IMPLY(a,b))=IMPLY(RenameVariable(x,y,a),RenameVariable(x,y,b))
+	|RenameVariable(x,y,DOUBLEIMPLY(a,b))=DOUBLEIMPLY(RenameVariable(x,y,a),RenameVariable(x,y,b))
+	|RenameVariable(x,y,FUNCTION(l,ls))=FUNCTION(l,RenameVariableList(x,y,ls))
+	|RenameVariable(x,y,FORALL(a,b))= if (x=a) then FORALL(y,RenameVariable(x,y,b)) else FORALL(a,RenameVariable(x,y,b))
+	|RenameVariable(x,y,EXISTS(a,b))= if (x=a) then EXISTS(y,RenameVariable(x,y,b)) else EXISTS(a,RenameVariable(x,y,b))
+	|RenameVariable(x,y,NOT(p))=NOT(RenameVariable(x,y,p))
+and RenameVariableList(x,y,[])=[]
+	|RenameVariableList(x,y,p::ps)=RenameVariable(x,y,p)::RenameVariableList(x,y,ps)
+;
+
+fun RenameAll(Variable(x))=Variable(x)
+	|RenameAll(Constant(x))=Constant(x)
+	|RenameAll(FORALL(a,b))=
+		let
+			val FORALL(a1,a2) = RenameVariable(a,Int.toString(!variablelast),FORALL(a,b))
+		in
+			(variablelast := !variablelast+1 ; FORALL(a1,RenameAll(a2)))
+		end
+	|RenameAll(EXISTS(a,b))=
+		let
+			val EXISTS(a1,a2) = RenameVariable(a,Int.toString(!variablelast),EXISTS(a,b))
+		in
+			(variablelast := !variablelast+1 ; EXISTS(a1,RenameAll(a2)))
+		end
+	|RenameAll(AND(a,b))=AND(RenameAll(a),RenameAll(b))
+	|RenameAll(OR(a,b))=OR(RenameAll(a),RenameAll(b))
+	|RenameAll(IMPLY(a,b))=IMPLY(RenameAll(a),RenameAll(b))
+	|RenameAll(DOUBLEIMPLY(a,b))=DOUBLEIMPLY(RenameAll(a),RenameAll(b))
+	|RenameAll(NOT(a))=NOT(RenameAll(a))
+	|RenameAll(FUNCTION(a,b))=FUNCTION(a,map RenameAll b)
+;
+
 fun CheckAllClosed([])= true
 	|CheckAllClosed(x::xs)= CheckComp(x) andalso CheckAllClosed(xs)
 ;
 
 (*val p:BoolExpr = Calc.parse_string("E(p,p*q) ;");*)
-val p1:BoolExpr = Calc.parse_string(" (E(x,f[x]))->(E(y,f[y])) ;"); 
+val p1:BoolExpr = Calc.parse_string(" (E(x,f[x]))->(E(x,f[x])) ;"); 
     (*f[p,q[r]] ;");*)
 
+val renamed = RenameAll(p1);
+
 (*val q:BoolExpr=Calc.parse_string("((p*q) + ((~p)*r)) -> (((~p)+q)*(p+r)) ;");*)
-val TableauxCreated = MakeTableaux(NOT(p1))
+val TableauxCreated = MakeTableaux(NOT(renamed))
 val result = CheckAllClosed(TableauxCreated)
