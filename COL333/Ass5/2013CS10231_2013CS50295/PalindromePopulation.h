@@ -5,6 +5,7 @@
 #include <queue>
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 extern std::vector<std::string> AllStrings;
 extern std::vector<float> NormalPalindromeScores;

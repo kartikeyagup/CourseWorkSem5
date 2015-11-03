@@ -102,10 +102,34 @@ int GetEntireScoreSt(const std::string &inp, int leng)
 
 bool GetMatch(const std::string &x,const std::string &pat,const int pos)
 {
+	bool filling=false;
+	char chartofill;
 	for (int i=0; i<pat.size(); i++)
 	{
-		if (x[pos+i]!=pat[i] && (x[pos+i]!='-' && pat[i]!='-'))
-			return false;
+		if (x[pos+i]=='-')
+		{
+			continue;
+		}
+		if (x[pos+i]!=pat[i])
+		{
+			if (pat[i]=='-')
+			{
+				if (filling)
+				{
+					if (x[pos+i]!=chartofill)
+					{
+						return false;
+					}
+				}
+				else
+				{
+					filling=true;
+					chartofill=x[pos+i];
+				}
+			}
+			else
+				return false;
+		}
 	}
 	return true;
 }
@@ -125,7 +149,7 @@ int GetFeatureCount(const std::string &inp,const std::string &feat)
 
 int* GetAllFeatureCounts(const std::string &inp)
 {
-	std::vector<std::string> features5 = {"AAAAA", "AAAA", "A-AAA", "AA-AA", "AAA", "A-AA", "A--AA", "A-A-A", "AA", "A-A", "A--A", "A---A", "BBBBB", "BBBB", "B-BBB", "BB-BB", "BBB", "B-BB", "B--BB", "B-B-B", "BB", "B-B", "B--B", "B---B", "CCCCC", "CCCC", "C-CCC", "CC-CC", "CCC", "C-CC", "C--CC", "C-C-C", "CC", "C-C", "C--C", "C---C", "DDDDD", "DDDD", "D-DDD", "DD-DD", "DDD", "D-DD", "D--DD", "D-D-D", "DD", "D-D", "D--D", "D---D", "EEEEE", "EEEE", "E-EEE", "EE-EE", "EEE", "E-EE", "E--EE", "E-E-E", "EE", "E-E", "E--E", "E---E"};
+	std::vector<std::string> features5 = {"AA", "A-A", "A--A", "A---A", "BB", "B-B", "B--B", "B---B", "CC", "C-C", "C--C", "C---C", "DD", "D-D", "D--D", "D---D", "EE", "E-E", "E--E", "E---E"};
 	int* ans = new int[features5.size()];
 	for (int i=0; i<features5.size(); i++)
 	{
@@ -136,13 +160,13 @@ int* GetAllFeatureCounts(const std::string &inp)
 
 float GetRonakHeuristic(const std::string &inp)
 {
-	std::vector<float> weights = {-8.51619336382,0.00445366255348,-0.12845454946,4.94561947651,-0.118819379399,-0.163803658797,-0.0459416980413,4.34133445271,1.97012615876,3.19098409526,4.01988978871,4.90055287504,-8.51619336382,0.00445366255348,-0.12845454946,4.94561947651,-0.118819379399,-0.163803658797,-0.0459416980413,4.34133445271,1.97012615876,3.19098409526,4.01988978871,4.90055287504,-8.51619336382,0.00445366255348,-0.12845454946,4.94561947651,-0.118819379399,-0.163803658797,-0.0459416980413,4.34133445271,1.97012615876,3.19098409526,4.01988978871,4.90055287504,-8.51619336382,0.00445366255348,-0.12845454946,4.94561947651,-0.118819379399,-0.163803658797,-0.0459416980413,4.34133445271,1.97012615876,3.19098409526,4.01988978871,4.90055287504,-8.51619336382,0.00445366255348,-0.12845454946,4.94561947651,-0.118819379399,-0.163803658797,-0.0459416980413,4.34133445271,1.97012615876,3.19098409526,4.01988978871,4.90055287504};
-	std::vector<std::string> features5 = {"AAAAA", "AAAA", "A-AAA", "AA-AA", "AAA", "A-AA", "A--AA", "A-A-A", "AA", "A-A", "A--A", "A---A", "BBBBB", "BBBB", "B-BBB", "BB-BB", "BBB", "B-BB", "B--BB", "B-B-B", "BB", "B-B", "B--B", "B---B", "CCCCC", "CCCC", "C-CCC", "CC-CC", "CCC", "C-CC", "C--CC", "C-C-C", "CC", "C-C", "C--C", "C---C", "DDDDD", "DDDD", "D-DDD", "DD-DD", "DDD", "D-DD", "D--DD", "D-D-D", "DD", "D-D", "D--D", "D---D", "EEEEE", "EEEE", "E-EEE", "EE-EE", "EEE", "E-EE", "E--EE", "E-E-E", "EE", "E-E", "E--E", "E---E"};
+	std::vector<float> weights = {1.948380566801626, 3.3046558704453455, 3.913967611336028, 4.7317813765182954, 1.9483805668016325, 3.3046558704453335, 3.9139676113360458, 4.731781376518238, 1.9483805668015861, 3.304655870445362, 3.913967611336074, 4.731781376518265, 1.9483805668016099, 3.304655870445339, 3.913967611336075, 4.7317813765182555, 1.9483805668015535, 3.3046558704453752, 3.9139676113359974, 4.731781376518259};
+	std::vector<std::string> features5 = {"AA", "A-A", "A--A", "A---A", "BB", "B-B", "B--B", "B---B", "CC", "C-C", "C--C", "C---C", "DD", "D-D", "D--D", "D---D", "EE", "E-E", "E--E", "E---E"};
 	int* featcounts = GetAllFeatureCounts(inp);
 	float ans=0.0;
 	for (int i=0; i<weights.size(); i++)
 	{
-		// std::cerr << weights[i]<< "\t" << features5[i] <<"\t" << featcounts[i]<<"\n";
+		// std::cerr << inp <<"\t" <<weights[i]<< "\t" << features5[i] <<"\t" << featcounts[i]<<"\n";
 		ans += featcounts[i]*weights[i];
 	}
 	return ans;
@@ -297,13 +321,30 @@ void Initialise(bool typeinp)
 	std::cerr << "Got all strings from ronak\t" << AllStrings.size() <<"\n";
 	// if (GlobalGameDim<7)
 	// {
+	if (GlobalGameDim<7)
+	{
 		for (int i=0; i< AllStrings.size(); i++)
 		{
 			// NormalPalindromeScores.push_back(GiveExpect1(AllStrings[i]));
 			PopulateTable1(AllStrings[i]);
-			RonakHeuristic[AllStrings[i]]=GetRonakHeuristic(AllStrings[i]);
+			// RonakHeuristic[AllStrings[i]]=GetRonakHeuristic(AllStrings[i]);
 			// std::cerr << AllStrings[i] <<"\t" << PalidromeScoreData[AllStrings[i]] << "\t" <<RonakHeuristic[AllStrings[i]] <<"\n";
 		}
+	}
+	else
+	{
+		std::ifstream fil;
+		fil.open("Poptable.txt");
+		for (int i=0; i< AllStrings.size(); i++)
+		{
+			// NormalPalindromeScores.push_back(GiveExpect1(AllStrings[i]));
+			fil >> PalidromeScoreData[AllStrings[i]];
+			// PopulateTable1(AllStrings[i]);
+			// RonakHeuristic[AllStrings[i]]=GetRonakHeuristic(AllStrings[i]);
+			// std::cerr << AllStrings[i] <<"\t" << PalidromeScoreData[AllStrings[i]] << "\t" <<RonakHeuristic[AllStrings[i]] <<"\n";
+		}
+		fil.close();
+	}
 		// for (int i=0; i<AllStrings.size(); i++)
 		// {
 		// 	if (abs(PalidromeScoreData[AllStrings[i]] - NormalPalindromeScores[i]) > 0.01 )
@@ -321,6 +362,8 @@ void Initialise(bool typeinp)
 	// }
 	// else
 	// 	PopulateTable1("-------");
+	std::cerr<< "E-E-E" << "\t" << PalidromeScoreData["E-E-E"] <<"\t" << RonakHeuristic["E-E-E"] << "\n";
+	std::cerr<< "EEE--" << "\t" << PalidromeScoreData["EEE--"] <<"\t" << RonakHeuristic["EEE--"] << "\n";
 	std::cerr << "Done with normal expectations\t" << AllStrings.size() <<"\t" << PalidromeScoreData.size() <<"\n";
 	PopulateTable(typeinp);
 	std::cerr << "Done with other tables\n";

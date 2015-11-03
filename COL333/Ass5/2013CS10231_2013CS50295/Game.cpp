@@ -87,7 +87,7 @@ float Game::GetEntireScore2(int val)
 	float a1,a2;
 	if (false)
 	{	
-		a1 = PalidromeScoreData[temp];
+		a1 = RonakHeuristic[temp];
 		return a1;
 	}
 	else
@@ -138,12 +138,12 @@ float Game::GetEntireScore2(int val)
 			// a2 = RonakHeuristic[temp];
 			if (!TypePlayer)
 			{
-				if (val==0 || val==4 || val==5 || val ==9)
+				if (val==0 || val==Dimension-1 || val==Dimension || val ==2*Dimension -1)
 				{
 					a1 *= 5;
 					a2 *= 5;
 				}
-				else if (val==1 || val== 3 || val==6 || val==8)
+				else if (val==1 || val== Dimension-2 || val==Dimension+1 || val==2*Dimension -2)
 				{
 					a1 *= 2;
 					a2 *= 2;

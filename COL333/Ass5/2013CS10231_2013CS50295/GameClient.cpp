@@ -23,12 +23,12 @@ std::string constantweights;			// denotes whether the player is playing with sta
 
 int main(int argc, char const *argv[])
 {
+	// std::cerr << GetRonakHeuristic("ABACA")<<"\n";
 	int dim;
 	std::cin >> dim;
 	std::string role;
 	std::cin >>role;
 
-	// std::cerr << GetRonakHeuristic(role)<<"\n";
 
 	if (dim==5)
 	{
