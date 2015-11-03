@@ -12,7 +12,8 @@ extern int GlobalGameDim;
 
 void Initialise(bool);
 void PopulateTable(bool);
-float PopulateTable1(std::string);
+float PopulateTable1(const std::string &);
 void PopulateAllTables(bool);
+float GetRonakHeuristic(const std::string &);
 
 #endif

@@ -118,7 +118,7 @@ float Game::GetEntireScore2(int val)
 				// }
 			// }
 		// }
-		if (NumCompleted>13)
+		if (NumCompleted>toggleHeuristic)
 		{
 			a1 = PalidromeScoreData[temp];
 			return a1;
@@ -127,11 +127,15 @@ float Game::GetEntireScore2(int val)
 		{
 			a1 = PalidromeScoreData[temp];
 	
-			a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
-			a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
-			a2 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
-			a2 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
-			a2 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+			for (int i=0; i<Dimension; i++)
+			{
+				a2 += ((Dimension+1 - ColCompleted[i])*AllPalindromesData[i][temp])/((GlobalDimensionSq-NumCompleted));
+				// a1 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
+				// a1 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
+				// a1 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
+				// a1 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+			}
+			// a2 = RonakHeuristic[temp];
 			if (!TypePlayer)
 			{
 				if (val==0 || val==4 || val==5 || val ==9)
@@ -278,6 +282,37 @@ float Game::Calc1WayH1(int val)
 	return a1;
 }
 
+float Game::CalculateScoreRonak(int val)
+{
+	std::string temp;
+	if (val<Dimension)
+	{
+		temp.assign(Board[val],Dimension);
+	}
+	else
+	{
+		temp=std::string(Dimension,'A');
+		for (int i=0; i<Dimension; i++)
+		{
+			temp[i]=Board[i][val-Dimension];
+		}
+	}
+	float a1;
+	a1 = RonakHeuristic[temp];
+	if (!TypePlayer)
+	{
+		if (val==0 || val==4 || val==5 || val ==9)
+		{
+			a1 *= 5;
+		}
+		else if (val==1 || val== 3 || val==6 || val==8)
+		{
+			a1 *= 2;
+		}
+	}
+	return a1;	
+}
+
 float Game::Calc1WayH2(int val)
 {
 	// val lies in 0 to 5 for row and 5 to 10 for column
@@ -300,11 +335,15 @@ float Game::Calc1WayH2(int val)
 	float a2;
 	a2 = 0.0;
 	
-	a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
-	a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
-	a2 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
-	a2 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
-	a2 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+	for (int i=0; i<Dimension; i++)
+	{
+		a2+= ((1+Dimension-ColCompleted[i])*AllPalindromesData[i][temp])/(GlobalDimensionSq + NumCompleted);
+	}
+	// a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
+	// a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
+	// a2 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
+	// a2 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
+	// a2 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
 	if (!TypePlayer)
 	{
 		if (val==0 || val==4 || val==5 || val ==9)
@@ -322,10 +361,10 @@ float Game::Calc1WayH2(int val)
 float Game::CalculateScoreH1()
 {
 	float ans =0;
-	for (int i=0; i<5; i++)
+	for (int i=0; i<Dimension; i++)
 	{
 		ans += Calc1WayH1(i);
-		ans += Calc1WayH1(5+i);
+		ans += Calc1WayH1(Dimension+i);
 	}
 	return ans;
 }
@@ -333,10 +372,21 @@ float Game::CalculateScoreH1()
 float Game::CalculateScoreH2()
 {
 	float ans =0;
-	for (int i=0; i<5; i++)
+	for (int i=0; i<Dimension; i++)
 	{
 		ans += Calc1WayH2(i);
-		ans += Calc1WayH2(5+i);
+		ans += Calc1WayH2(Dimension+i);
+	}
+	return ans;
+}
+
+float Game::CalculateScoreRon()
+{
+	float ans=0;
+	for (int i=0; i<Dimension; i++)
+	{
+		ans += CalculateScoreRonak(i);
+		ans += CalculateScoreRonak(Dimension+i);		
 	}
 	return ans;
 }

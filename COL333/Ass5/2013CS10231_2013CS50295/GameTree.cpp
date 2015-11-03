@@ -628,12 +628,12 @@ std::pair<int,int> getbestmoveChaos(char b)
 	// final backed up value
 	if(constantweights == "0")
 	{
-		if (GlobalGame.GetNumCompleted()<13)
+		if (GlobalGame.GetNumCompleted()<toggleHeuristic)
 		{
 			// updating the weights for the heuristics
 			// std::cerr << "Final value is: " << finvalue <<"\t" << initvalue <<"\n";
-			float contr1 = GlobalGame.CalculateScoreH1();
-			float contr2 = GlobalGame.CalculateScoreH2();
+			float contr1 = GlobalGame.CalculateScoreH1() + GlobalGame.CalculateScoreH2();
+			float contr2 = GlobalGame.CalculateScoreRon();
 			std::cerr << contr1 <<"\t" << contr2 <<" are the contrs\n";
 			std::cerr << initvalue <<"\t" <<finvalue <<" are the init and final values\n";
 			w1_chaos = w1_chaos + learningrate_chaos*(finvalue - initvalue)*(contr1)/(contr1+contr2);
@@ -1025,13 +1025,13 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 
 	if(constantweights == "0")
 	{
-		if (GlobalGame.GetNumCompleted()<13)
+		if (GlobalGame.GetNumCompleted()<toggleHeuristic)
 		{
 			float finvalue = c->getparent()->getutility();
 			std::cerr << "Value is changinf from " << initvalue <<"\t" << finvalue <<"\n";
 			// updating the weights for the heuristics
-			float contr1 = GlobalGame.CalculateScoreH1();
-			float contr2 = GlobalGame.CalculateScoreH2();
+			float contr1 = GlobalGame.CalculateScoreH1() + GlobalGame.CalculateScoreH2();
+			float contr2 = GlobalGame.CalculateScoreRon();
 			std::cerr << contr1 <<"\t" << contr2 <<" are the contrs\n";
 			w1_order = w1_order + learningrate_order*(finvalue - initvalue)*contr1/(contr1+contr2);
 			w2_order = w2_order + learningrate_order*(finvalue - initvalue)*contr2/(contr1+contr2);

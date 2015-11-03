@@ -11,7 +11,11 @@
 extern char* vert;
 extern std::unordered_map<std::string,float> PalidromeScoreData;
 extern std::unordered_map<std::string,float>* AllPalindromesData;
+extern std::unordered_map<std::string,float> RonakHeuristic;
 
+
+extern int toggleHeuristic;
+extern float GlobalDimensionSq;
 extern float w1_chaos,w2_chaos,w1_order,w2_order;
 extern float learningrate_chaos,learningrate_order;
 extern float f1_chaos,f2_chaos,f1_order,f2_order;
@@ -53,6 +57,8 @@ public:
 	std::pair<int,int> GetRandomMoveChaos();
 	std::pair<std::pair<int,int>, std::pair<int,int> > GetRandomMoveOrder();
 
+	float CalculateScoreRonak(int);
+	float CalculateScoreRon();
 	float CalculateScore();
 	void ShowPresent();
 	void Move(int,int,int,int);

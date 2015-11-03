@@ -2,6 +2,11 @@
 
 std::unordered_map<std::string,float> PalidromeScoreData;
 std::unordered_map<std::string,float>* AllPalindromesData;
+std::unordered_map<std::string,float> RonakHeuristic;
+
+float GlobalDimensionSq;
+int toggleHeuristic;
+
 Game GlobalGame;
 char* vert;
 std::vector<std::string> AllStrings;
@@ -22,6 +27,23 @@ int main(int argc, char const *argv[])
 	std::cin >> dim;
 	std::string role;
 	std::cin >>role;
+
+	// std::cerr << GetRonakHeuristic(role)<<"\n";
+
+	if (dim==5)
+	{
+		toggleHeuristic=15;
+	}
+	else if (dim==6)
+	{
+		toggleHeuristic=22;
+	}
+	else
+	{
+		toggleHeuristic=30;
+	}
+
+	GlobalDimensionSq = dim*(dim+1);
 
 	bool typeg = (role=="CHAOS");
 	
