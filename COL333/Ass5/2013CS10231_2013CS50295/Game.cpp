@@ -118,42 +118,50 @@ float Game::GetEntireScore2(int val)
 				// }
 			// }
 		// }
-
-		a1 = PalidromeScoreData[temp];
-
-		a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
-		a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
-		a2 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
-		a2 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
-		a2 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
-		if (!TypePlayer)
+		if (NumCompleted>13)
 		{
-			if (val==0 || val==4 || val==5 || val ==9)
-			{
-				a1 *= 5;
-				a2 *= 5;
-			}
-			else if (val==1 || val== 3 || val==6 || val==8)
-			{
-				a1 *= 2;
-				a2 *= 2;
-			}
-		}
-		f1_chaos = a1;
-		f1_order = a1;
-		f2_chaos = a2;
-		f2_order = a2;
-
-		float finscore;
-		if(TypePlayer)
-		{
-			finscore = w1_chaos * f1_chaos + w2_chaos * f2_chaos;
+			a1 = PalidromeScoreData[temp];
+			return a1;
 		}
 		else
 		{
-			finscore = w1_order * f1_order + w2_order * f2_order;
+			a1 = PalidromeScoreData[temp];
+	
+			a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
+			a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
+			a2 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
+			a2 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
+			a2 += ((6.0- ColCompleted[4])*AllPalindromesData[4][temp])/((30.0-NumCompleted)); 	
+			if (!TypePlayer)
+			{
+				if (val==0 || val==4 || val==5 || val ==9)
+				{
+					a1 *= 5;
+					a2 *= 5;
+				}
+				else if (val==1 || val== 3 || val==6 || val==8)
+				{
+					a1 *= 2;
+					a2 *= 2;
+				}
+			}
+			f1_chaos = a1;
+			f1_order = a1;
+			f2_chaos = a2;
+			f2_order = a2;
+	
+			float finscore;
+			if(TypePlayer)
+			{
+				finscore = w1_chaos * f1_chaos + w2_chaos * f2_chaos;
+				// finscore = f2_chaos;
+			}
+			else
+			{
+				finscore = w1_order * f1_order + w2_order * f2_order;
+			}
+			return finscore;
 		}
-		return finscore;
 	}
 }
 
