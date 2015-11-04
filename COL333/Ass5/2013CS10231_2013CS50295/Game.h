@@ -9,6 +9,7 @@
 #include <algorithm>
 
 extern char* vert;
+extern std::string temp;
 extern std::unordered_map<std::string,float> PalidromeScoreData;
 extern std::unordered_map<std::string,float>* AllPalindromesData;
 extern std::unordered_map<std::string,float> RonakHeuristic;

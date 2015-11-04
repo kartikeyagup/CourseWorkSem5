@@ -71,14 +71,14 @@ float Game::GetEntireScore2(int val)
 	// val lies in 0 to 5 for row and 5 to 10 for column
 	// std::string temp(inp);
 	// return 1.0;
-	std::string temp;
+	// std::string temp;
 	if (val<Dimension)
 	{
 		temp.assign(Board[val],Dimension);
 	}
 	else
 	{
-		temp=std::string(Dimension,'A');
+		// temp=std::string(Dimension,'A');
 		for (int i=0; i<Dimension; i++)
 		{
 			temp[i]=Board[i][val-Dimension];
@@ -253,14 +253,14 @@ float Game::CalculateScore()
 
 float Game::Calc1WayH1(int val)
 {
-	std::string temp;
+	// std::string temp;
 	if (val<Dimension)
 	{
 		temp.assign(Board[val],Dimension);
 	}
 	else
 	{
-		temp=std::string(Dimension,'A');
+		// temp=std::string(Dimension,'A');
 		for (int i=0; i<Dimension; i++)
 		{
 			temp[i]=Board[i][val-Dimension];
@@ -284,14 +284,14 @@ float Game::Calc1WayH1(int val)
 
 float Game::CalculateScoreRonak(int val)
 {
-	std::string temp;
+	// std::string temp;
 	if (val<Dimension)
 	{
 		temp.assign(Board[val],Dimension);
 	}
 	else
 	{
-		temp=std::string(Dimension,'A');
+		// temp=std::string(Dimension,'A');
 		for (int i=0; i<Dimension; i++)
 		{
 			temp[i]=Board[i][val-Dimension];
@@ -318,14 +318,14 @@ float Game::Calc1WayH2(int val)
 	// val lies in 0 to 5 for row and 5 to 10 for column
 	// std::string temp(inp);
 
-	std::string temp;
+	// std::string temp;
 	if (val<Dimension)
 	{
 		temp.assign(Board[val],Dimension);
 	}
 	else
 	{
-		temp=std::string(Dimension,'A');
+		// temp=std::string(Dimension,'A');
 		for (int i=0; i<Dimension; i++)
 		{
 			temp[i]=Board[i][val-Dimension];

@@ -12,6 +12,7 @@ char* vert;
 std::vector<std::string> AllStrings;
 std::vector<float> NormalPalindromeScores;
 int GlobalGameDim;
+std::string temp;
 
 float w1_chaos,w2_chaos,w1_order,w2_order;
 float learningrate_chaos,learningrate_order;
@@ -42,11 +43,11 @@ int main(int argc, char const *argv[])
 	{
 		toggleHeuristic=30;
 	}
+	temp=std::string(dim,'-');
 
 	GlobalDimensionSq = dim*(dim+1);
 
 	bool typeg = (role=="CHAOS");
-	
 	GlobalGameDim = dim;
 	AllPalindromesData= new std::unordered_map<std::string,float>[dim];
 	std::cerr << "Starting preprocessing\n";
