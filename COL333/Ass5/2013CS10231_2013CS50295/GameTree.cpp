@@ -31,7 +31,6 @@ ChaosNode::ChaosNode(char c,float p,float u,float sc)
 	children_visited = 0;
 	alpha = ORDER_DEFAULT;
 	beta = CHAOS_DEFAULT;
-	//hasinferred = 0;
 }
 
 
@@ -63,10 +62,9 @@ void ChaosNode::setutility(float a)
 bool Chaos_child (OrderNode* i,OrderNode* j) { return (i->score > j->score); }
 bool Order_child (ChanceNode* i,ChanceNode* j) { return (i->score < j->score);}
 
-std::vector<OrderNode*> ChaosNode::getchildren()
+void ChaosNode::getchildren(std::vector<OrderNode*> &child_chaos)
 {
-	// TODO: ordering (reverse orderings)
-	std::vector<OrderNode*> child_chaos;
+	// std::vector<OrderNode*> child_chaos;
 	for(int i=0;i<GlobalGame.GetDimension();i++)
 	{
 		for(int j=0;j<GlobalGame.GetDimension();j++)
@@ -86,7 +84,7 @@ std::vector<OrderNode*> ChaosNode::getchildren()
 		}
 	}
 	std::sort (child_chaos.begin(), child_chaos.end(), Chaos_child);
-	return child_chaos;
+	// return child_chaos;
 }
 
 OrderNode::OrderNode(float u,ChaosNode* par,float sc,ChaosMove* a)
@@ -133,68 +131,299 @@ void OrderNode::setutility(float a)
 	utility = a;
 }
 
-std::vector<ChanceNode*> OrderNode::getchildren()
+void OrderNode::getchildren(std::vector<ChanceNode*> &v1)
 {
-	// TODO: improve complexity and ordering (reverse orderings)
 	// std::cerr << "Starting get children of order\n";
-	std::vector<ChanceNode*> v;
+	// std::vector<ChanceNode*> v;
+	// std::vector<ChanceNode*> v1;
 	if(this->getparent()!=NULL)
 	{
 		GlobalGame.MoveChaos(this->move);
 	}
 	bool dupdone=false;
 	// std::cerr << "Starting get children of order\n";
+	// for(int i=0;i<GlobalGame.GetDimension();i++)
+	// {
+	// 	for(int j=0;j<GlobalGame.GetDimension();j++)
+	// 	{
+	// 		if (!GlobalGame.GetValidMoveInsert('A',i,j))
+	// 		{
+	// 			// for (int k=i; k<GlobalGame.GetDimension(); k++)
+	// 			// {
+	// 			// 	if (GlobalGame.GetValidMoveInsert('A',k,j))
+	// 			// 	{
+	// 			// 		OrderMove* omove = new OrderMove();
+	// 			// 		omove->initx = i;
+	// 			// 		omove->inity = j;
+	// 			// 		omove->finx = k;
+	// 			// 		omove->finy = j;
+	// 			// 		float score = GlobalGame.MoveAndUndoOrder(omove);
+	// 			// 		if (i==k)
+	// 			// 		{
+	// 			// 			if (!dupdone)
+	// 			// 			{
+	// 			// 				dupdone=true;
+	// 			// 				ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 				v.push_back(child);
+	// 			// 			}
+	// 			// 		}
+	// 			// 		else
+	// 			// 		{
+	// 			// 			ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 			v.push_back(child);	
+	// 			// 		}	
+	// 			// 	}
+	// 			// 	else
+	// 			// 	{
+	// 			// 		break;
+	// 			// 	}
+	// 			// }
+	// 			// for (int k=i-1; k>=0; k--)
+	// 			// {
+	// 			// 	if (GlobalGame.GetValidMoveInsert('A',k,j))
+	// 			// 	{
+	// 			// 		OrderMove* omove = new OrderMove();
+	// 			// 		omove->initx = i;
+	// 			// 		omove->inity = j;
+	// 			// 		omove->finx = k;
+	// 			// 		omove->finy = j;
+	// 			// 		float score = GlobalGame.MoveAndUndoOrder(omove);
+	// 			// 		if (i==k)
+	// 			// 		{
+	// 			// 			if (!dupdone)
+	// 			// 			{
+	// 			// 				dupdone=true;
+	// 			// 				ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 				v.push_back(child);
+	// 			// 			}
+	// 			// 		}
+	// 			// 		else
+	// 			// 		{
+	// 			// 			ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 			v.push_back(child);	
+	// 			// 		}	
+	// 			// 	}
+	// 			// 	else
+	// 			// 	{
+	// 			// 		break;
+	// 			// 	}
+	// 			// }
+
+	// 			for (int k=0; k<GlobalGame.GetDimension(); k++)
+	// 			{
+	// 				for (int l=0; l<GlobalGame.GetDimension(); l++)
+	// 				{
+	// 				if(GlobalGame.GetValidMoveShift(i,j,k,l))
+	// 				{
+	// 					// std::cerr << "Adding ronak " << i <<"\t" << j <<"\t" <<k <<"\t" <<l<<"\n";
+	// 					OrderMove* omove = new OrderMove();
+	// 					omove->initx = i;
+	// 					omove->inity = j;
+	// 					omove->finx = k;
+	// 					omove->finy = l;
+	// 					float score = GlobalGame.MoveAndUndoOrder(omove);
+	// 					if ((i==k) && (j==l))
+	// 					{
+	// 						if (!dupdone)
+	// 						{
+	// 							dupdone=true;
+	// 							ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 							v.push_back(child);
+	// 						}
+	// 					}
+	// 					else
+	// 					{
+	// 						ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 						v.push_back(child);	
+	// 					}
+	// 				}}}					
+				
+
+	// 			// for (int k=j+1; k<GlobalGame.GetDimension(); k++)
+	// 			// {
+	// 			// 	if(GlobalGame.GetValidMoveInsert('A',i,k))
+	// 			// 	{
+	// 			// 		OrderMove* omove = new OrderMove();
+	// 			// 		omove->initx = i;
+	// 			// 		omove->inity = j;
+	// 			// 		omove->finx = i;
+	// 			// 		omove->finy = k;
+	// 			// 		float score = GlobalGame.MoveAndUndoOrder(omove);
+	// 			// 		ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 		v.push_back(child);	
+	// 			// 	}
+	// 			// 	else
+	// 			// 	{
+	// 			// 		break;
+	// 			// 	}					
+	// 			// }
+	// 			// for (int k=j-1; k>=0; k--)
+	// 			// {
+	// 			// 	if(GlobalGame.GetValidMoveInsert('A',i,k))
+	// 			// 	{
+	// 			// 		OrderMove* omove = new OrderMove();
+	// 			// 		omove->initx = i;
+	// 			// 		omove->inity = j;
+	// 			// 		omove->finx = i;
+	// 			// 		omove->finy = k;
+	// 			// 		float score = GlobalGame.MoveAndUndoOrder(omove);
+	// 			// 		ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 		v.push_back(child);	
+	// 			// 	}
+	// 			// 	else
+	// 			// 	{
+	// 			// 		break;
+	// 			// 	}					
+	// 			// }
+
+
+	// 			// for(int k=0;k<GlobalGame.GetDimension();k++)
+	// 			// {
+	// 			// 	// TODO: Replace by separate for order
+	// 			// 	for(int l=0;l<GlobalGame.GetDimension();l++)
+	// 			// 	{
+	// 			// 		if(GlobalGame.GetValidMoveShift(i,j,k,l))
+	// 			// 		{
+	// 			// 			OrderMove* omove = new OrderMove();
+	// 			// 			omove->initx = i;
+	// 			// 			omove->inity = j;
+	// 			// 			omove->finx = k;
+	// 			// 			omove->finy = l;
+	// 			// 			float score = GlobalGame.MoveAndUndoOrder(omove);
+	// 			// 			if (i==k && j==l)
+	// 			// 			{
+	// 			// 				if (!dupdone)
+	// 			// 				{
+	// 			// 					dupdone=true;
+	// 			// 					ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 					v.push_back(child);
+	// 			// 				}
+	// 			// 			}
+	// 			// 			else
+	// 			// 			{
+	// 			// 				ChanceNode* child = new ChanceNode(0,this,score,omove);
+	// 			// 				v.push_back(child);	
+	// 			// 			}
+	// 			// 		}
+	// 			// 	}
+	// 			// }
+	// 		}
+	// 	}
+	// }
+	dupdone=false;
 	for(int i=0;i<GlobalGame.GetDimension();i++)
 	{
 		for(int j=0;j<GlobalGame.GetDimension();j++)
 		{
 			if (!GlobalGame.GetValidMoveInsert('A',i,j))
 			{
-				for(int k=0;k<GlobalGame.GetDimension();k++)
+				if (!dupdone)
 				{
-					for(int l=0;l<GlobalGame.GetDimension();l++)
+					OrderMove* omove = new OrderMove();
+					omove->initx = i;
+					omove->inity = j;
+					omove->finx = i;
+					omove->finy = j;
+					float score = GlobalGame.MoveAndUndoOrder(omove);
+				
+					dupdone=true;
+					ChanceNode* child = new ChanceNode(0,this,score,omove);
+					v1.push_back(child);
+				}		
+				for (int k=i+1; k<GlobalGame.GetDimension(); k++)
+				{
+					if (GlobalGame.GetValidMoveInsert('A',k,j))
 					{
-						// if(i!=k || j!=l)
-						// {
-							if(GlobalGame.GetValidMoveShift(i,j,k,l))
-							{
-								OrderMove* omove = new OrderMove();
-								omove->initx = i;
-								omove->inity = j;
-								omove->finx = k;
-								omove->finy = l;
-								float score = GlobalGame.MoveAndUndoOrder(omove);
-								if (i==k && j==l)
-								{
-									if (!dupdone)
-									{
-										dupdone=true;
-										ChanceNode* child = new ChanceNode(0,this,score,omove);
-										v.push_back(child);
-									}
-								}
-								else
-								{
-									ChanceNode* child = new ChanceNode(0,this,score,omove);
-									v.push_back(child);	
-								}
-
-								// ChanceNode* child = new ChanceNode(dup_game,0,this);
-								// std::cerr<< "chance node printing ********************\n";
-								// child -> getgame()->ShowPresent();
-								// std::cerr<< "chance node printing ********************\n";
-								// v.push_back(child);
-								// delete dup_game;
-								// delete child;
-							}
-						// }
+						// std::cerr << "KG1 " << i <<"\t" << j <<"\t" << k <<"\t" << j <<"\n";
+						OrderMove* omove = new OrderMove();
+						omove->initx = i;
+						omove->inity = j;
+						omove->finx = k;
+						omove->finy = j;
+						float score = GlobalGame.MoveAndUndoOrder(omove);
+						ChanceNode* child = new ChanceNode(0,this,score,omove);
+						v1.push_back(child);	
 					}
+					else
+					{
+						break;
+					}
+				}
+				for (int k=i-1; k>=0; k--)
+				{
+					if (GlobalGame.GetValidMoveInsert('A',k,j))
+					{
+						// std::cerr << "KG2 " << i <<"\t" << j <<"\t" << k <<"\t" << j <<"\n";
+						OrderMove* omove = new OrderMove();
+						omove->initx = i;
+						omove->inity = j;
+						omove->finx = k;
+						omove->finy = j;
+						float score = GlobalGame.MoveAndUndoOrder(omove);
+						if (i==k)
+						{
+							if (!dupdone)
+							{
+								dupdone=true;
+								ChanceNode* child = new ChanceNode(0,this,score,omove);
+								v1.push_back(child);
+							}
+						}
+						else
+						{
+							ChanceNode* child = new ChanceNode(0,this,score,omove);
+							v1.push_back(child);	
+						}	
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				for (int k=j+1; k<GlobalGame.GetDimension(); k++)
+				{
+					if(GlobalGame.GetValidMoveInsert('A',i,k))
+					{
+						// std::cerr << "KG3 " << i <<"\t" << j <<"\t" << i <<"\t" << k <<"\n";
+						OrderMove* omove = new OrderMove();
+						omove->initx = i;
+						omove->inity = j;
+						omove->finx = i;
+						omove->finy = k;
+						float score = GlobalGame.MoveAndUndoOrder(omove);
+						ChanceNode* child = new ChanceNode(0,this,score,omove);
+						v1.push_back(child);	
+					}
+					else
+					{
+						break;
+					}					
+				}
+				for (int k=j-1; k>=0; k--)
+				{
+					if(GlobalGame.GetValidMoveInsert('A',i,k))
+					{
+						// std::cerr << "KG4 " << i <<"\t" << j <<"\t" << i <<"\t" << k <<"\n";
+						OrderMove* omove = new OrderMove();
+						omove->initx = i;
+						omove->inity = j;
+						omove->finx = i;
+						omove->finy = k;
+						float score = GlobalGame.MoveAndUndoOrder(omove);
+						ChanceNode* child = new ChanceNode(0,this,score,omove);
+						v1.push_back(child);	
+					}
+					else
+					{
+						break;
+					}					
 				}
 			}
 		}
 	}
-	std::sort(v.begin(),v.end(),Order_child);
-	return v;
+	std::sort(v1.begin(),v1.end(),Order_child);
+	// return v1;
 }
 
 ChanceNode::ChanceNode(float u, OrderNode* par,float sc,OrderMove* a)
@@ -230,9 +459,8 @@ void ChanceNode::setutility(float a)
 	utility = a;
 }
 
-std::vector<ChaosNode*> ChanceNode::getchildren()
+void ChanceNode::getchildren(std::vector<ChaosNode*> &v)
 {
-	std::vector<ChaosNode*> v;
 	float score = GlobalGame.MoveOrder(this->move);
 	for(int i=0;i<GlobalGame.GetDimension();i++)
 	{
@@ -243,7 +471,7 @@ std::vector<ChaosNode*> ChanceNode::getchildren()
 		}
 		// delete child;
 	}
-	return v;
+	// return v;
 }
 
 int count_no_chaos_moves = 0;
@@ -272,14 +500,14 @@ std::pair<int,int> getbestmoveChaos(char b)
 	}
 	else
 	{
-		// if(count_no_chaos_moves>=15)
-		// {
-		// 	// depth d;
-		// 	d = 8;
-		// }
+		if(count_no_chaos_moves>=13)
+		{
+			// depth d;
+			d = 8;
+		}
 		d = std::min(d,(GlobalGame.GetDimension()*GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
-	
+	std::cerr << "GOING TILL DEPTH " << d<<"\n";	
 	//float init_util = 10000.0;
 	ChaosNode* node_chaos = new ChaosNode(b,1.0,CHAOS_DEFAULT,0);
 
@@ -372,7 +600,8 @@ std::pair<int,int> getbestmoveChaos(char b)
 						n_chaos -> beta  = n_chaos -> getparent() -> beta;
 					}
 
-					std::vector<OrderNode*> v_children = chaos_stack.top().first->getchildren();
+					std::vector<OrderNode*> v_children;
+					chaos_stack.top().first->getchildren(v_children);
 					for(int i=0;i<v_children.size();i++)
 					{
 						order_stack.push(std::make_pair(v_children[i],depth_chaos+1));
@@ -445,7 +674,8 @@ std::pair<int,int> getbestmoveChaos(char b)
 					n_chance -> alpha = n_chance -> getparent() -> alpha;
 					n_chance -> beta  = n_chance -> getparent() -> beta;
 					
-					std::vector<ChaosNode*> v_children = chance_stack.top().first->getchildren();
+					std::vector<ChaosNode*> v_children;
+					chance_stack.top().first->getchildren(v_children);
 					if(v_children.size()>0)
 					{
 						for(int i=0;i<v_children.size();i++)
@@ -552,7 +782,8 @@ std::pair<int,int> getbestmoveChaos(char b)
 					n_order -> alpha = n_order -> getparent() -> alpha;
 					n_order -> beta  = n_order -> getparent() -> beta;
 					
-					std::vector<ChanceNode*> v_children = order_stack.top().first->getchildren();
+					std::vector<ChanceNode*> v_children;
+					order_stack.top().first->getchildren(v_children);
 					if(v_children.size()>1)
 					{
 						for(int i=0;i<v_children.size();i++)
@@ -701,12 +932,13 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	}
 	else
 	{
-		d = std::min(7,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
-		if(count_no_order_moves>2 && count_no_order_moves<17)
+		if(count_no_order_moves<15)
 		{
 			d = 6;
 		}
+		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
+	std::cerr << "GOING TILL DEPTH " << d<<"\n";
 	float initvalue;
 	if(constantweights == "0")
 	{
@@ -800,7 +1032,8 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 				{
 					chaos_stack.top().first->alpha = chaos_stack.top().first->getparent()->alpha;
 					chaos_stack.top().first->beta = chaos_stack.top().first->getparent()->beta;
-					std::vector<OrderNode*> v_children = chaos_stack.top().first->getchildren();
+					std::vector<OrderNode*> v_children;
+					chaos_stack.top().first->getchildren(v_children);
 					for(int i=0;i<v_children.size();i++)
 					{
 						order_stack.push(std::make_pair(v_children[i],depth_chaos+1));
@@ -876,7 +1109,8 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 				{
 					chance_stack.top().first->alpha = chance_stack.top().first->getparent()->alpha;
 					chance_stack.top().first->beta = chance_stack.top().first->getparent()->beta;
-					std::vector<ChaosNode*> v_children = chance_stack.top().first->getchildren();
+					std::vector<ChaosNode*> v_children;
+					chance_stack.top().first->getchildren(v_children);
 					if(v_children.size()>0)
 					{
 						for(int i=0;i<v_children.size();i++)
@@ -995,7 +1229,8 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 						order_stack.top().first->alpha = order_stack.top().first->getparent()->alpha;
 						order_stack.top().first->beta = order_stack.top().first->getparent()->beta;
 					}
-					std::vector<ChanceNode*> v_children = order_stack.top().first->getchildren();
+					std::vector<ChanceNode*> v_children;
+					order_stack.top().first->getchildren(v_children);
 					if(v_children.size()>1)
 					{
 						for(int i=0;i<v_children.size();i++)

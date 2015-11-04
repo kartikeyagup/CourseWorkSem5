@@ -26,7 +26,7 @@ public:
 	float getutility();
 	float score;
 	ChanceNode* getparent();
-	std::vector<OrderNode*> getchildren();	//	to complete
+	void getchildren(std::vector<OrderNode*> &);	//	to complete
 	char getcolor();
 	void setutility(float);
 	bool children_visited;
@@ -48,7 +48,7 @@ public:
 	OrderNode(float,ChaosNode*,float,ChaosMove*);
 	OrderNode(float,float);
 	~OrderNode();
-	std::vector<ChanceNode*> getchildren();		// to complete
+	void getchildren(std::vector<ChanceNode*> &);		// to complete
 	ChaosNode* getparent();
 	float getutility();
 	void setutility(float);
@@ -70,7 +70,7 @@ public:
 	ChanceNode(float,OrderNode*,float,OrderMove*);
 	~ChanceNode();
 	Game* getgame();
-	std::vector<ChaosNode*> getchildren();		// to complete
+	void getchildren(std::vector<ChaosNode*> &);		// to complete
 	OrderNode* getparent();
 	float getutility();
 	float score;

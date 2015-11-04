@@ -70,7 +70,7 @@ float Game::GetEntireScore2(int val)
 {
 	// val lies in 0 to 5 for row and 5 to 10 for column
 	// std::string temp(inp);
-
+	// return 1.0;
 	std::string temp;
 	if (val<Dimension)
 	{
