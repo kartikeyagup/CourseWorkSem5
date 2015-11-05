@@ -484,7 +484,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 	if (GlobalGame.GetDimension()==6)
 	{
 		d=6;
-		if (count_no_chaos_moves>=15)
+		if (count_no_chaos_moves>17)
 		{
 			d=7;
 		}
@@ -874,8 +874,8 @@ std::pair<int,int> getbestmoveChaos(char b)
 		{
 			// updating the weights for the heuristics
 			// std::cerr << "Final value is: " << finvalue <<"\t" << initvalue <<"\n";
-			float contr1 = GlobalGame.CalculateScoreH1() + GlobalGame.CalculateScoreH2();
-			float contr2 = GlobalGame.CalculateScoreRon();
+			float contr1 = GlobalGame.CalculateScoreH1();
+			float contr2 = GlobalGame.CalculateScoreH2();
 			std::cerr << contr1 <<"\t" << contr2 <<" are the contrs\n";
 			std::cerr << initvalue <<"\t" <<finvalue <<" are the init and final values\n";
 			w1_chaos = w1_chaos + learningrate_chaos*(finvalue - initvalue)*(contr1)/(contr1+contr2);
@@ -915,7 +915,16 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	if (GlobalGame.GetDimension()==6)
 	{
 		//TODO: Keep depth 5 and 6
-		d = std::min(5,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+		d=5;
+		// if (count_no_order_moves>20)
+		// {
+		// 	d=6;
+		// }
+		if (count_no_order_moves>20)
+		{
+			d=7;
+		}
+		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	else if(GlobalGame.GetDimension()==7)
 	{
@@ -933,9 +942,10 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	}
 	else
 	{
-		if(count_no_order_moves<15)
+		d=6;
+		if(count_no_order_moves>12)
 		{
-			d = 6;
+			d = 7;
 		}
 		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
@@ -1287,8 +1297,8 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 			float finvalue = c->getparent()->getutility();
 			std::cerr << "Value is changinf from " << initvalue <<"\t" << finvalue <<"\n";
 			// updating the weights for the heuristics
-			float contr1 = GlobalGame.CalculateScoreH1() + GlobalGame.CalculateScoreH2();
-			float contr2 = GlobalGame.CalculateScoreRon();
+			float contr1 = GlobalGame.CalculateScoreH1();
+			float contr2 = GlobalGame.CalculateScoreH2();
 			std::cerr << contr1 <<"\t" << contr2 <<" are the contrs\n";
 			w1_order = w1_order + learningrate_order*(finvalue - initvalue)*contr1/(contr1+contr2);
 			w2_order = w2_order + learningrate_order*(finvalue - initvalue)*contr2/(contr1+contr2);

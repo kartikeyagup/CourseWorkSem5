@@ -83,6 +83,7 @@ int main(int argc, char const *argv[])
 	bool timed_out = 0;
 	std::cerr<<"Type: "<<typeg<<"\n";
 	constantweights = argv[1];
+	std::cin >> timed_out ;
 	if (typeg)
 	{
 		//Playing as Chaos
