@@ -497,7 +497,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 	else if(GlobalGame.GetDimension()==7)
 	{
 		// TODO: 6 throughout
-		d = std::min(4,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+		d = std::min(6,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	else
 	{

@@ -362,8 +362,8 @@ void Initialise(bool typeinp)
 	// }
 	// else
 	// 	PopulateTable1("-------");
-	std::cerr<< "E-E-E" << "\t" << PalidromeScoreData["E-E-E"] <<"\t" << RonakHeuristic["E-E-E"] << "\n";
-	std::cerr<< "EEE--" << "\t" << PalidromeScoreData["EEE--"] <<"\t" << RonakHeuristic["EEE--"] << "\n";
+	// std::cerr<< "E-E-E" << "\t" << PalidromeScoreData["E-E-E"] <<"\t" << RonakHeuristic["E-E-E"] << "\n";
+	// std::cerr<< "EEE--" << "\t" << PalidromeScoreData["EEE--"] <<"\t" << RonakHeuristic["EEE--"] << "\n";
 	std::cerr << "Done with normal expectations\t" << AllStrings.size() <<"\t" << PalidromeScoreData.size() <<"\n";
 	PopulateTable(typeinp);
 	std::cerr << "Done with other tables\n";

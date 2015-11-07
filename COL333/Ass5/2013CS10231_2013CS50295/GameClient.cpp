@@ -70,36 +70,51 @@ int main(int argc, char const *argv[])
 	learningrate_chaos = 0.03;
 	if(GlobalGame.GetDimension()==5)
 	{
-		dim_timeout = 156.66;
+		dim_timeout = 56.66;
 	}
 	else if(GlobalGame.GetDimension() == 6)
 	{
-		dim_timeout = 1116.66;
+		dim_timeout = 116.66;
 	}
 	else if(GlobalGame.GetDimension() == 7)
 	{
-		dim_timeout = 1176.66;
+		dim_timeout = 176.66;
 	}
 	bool timed_out = 0;
 	std::cerr<<"Type: "<<typeg<<"\n";
-	constantweights = argv[1];
-	std::cin >> timed_out ;
+	constantweights = "1";
+	// std::cin >> timed_out ;
 	if (typeg)
 	{
 		//Playing as Chaos
-		std::ifstream fil;
-		fil.open("ChaosWeights.txt");
-		if(fil.is_open())
-		{
-			float a,b;
-			while(fil >> a >> b)
-			{
-				w1_chaos = a;
-				w2_chaos = b;
-			}
-			fil.close();
-		}
+		// std::ifstream fil;
+		// fil.open("ChaosWeights.txt");
+		// if(fil.is_open())
+		// {
+		// 	float a,b;
+		// 	while(fil >> a >> b)
+		// 	{
+		// 		w1_chaos = a;
+		// 		w2_chaos = b;
+		// 	}
+		// 	fil.close();
+		// }
 
+		if (GlobalGameDim==5)
+		{
+			w1_chaos=0.012902;
+			w2_chaos=0.987098;
+		}
+		else if(GlobalGameDim==6)
+		{
+			w1_chaos=0.580945;
+			w2_chaos=0.419055;
+		}
+		else
+		{
+			w1_chaos=0.651103;
+			w2_chaos=0.348897;
+		}
 
 		char inp;
 		timed_out = 0;
@@ -165,31 +180,46 @@ int main(int argc, char const *argv[])
 				std::cout << mbest.first <<" "<<mbest.second <<"\n";
 			}
 		}
-		std::ofstream fil1;
-		fil1.open("ChaosWeights.txt");
+		// std::ofstream fil1;
+		// fil1.open("ChaosWeights.txt");
 
-		fil1<<std::to_string(w1_chaos);
-		fil1<<" ";
-		fil1<<std::to_string(w2_chaos);
+		// fil1<<std::to_string(w1_chaos);
+		// fil1<<" ";
+		// fil1<<std::to_string(w2_chaos);
 
-		fil1.close();
+		// fil1.close();
 	}
 	else
 	{
 		// std::cerr<<"In the else case\n";
 		//Playing as Order
 		// return 0;
-		std::ifstream fil;
-		fil.open("OrderWeights.txt");
-		if(fil.is_open())
+		// std::ifstream fil;
+		// fil.open("OrderWeights.txt");
+		// if(fil.is_open())
+		// {
+		// 	float a,b;
+		// 	while(fil >> a >> b)
+		// 	{
+		// 		w1_order = a;
+		// 		w2_order = b;
+		// 	}
+		// 	fil.close();
+		// }
+		if (GlobalGameDim==5)
 		{
-			float a,b;
-			while(fil >> a >> b)
-			{
-				w1_order = a;
-				w2_order = b;
-			}
-			fil.close();
+			w1_order=0.681486;
+			w2_order=0.318514;
+		}
+		else if (GlobalGameDim==6)
+		{
+			w1_order=0.705349;
+			w2_order=0.294651;
+		}
+		else
+		{
+			w1_order=0.729738;
+			w2_order=0.270262;
 		}
 
 		std::pair<std::pair<int,int>,std::pair<int,int> > mv;
@@ -231,14 +261,14 @@ int main(int argc, char const *argv[])
 				std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
 			}
 		}
-		std::ofstream fil1;
-		fil1.open("OrderWeights.txt");
+		// std::ofstream fil1;
+		// fil1.open("OrderWeights.txt");
 
-		fil1<<std::to_string(w1_order);
-		fil1<<" ";
-		fil1<<std::to_string(w2_order);
+		// fil1<<std::to_string(w1_order);
+		// fil1<<" ";
+		// fil1<<std::to_string(w2_order);
 
-		fil1.close();
+		// fil1.close();
 	}
 
 
