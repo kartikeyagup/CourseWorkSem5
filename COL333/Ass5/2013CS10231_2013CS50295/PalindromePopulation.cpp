@@ -277,15 +277,20 @@ float GiveExpect1(std::string &s)
 float GiveExpect2(std::string &s, char c)
 {
 	std::string x = s.c_str();
+	float temp=0.0;
+	int c1 =0;
 	for (int i=0; i<GlobalGameDim; i++)
 	{
 		if (s[i]=='-')
 		{
 			x[i]=c;
-			return PalidromeScoreData[x];
+			temp+=PalidromeScoreData[x];
+			x[i]='-';
+			c1 +=1;
 		}
 	}
-	return PalidromeScoreData[x];
+	// return PalidromeScoreData[x];
+	return temp/c1;
 }
 
 float GiveExpectChaos(std::string &s,bool typeinp)

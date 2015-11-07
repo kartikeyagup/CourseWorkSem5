@@ -506,6 +506,10 @@ std::pair<int,int> getbestmoveChaos(char b)
 			// depth d;
 			d = 8;
 		}
+		if(count_no_chaos_moves>19)
+		{
+			d=10;
+		}
 		d = std::min(d,(GlobalGame.GetDimension()*GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	std::cerr << "GOING TILL DEPTH " << d<<"\n";	
@@ -943,7 +947,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	else
 	{
 		d=6;
-		if(count_no_order_moves>12)
+		if(count_no_order_moves>11)
 		{
 			d = 7;
 		}
