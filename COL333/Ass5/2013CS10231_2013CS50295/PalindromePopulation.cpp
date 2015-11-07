@@ -417,10 +417,13 @@ void PopulateTable(bool x)
 	
 		for (int i=0; i<AllStrings.size(); i++)
 		{
+			std::string s = AllStrings[i];
+			float* sc = new float[GlobalGameDim];
 			for (int j=0; j<GlobalGameDim; j++)
 			{
-				AllPalindromesData[j][AllStrings[i]] = GiveExpect2(AllStrings[i],'A'+j); 
+				sc[j] = GiveExpect2(s,'A'+j);
 			}
+			AllPalindromesData[s] = sc;
 		}
 	}
 }	

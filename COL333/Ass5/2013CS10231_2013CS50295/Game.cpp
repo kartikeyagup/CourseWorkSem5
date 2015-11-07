@@ -127,9 +127,10 @@ float Game::GetEntireScore2(int val)
 		{
 			a1 = PalidromeScoreData[temp];
 	
+			float* scorearray = AllPalindromesData[temp];
 			for (int i=0; i<Dimension; i++)
 			{
-				a2 += ((Dimension+1 - ColCompleted[i])*AllPalindromesData[i][temp])/((GlobalDimensionSq-NumCompleted));
+				a2 += ((Dimension+1 - ColCompleted[i])*scorearray[i])/((GlobalDimensionSq-NumCompleted));
 				// a1 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));
 				// a1 += ((6.0- ColCompleted[2])*AllPalindromesData[2][temp])/((30.0-NumCompleted));
 				// a1 += ((6.0- ColCompleted[3])*AllPalindromesData[3][temp])/((30.0-NumCompleted));
@@ -334,10 +335,10 @@ float Game::Calc1WayH2(int val)
 
 	float a2;
 	a2 = 0.0;
-	
+	float* scorearray = AllPalindromesData[temp];
 	for (int i=0; i<Dimension; i++)
 	{
-		a2+= ((1+Dimension-ColCompleted[i])*AllPalindromesData[i][temp])/(GlobalDimensionSq + NumCompleted);
+		a2+= ((1+Dimension-ColCompleted[i])*scorearray[i])/(GlobalDimensionSq + NumCompleted);
 	}
 	// a2 += ((6.0- ColCompleted[0])*AllPalindromesData[0][temp])/((30.0-NumCompleted));
 	// a2 += ((6.0- ColCompleted[1])*AllPalindromesData[1][temp])/((30.0-NumCompleted));

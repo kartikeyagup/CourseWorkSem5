@@ -1,7 +1,7 @@
 #include "GameClient.h"
 
 std::unordered_map<std::string,float> PalidromeScoreData;
-std::unordered_map<std::string,float>* AllPalindromesData;
+std::unordered_map<std::string,float*> AllPalindromesData;
 std::unordered_map<std::string,float> RonakHeuristic;
 
 float GlobalDimensionSq;
@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
 
 	bool typeg = (role=="CHAOS");
 	GlobalGameDim = dim;
-	AllPalindromesData= new std::unordered_map<std::string,float>[dim];
+	// AllPalindromesData= std::unordered_map<std::string,float*>;
 	std::cerr << "Starting preprocessing\n";
 	Initialise(typeg);
 	std::cerr << "Done with all preprocessing\n";
