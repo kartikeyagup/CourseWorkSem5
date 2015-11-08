@@ -483,21 +483,26 @@ std::pair<int,int> getbestmoveChaos(char b)
 	int d=7;
 	if (GlobalGame.GetDimension()==6)
 	{
-		d=6;
-		if (count_no_chaos_moves>17)
+		d=5;
+		if (count_no_chaos_moves>18)
 		{
-			d=7;
+			d=8;
 		}
 		if (count_no_chaos_moves>=23)
 		{
-			d=9;
+			d=10;
 		}
 		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	else if(GlobalGame.GetDimension()==7)
 	{
 		// TODO: 6 throughout
-		d = std::min(6,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
+		d=5;
+		if (count_no_chaos_moves>30)
+		{
+			d=7;
+		}
+		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	else
 	{
@@ -506,7 +511,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 			// depth d;
 			d = 8;
 		}
-		if(count_no_chaos_moves>19)
+		if(count_no_chaos_moves>=16)
 		{
 			d=10;
 		}
