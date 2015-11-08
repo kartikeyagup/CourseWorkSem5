@@ -289,8 +289,10 @@ float GiveExpect2(std::string &s, char c)
 			c1 +=1;
 		}
 	}
-	// return PalidromeScoreData[x];
-	return temp/c1;
+	if (c1>0)
+		return temp/c1;
+	else
+		return PalidromeScoreData[x];
 }
 
 float GiveExpectChaos(std::string &s,bool typeinp)
