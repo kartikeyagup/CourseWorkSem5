@@ -959,11 +959,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	{
 		// TODO: Greater than 24 : 6 and Greater than 39: 7
 		d=4;
-		if (count_no_order_moves>15)
+		if (count_no_order_moves>17)
 		{
 			d=6;
 		}
-		if (count_no_order_moves>38)
+		if (count_no_order_moves>40)
 		{
 			d=9;
 		}
