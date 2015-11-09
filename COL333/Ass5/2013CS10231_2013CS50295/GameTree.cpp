@@ -486,15 +486,15 @@ std::pair<int,int> getbestmoveChaos(char b)
 	if (GlobalGame.GetDimension()==6)
 	{
 		d=5;
-		if (count_no_chaos_moves>18)
+		if (count_no_chaos_moves>20)
 		{
 			d=7;
 		}
-		if (count_no_chaos_moves>=23)
+		if (count_no_chaos_moves>=25)
 		{
 			d=8;
 		}
-		if (count_no_chaos_moves>=25)
+		if (count_no_chaos_moves>=28)
 		{
 			d=10;
 		}
@@ -504,11 +504,11 @@ std::pair<int,int> getbestmoveChaos(char b)
 	{
 		// TODO: 6 throughout
 		d=5;
-		if (count_no_chaos_moves>21)
+		if (count_no_chaos_moves>25)
 		{
 			d=7;
 		}
-		if (count_no_chaos_moves>39)
+		if (count_no_chaos_moves>41)
 		{
 			d=10;
 		}
@@ -522,7 +522,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 		// 	// depth d;
 		// 	d = 8;
 		// }
-		if(count_no_chaos_moves>=14)
+		if(count_no_chaos_moves>=16)
 		{
 			d=10;
 		}
@@ -945,11 +945,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 		// {
 		// 	d=6;
 		// }
-		if (count_no_order_moves>20)
+		if (count_no_order_moves>21)
 		{
 			d=7;
 		}
-		if (count_no_order_moves>24)
+		if (count_no_order_moves>26)
 		{
 			d=9;
 		}
@@ -959,7 +959,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	{
 		// TODO: Greater than 24 : 6 and Greater than 39: 7
 		d=4;
-		if (count_no_order_moves>17)
+		if (count_no_order_moves>18)
 		{
 			d=6;
 		}
@@ -972,11 +972,11 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	else
 	{
 		d=6;
-		if (count_no_order_moves>3)
+		if (count_no_order_moves>7)
 		{
 			d=7;
 		}
-		if (count_no_order_moves>15)
+		if (count_no_order_moves>17)
 		{
 			d = 9;
 		}
