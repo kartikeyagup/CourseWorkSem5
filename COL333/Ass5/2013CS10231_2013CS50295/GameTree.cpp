@@ -463,15 +463,17 @@ void ChanceNode::setutility(float a)
 void ChanceNode::getchildren(std::vector<ChaosNode*> &v)
 {
 	float score = GlobalGame.MoveOrder(this->move);
+	float *temp1 = GlobalGame.GetProbabilities();
 	for(int i=0;i<GlobalGame.GetDimension();i++)
 	{
-		if(GlobalGame.GetProbabilities()[i]>0.0001)
+		if(temp1[i]>0.0001)
 		{
-			ChaosNode* child = new ChaosNode(i+'A',(GlobalGame.GetProbabilities())[i],CHAOS_DEFAULT,this,score);
+			ChaosNode* child = new ChaosNode(i+'A',temp1[i],CHAOS_DEFAULT,this,score);
 			v.push_back(child);
 		}
 		// delete child;
 	}
+	delete temp1;
 	// return v;
 }
 
@@ -665,6 +667,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 						chance_stack.pop();
 						delete prune;
 					}
+
 					// start pruning
 					// remove elements from chance_stack till depth is equal to
 				}
