@@ -486,9 +486,13 @@ std::pair<int,int> getbestmoveChaos(char b)
 		d=5;
 		if (count_no_chaos_moves>18)
 		{
-			d=8;
+			d=7;
 		}
 		if (count_no_chaos_moves>=23)
+		{
+			d=8;
+		}
+		if (count_no_chaos_moves>=25)
 		{
 			d=10;
 		}
@@ -502,16 +506,21 @@ std::pair<int,int> getbestmoveChaos(char b)
 		{
 			d=7;
 		}
+		if (count_no_chaos_moves>37)
+		{
+			d=10;
+		}
+
 		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	else
 	{
-		if(count_no_chaos_moves>=13)
-		{
-			// depth d;
-			d = 8;
-		}
-		if(count_no_chaos_moves>=16)
+		// if(count_no_chaos_moves>=13)
+		// {
+		// 	// depth d;
+		// 	d = 8;
+		// }
+		if(count_no_chaos_moves>=14)
 		{
 			d=10;
 		}
@@ -924,7 +933,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 	if (GlobalGame.GetDimension()==6)
 	{
 		//TODO: Keep depth 5 and 6
-		d=5;
+		d=6;
 		// if (count_no_order_moves>20)
 		// {
 		// 	d=6;
@@ -933,28 +942,36 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 		{
 			d=7;
 		}
+		if (count_no_order_moves>24)
+		{
+			d=9;
+		}
 		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
 	else if(GlobalGame.GetDimension()==7)
 	{
 		// TODO: Greater than 24 : 6 and Greater than 39: 7
-		d=5;
+		d=4;
 		if (count_no_order_moves>24)
 		{
 			d=6;
 		}
-		if (count_no_order_moves>39)
+		if (count_no_order_moves>30)
 		{
-			d=7;
+			d=9;
 		}
 		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;	
 	}
 	else
 	{
 		d=6;
-		if(count_no_order_moves>11)
+		if (count_no_order_moves>3)
 		{
-			d = 7;
+			d=7;
+		}
+		if (count_no_order_moves>15)
+		{
+			d = 9;
 		}
 		d = std::min(d,(GlobalGame.GetDimension() * GlobalGame.GetDimension() - GlobalGame.GetNumCompleted())*2) ;
 	}
