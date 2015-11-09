@@ -667,7 +667,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 						chance_stack.pop();
 						delete prune;
 					}
-
+					delete n_chance;
 					// start pruning
 					// remove elements from chance_stack till depth is equal to
 				}
@@ -722,6 +722,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 							chance_stack.pop();
 							delete prune;
 						}
+						delete n_chance;
 						// start pruning
 						// remove elements from chance_stack till depth is equal to
 					}
@@ -770,6 +771,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 						order_stack.pop();
 						delete prune;
 					}
+					delete n_order;
 					// start pruning
 					// remove elements from order stack till depth is depth_order
 				}
@@ -835,6 +837,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 								order_stack.pop();
 								delete prune;
 							}
+							delete n_order;
 							// start pruning
 							// remove elements from order stack till depth is depth_order
 						}
@@ -864,6 +867,7 @@ std::pair<int,int> getbestmoveChaos(char b)
 								order_stack.pop();
 								delete prune;
 							}
+							delete n_order;
 							// start pruning
 							// remove elements from order stack till depth is depth_order
 						}
@@ -1113,6 +1117,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 						chance_stack.pop();
 						delete prune;
 					}
+					delete n_chance;
 				}
 				else
 				{
@@ -1176,6 +1181,10 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 							chance_stack.pop();
 							delete prune;
 						}
+						// if(depth_chance != 1)
+						// {
+						// 	delete n_chance;
+						// }
 					}
 					else
 					{
@@ -1248,6 +1257,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 						order_stack.pop();
 						delete prune;
 					}
+					delete n_order;
 				}
 				else
 				{
@@ -1297,6 +1307,7 @@ std::pair<std::pair<int,int>,std::pair<int,int> > getbestmoveOrder()
 								order_stack.pop();
 								delete prune;
 							}
+							// delete n_order;
 						}
 						else
 						{
