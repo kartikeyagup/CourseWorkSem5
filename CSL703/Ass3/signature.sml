@@ -16,12 +16,34 @@ and OccursList(x,[])= false
 	|OccursList(x,l::ls) = Occurs(x,l) orelse OccursList(x,ls)
 ;
 
-fun CheckUnify(Variable(x),Variable(y))= true
-	|CheckUnify(Constant(x),Variable(y))= true
-	|CheckUnify(Variable(y),Constant(x))= true
+fun Substitute((x,y),Variable(p))= if (p=x) then y else Variable(p)
+	|Substitute((x,y),Constant(p)) = Constant(p)
+	|Substitute(a,NOT(p)) = NOT(Substitute(a,p))
+	|Substitute(a,AND(p,q)) = AND(Substitute(a,p),Substitute(a,q))
+	|Substitute(a,OR(p,q)) = OR(Substitute(a,p),Substitute(a,q))
+	|Substitute(a,IMPLY(p,q)) = IMPLY(Substitute(a,p),Substitute(a,q))
+	|Substitute(a,DOUBLEIMPLY(p,q)) = DOUBLEIMPLY(Substitute(a,p),Substitute(a,q))
+	|Substitute(a,FORALL(p,q))= FORALL(p,Substitute(a,q))
+	|Substitute(a,EXISTS(p,q))= EXISTS(p,Substitute(a,q))
+	|Substitute(a,FUNCTION(b,c)) = FUNCTION(b,SubstituteList(a,c))
+and SubstituteList(x,[])=[]
+	|SubstituteList(x,l::ls)=Substitute(x,l)::SubstituteList(x,ls)
+;
+
+fun CompleteSubstitution(a,[])=a
+	|CompleteSubstitution(a,l::ls)=CompleteSubstitution(Substitute(l,a),ls)
+;
+
+fun CompleteSubstitutionList([],l)=[]
+	|CompleteSubstitutionList(x::xs,l)=CompleteSubstitution(x,l)::CompleteSubstitutionList(xs,l)
+;
+
+fun CheckUnify(Variable(x),Variable(y))= (true,[(x,Variable(y))])
+	|CheckUnify(Constant(x),Variable(y))= (true,[(y,Constant(x))])
+	|CheckUnify(Variable(y),Constant(x))= (true,[(y,Constant(x))])
 	|CheckUnify(FUNCTION(x,y),FUNCTION(a,b)) = 
 		if (x=a) then CheckUnifyList(y,b)
-		else false
+		else (false,[])
 	|CheckUnify(Variable(x),FUNCTION(a,b)) = 
 		if (OccursList(Variable(x),b)) then false
 		else true
