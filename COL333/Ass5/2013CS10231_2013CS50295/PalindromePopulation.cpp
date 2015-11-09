@@ -325,7 +325,7 @@ void Initialise(bool typeinp)
 	std::queue<std::string> init;
 	init.push("");
 	makeallstrings(init);
-	std::cerr << "Got all strings from ronak\t" << AllStrings.size() <<"\n";
+	// std::cerr << "Got all strings from ronak\t" << AllStrings.size() <<"\n";
 	// if (GlobalGameDim<7)
 	// {
 	if (GlobalGameDim<7)
@@ -371,9 +371,9 @@ void Initialise(bool typeinp)
 	// 	PopulateTable1("-------");
 	// std::cerr<< "E-E-E" << "\t" << PalidromeScoreData["E-E-E"] <<"\t" << RonakHeuristic["E-E-E"] << "\n";
 	// std::cerr<< "EEE--" << "\t" << PalidromeScoreData["EEE--"] <<"\t" << RonakHeuristic["EEE--"] << "\n";
-	std::cerr << "Done with normal expectations\t" << AllStrings.size() <<"\t" << PalidromeScoreData.size() <<"\n";
+	// std::cerr << "Done with normal expectations\t" << AllStrings.size() <<"\t" << PalidromeScoreData.size() <<"\n";
 	PopulateTable(typeinp);
-	std::cerr << "Done with other tables\n";
+	// std::cerr << "Done with other tables\n";
 }
 
 float PopulateTable1(const std::string &b)

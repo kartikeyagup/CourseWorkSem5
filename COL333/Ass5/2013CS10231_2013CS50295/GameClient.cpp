@@ -50,9 +50,9 @@ int main(int argc, char const *argv[])
 	bool typeg = (role=="CHAOS");
 	GlobalGameDim = dim;
 	// AllPalindromesData= std::unordered_map<std::string,float*>;
-	std::cerr << "Starting preprocessing\n";
+	// std::cerr << "Starting preprocessing\n";
 	Initialise(typeg);
-	std::cerr << "Done with all preprocessing\n";
+	// std::cerr << "Done with all preprocessing\n";
 	// PopulateTable(typeg);
 	// PopulateAllTables(typeg);
 	// std::cerr << PalidromeScoreData["AC---"]<<"\n";
@@ -74,14 +74,14 @@ int main(int argc, char const *argv[])
 	}
 	else if(GlobalGame.GetDimension() == 6)
 	{
-		dim_timeout = 116.66;
+		dim_timeout = 100.00;
 	}
 	else if(GlobalGame.GetDimension() == 7)
 	{
-		dim_timeout = 176.66;
+		dim_timeout = 150.00;
 	}
-	bool timed_out = 0;
-	std::cerr<<"Type: "<<typeg<<"\n";
+	// bool timed_out = 0;
+	// std::cerr<<"Type: "<<typeg<<"\n";
 	constantweights = "0";
 	// std::cin >> timed_out ;
 	if (typeg)
@@ -119,13 +119,13 @@ int main(int argc, char const *argv[])
 		}
 
 		char inp;
-		timed_out = 0;
+		// timed_out = 0;
 		
 		std::cin >>inp;
 
 		t_chaos = clock()/double(CLOCKS_PER_SEC);
 
-		std::cerr << "Char obtained is: " << inp <<"\n";
+		// std::cerr << "Char obtained is: " << inp <<"\n";
 		// GlobalGame.ShowPresent();
 		std::pair<int,int> mbest(1,1);
 		// std::pair<int,int> mbest= getbestmoveChaos(inp);
@@ -139,8 +139,8 @@ int main(int argc, char const *argv[])
 		
 		while (true)
 		{
-			std::cerr << w1_chaos <<"\t" << w2_chaos <<" are the weights\n";
-			std::cerr << learningrate_chaos << " is the learningrate_chaos\n";
+			// std::cerr << w1_chaos <<"\t" << w2_chaos <<" are the weights\n";
+			// std::cerr << learningrate_chaos << " is the learningrate_chaos\n";
 			if (GlobalGame.IsCompleted())
 			{
 				break;
@@ -171,7 +171,7 @@ int main(int argc, char const *argv[])
 				t_chaos = clock()/double(CLOCKS_PER_SEC) - t_chaos;
 				//std::cerr<<"Printing Clock  "<<t_chaos<<"\n";
 				t_chaostime += t_chaos;
-				GlobalGame.ShowPresent();
+				// GlobalGame.ShowPresent();
 				// std::cerr<<"Printing time: "<<t_chaostime<<"\n";
 			}
 			else
@@ -227,11 +227,11 @@ int main(int argc, char const *argv[])
 		}
 
 		std::pair<std::pair<int,int>,std::pair<int,int> > mv;
-		timed_out = 0;
+		// timed_out = 0;
 		while (true)
 		{
-			std::cerr << w1_order <<"\t" << w2_order <<" are the weights\n";
-			std::cerr << learningrate_order << " is the learningrate_order\n";
+			// std::cerr << w1_order <<"\t" << w2_order <<" are the weights\n";
+			// std::cerr << learningrate_order << " is the learningrate_order\n";
 			// GlobalGame.ShowPresent();
 			int posx,posy;
 			char col;
@@ -250,7 +250,7 @@ int main(int argc, char const *argv[])
 			{
 				mv = getbestmoveOrder();
 				// std::cerr << "Received move from ronak\t" << mv.first.first << "\t" <<mv.first.second <<"\t" << mv.second.first <<"\t" << mv.second.second<<"\n";
-				GlobalGame.ShowPresent();
+				// GlobalGame.ShowPresent();
 				GlobalGame.Move(mv.first.first,mv.first.second,mv.second.first,mv.second.second);
 				std::cout << mv.first.first << " " <<mv.first.second << " " << mv.second.first << " " << mv.second.second <<"\n";
 				t_order = clock()/double(CLOCKS_PER_SEC) - t_order;
