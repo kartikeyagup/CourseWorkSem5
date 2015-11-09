@@ -45,20 +45,28 @@ fun CheckUnify(Variable(x),Variable(y))= (true,[(x,Variable(y))])
 		if (x=a) then CheckUnifyList(y,b)
 		else (false,[])
 	|CheckUnify(Variable(x),FUNCTION(a,b)) = 
-		if (OccursList(Variable(x),b)) then false
-		else true
+		if (OccursList(Variable(x),b)) then (false,[])
+		else (true,[(x,FUNCTION(a,b))])
 	|CheckUnify(FUNCTION(a,b),Variable(x)) = 
-		if (OccursList(Variable(x),b)) then false
-		else true
-	|CheckUnify(_,_) = false
+		if (OccursList(Variable(x),b)) then (false,[])
+		else (true,[(x,FUNCTION(a,b))])
+	|CheckUnify(_,_) = (false,[])
 
-and CheckUnifyList([],[])= true
-	|CheckUnifyList(x::xs,y::ys) = CheckUnify(x,y) andalso CheckUnifyList(xs,ys) 
-	|CheckUnifyList(_,_) = false
+and CheckUnifyList([],[])= (true,[])
+	|CheckUnifyList(x::xs,y::ys) = 
+		let
+			val (p1,p2) =CheckUnify(x,y)
+		in
+			if (p1) then CheckUnifyList(CompleteSubstitutionList(xs,p2),CompleteSubstitutionList(ys,p2))
+			else (false,[])
+		end
+	|CheckUnifyList(_,_) = (false,[])
 ;
 
-fun CheckComplimentary(x,NOT(y)) = CheckUnify(x,y)
-	|CheckComplimentary(NOT(x),y) = CheckUnify(x,y)
+fun Unifiable(a,b)= #1(CheckUnify(a,b));
+
+fun CheckComplimentary(x,NOT(y)) = Unifiable(x,y)
+	|CheckComplimentary(NOT(x),y) = Unifiable(x,y)
 	|CheckComplimentary(_,_) = false
 ;
 
